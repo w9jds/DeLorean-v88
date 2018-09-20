@@ -7,6 +7,27 @@ class Home extends React.Component {
 
     }
 
+    render() {
+        return(
+            <main>
+                <section>
+
+                </section>
+                <section>
+                    
+                </section>
+                <section>
+                    <header>
+
+                    </header>
+                    <div>
+
+                    </div>
+                </section>
+            </main>
+        )
+    }
+
 }
 
 export default Home;

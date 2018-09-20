@@ -9,9 +9,9 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import * as colors from '@material-ui/core/colors';
 
 import Home from './components/pages/Home';
-import AppBar from './components/controls/AppBar';
+import Header from './components/controls/Header';
 import Speakers from './components/pages/Speakers';
-import Sessions from './components/pages/Sessions';
+import Schedule from './components/pages/Schedule';
 import Sponsors from './components/pages/Sponsors';
 
 import createSagaMiddleware from 'redux-saga';
@@ -26,19 +26,23 @@ const store = createStore(
     }), applyMiddleware(sagaMiddleware)
 );
 
-const defaultTheme = createMuiTheme();
 const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: {
-            light: colors.blue[300],
-            main: colors.blue[500],
-            dark: colors.blue[700],
-            contrastText: defaultTheme.palette.getContrastText(colors.blue[500]),
-        }
+            main: '#13191e',
+        },
+        secondary: colors.lightBlue,
     },
     typography: {
         htmlFontSize: 10,
+    },
+    overrides: {
+        MuiAppBar: {
+            root: {
+                boxShadow: 'none'
+            }
+        }
     }
 });
 
@@ -49,11 +53,10 @@ render(
         <MuiThemeProvider theme={theme}>
             <BrowserRouter>
                 <div className="app-frame">
-                    <AppBar />
-                    <Route exact path="/home" component={Home} />
+                    <Header />
+                    <Route exact path="/" component={Home} />
                     <Route path="/speakers" component={Speakers} />
-                    <Route path="/sessions" component={Sessions} />
-                    <Route path="/sponsors" component={Sponsors} />
+                    <Route path="/schedule" component={Schedule} />
                 </div>
             </BrowserRouter>
         </MuiThemeProvider>

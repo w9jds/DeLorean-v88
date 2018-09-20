@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-class Speakers extends React.Component {
+class Schedule extends React.Component {
 
     constructor(props) {
         super(props);
@@ -15,4 +15,4 @@ class Speakers extends React.Component {
 
 }
 
-export default Speakers;
+export default Schedule;
