@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "outDir": "build/dist",
+      "module": "commonjs",
+      "target": "es5",
+      "lib": ["es6", "dom"],
+      "sourceMap": true,
+      "jsx": "react",
+      "moduleResolution": "node",
+      "declaration": false,
+      "importHelpers": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "strictNullChecks": false
+    },
+    "exclude": [
+      "node_modules",
+      "build",
+      "scripts",
+      "webpack"
+    ],
+    "types": [
+      "typePatches"
+    ]
+}

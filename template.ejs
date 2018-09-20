@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <title>
+            <%= htmlWebpackPlugin.options.title %>
+        </title>
+    </head>
+
+    <body>        
+        <div id='root' />
+
+        <script>
+            window.galaxyfinder = {
+                release: '<%= htmlWebpackPlugin.options.version %>',
+                environment: '<%= htmlWebpackPlugin.options.environment %>'
+            };
+        </script>
+    </body>
+</html>
