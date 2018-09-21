@@ -1,0 +1,24 @@
+const DevfestDetails = {
+    name: 'DevFest',
+    location: 'Windy City',
+    year: 2019
+}
+
+const FirebaseConfig = {
+    apiKey: '',
+    authDomain: '',
+    databaseURL: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: ''
+};
+
+const MapsConfig = {
+    apiKey: ''
+}
+
+module.exports = { 
+    DevfestDetails,
+    FirebaseConfig,
+    MapsConfig
+}

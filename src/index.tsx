@@ -12,16 +12,20 @@ import Home from './components/pages/Home';
 import Header from './components/controls/Header';
 import Speakers from './components/pages/Speakers';
 import Schedule from './components/pages/Schedule';
-import Sponsors from './components/pages/Sponsors';
 
 import createSagaMiddleware from 'redux-saga';
 import current from './ducks/current';
 import sagas from './sagas/sagas';
+import { CurrentState } from './models/states';
 
 const sagaMiddleware = createSagaMiddleware();
 
+export interface ApplicationState {
+    readonly current: CurrentState
+}
+
 const store = createStore(
-    combineReducers({
+    combineReducers<ApplicationState>({
         current
     }), applyMiddleware(sagaMiddleware)
 );

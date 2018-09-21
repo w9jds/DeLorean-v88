@@ -3,9 +3,10 @@ const app = require('./package.json');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const { DevfestDetails } = require('./config/delorean.config.js');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-var plugins = [];
+const plugins = [];
 
 if (NODE_ENV !== 'development') {
     plugins = plugins.concat([
@@ -101,7 +102,7 @@ module.exports = {
             'NODE_ENV'
         ]),
         new HtmlWebpackPlugin({
-            title: 'Galaxy Finder',
+            title: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
             filename: 'index.html',
             environment: NODE_ENV,
             template: path.join(__dirname, './template.ejs'),

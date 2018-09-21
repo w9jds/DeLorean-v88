@@ -59,10 +59,12 @@ typings/
 
 # Build, Config, and Compile files
 .vscode/
-config/
 build/
 out/
 
 # Docker build
 Dockerfile
 /.idea
+/functions/lib
+/.firebaserc
+/config/delorean.config.js
