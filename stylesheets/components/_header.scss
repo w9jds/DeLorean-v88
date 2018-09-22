@@ -26,6 +26,7 @@
             max-width: 100%;
             display: block;
             max-height: 72px;
+            
         }
 
         a {
@@ -52,19 +53,12 @@
             text-decoration: none;
             padding: 8px;
             position: relative;
-
-            // border-bottom: 2px solid transparent;
         }
     
         & > div {
-    
             &:not(:last-of-type) {
                 margin-right: 36px;
             }
-    
-            // &:hover {
-            //     border-bottom: 2px solid #8DA0FC;
-            // }
         }
     }
 
@@ -79,7 +73,36 @@
             border-radius: 50%;
             height: 42px;
             width: 42px;
+            transition:all 0.3s ease;
+
+            &:hover {
+                box-shadow: 0 0 0 2px #2196f3;
+                cursor: pointer;
+            }
         }
+
+        .user-selected {
+            box-shadow: 0 0 0 2px #2196f3;
+        }
+    }
+}
+
+.user-menu {
+    margin-top: 12px !important;
+    overflow: visible !important;
+
+    &:before {
+        top: -5px;
+        right: 12px;
+        width: 15px;
+        height: 15px;
+        content: ' ';
+        position: absolute;
+        display: inline-block;
+        box-sizing: border-box;
+        transform: rotate(45deg);
+        background-color: #424242;
+        z-index: -100;
     }
 }
 

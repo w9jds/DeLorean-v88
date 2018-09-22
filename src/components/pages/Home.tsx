@@ -10,13 +10,16 @@ class Home extends React.Component {
     render() {
         return(
             <main>
-                <section>
+                <section className="intro">
 
                 </section>
-                <section>
+                <section className="pictures">
+
+                </section>
+                <section className="venue">
                     
                 </section>
-                <section>
+                <section className="sponsors">
                     <header>
 
                     </header>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-class Footer extends React.Component {
+class SiteConfig extends React.Component {
 
     constructor(props) {
         super(props);
@@ -9,12 +9,10 @@ class Footer extends React.Component {
 
     render() {
         return (
-            <div className="footer">
-
-            </div>
+            <div></div>
         )
     }
 
 }
 
-export default Footer;
+export default SiteConfig;

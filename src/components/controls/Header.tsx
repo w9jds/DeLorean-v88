@@ -8,29 +8,44 @@ import { FirebaseConfig } from '../../../config/delorean.config';
 import { app, auth, initializeApp } from 'firebase';
 
 import { StyleRulesCallback, withStyles } from '@material-ui/core';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import Popover from '@material-ui/core/Popover';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 
 import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
-import { getUser } from '../../selectors/current';
+import { getUser, getUserProfile } from '../../selectors/current';
 import { Profile } from '../../models/user';
 
 const styleSheet: StyleRulesCallback = theme => ({ });
 
 type HeaderProps = ReturnType<typeof styleSheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+type HeaderState = {
+    accountMenuOpen: boolean;
+    anchorEl: HTMLElement;
+}
 
-class Header extends React.Component<HeaderProps> {
+class Header extends React.Component<HeaderProps, HeaderState> {
 
     private firebase: app.App;
 
     constructor(props: HeaderProps) {
         super(props);
 
+        this.state = {
+            accountMenuOpen: false,
+            anchorEl: null
+        };
+
         this.firebase = initializeApp(FirebaseConfig);
+        this.firebase.firestore().settings({ timestampsInSnapshots: true });
 
         props.setFirebaseApplication(this.firebase);
-
         auth().onAuthStateChanged(this.verifyLogin);
     }
 
@@ -39,17 +54,44 @@ class Header extends React.Component<HeaderProps> {
         this.firebase.auth().signInWithPopup(provider);
     }
 
-    verifyLogin = async (user: firebase.User) => {
-        // if (this.state.firstLoad) {
-        //     this.setState({ firstLoad: false }, this.props.verifyLogins);
-        // }
+    handleClose = async () => {
+        this.setState({
+            accountMenuOpen: false,
+            anchorEl: null
+        });
+    }
 
+    openAccountMenu = (e: React.MouseEvent<HTMLImageElement>) => {
+        this.setState({
+            anchorEl: e.currentTarget,
+            accountMenuOpen: true
+        });
+    }
+
+    verifyLogin = async (user: firebase.User) => {
         if (user) {
             this.props.setUser(user);
 
             let profile = await this.firebase.firestore().doc(`/users/${user.uid}`).get();
             this.props.setUserProfile(profile.data() as Profile)
         }
+    }
+
+    buildMenuItems = () => {
+        let items = [];
+
+        if (this.props.profile && this.props.profile.admin) {
+            items = items.concat(
+                <MenuItem key="user-management">User management</MenuItem>,
+                <MenuItem key="site-config">Site configuration</MenuItem>,
+                <MenuItem key="survey-data">Survey data</MenuItem>,
+                <Divider key="divider"/>
+            );
+        }
+
+        return items.concat(
+            <MenuItem key="sign-out">Sign out</MenuItem>
+        );
     }
 
     buildLoginItems = () => {
@@ -59,7 +101,32 @@ class Header extends React.Component<HeaderProps> {
 
         return (
             <div>
-                <img src={this.props.user.photoURL} />
+                <img className={this.state.accountMenuOpen ? 'user-selected' : ''} 
+                    onClick={this.openAccountMenu} 
+                    src={this.props.user.photoURL} />
+                <Popover classes={{ paper: "user-menu" }}
+                    open={this.state.accountMenuOpen}
+                    anchorEl={this.state.anchorEl}
+                    onClose={this.handleClose}
+                    anchorPosition={{ top: 5, left: 0 }}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right'
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right'
+                    }}>
+
+                    <Paper>
+                        <ClickAwayListener onClickAway={this.handleClose}>
+                            <MenuList>
+                                {this.buildMenuItems()}
+                            </MenuList>
+                        </ClickAwayListener>
+                    </Paper>
+
+                </Popover>
             </div>
         )
     }
@@ -83,9 +150,6 @@ class Header extends React.Component<HeaderProps> {
                         <div>
                             <Link to="/speakers">Speakers</Link>
                         </div>
-                        <div>
-                            <a>FAQ</a>
-                        </div>
                     </nav>
 
                     <div className="login">
@@ -99,11 +163,13 @@ class Header extends React.Component<HeaderProps> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    user: getUser(state)
+    user: getUser(state),
+    profile: getUserProfile(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    setFirebaseApplication, setUser, setUserProfile
+    setUser, setUserProfile,
+    setFirebaseApplication
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(Header));

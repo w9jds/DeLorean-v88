@@ -9,9 +9,12 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import * as colors from '@material-ui/core/colors';
 
 import Home from './components/pages/Home';
-import Header from './components/controls/Header';
 import Speakers from './components/pages/Speakers';
 import Schedule from './components/pages/Schedule';
+import Tickets from './components/pages/Tickets';
+import Footer from './components/controls/Footer';
+import Header from './components/controls/Header';
+
 
 import createSagaMiddleware from 'redux-saga';
 import current from './ducks/current';
@@ -61,6 +64,8 @@ render(
                     <Route exact path="/" component={Home} />
                     <Route path="/speakers" component={Speakers} />
                     <Route path="/schedule" component={Schedule} />
+                    <Route path="/buy-tickets" component={Tickets} />
+                    <Footer />
                 </div>
             </BrowserRouter>
         </MuiThemeProvider>
