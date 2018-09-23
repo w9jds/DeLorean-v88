@@ -1,13 +1,42 @@
 .footer {
     overflow: hidden;
     padding: 48px 0 16px;
-    color: #fff;
-    z-index: 8;
     position: relative;
+    z-index: 8;
+
+    .container-wide {
+        text-align: center;
+    }
+
+    .nav {
+        a {
+            font-size: 16px;
+            display: block;
+            padding: 4px 0px;
+            transition: color 0.4s ease-in-out 0s;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    }
 }
 
 @media (min-width: 768px) {
     .footer {
         padding: 72px 0 20px;
+
+        .nav {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            max-width: 720px;
+
+            li {
+                margin-bottom: 0px;
+                margin-left: 24px;
+            }
+        }
     }
 }

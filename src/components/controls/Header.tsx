@@ -21,6 +21,7 @@ import MenuList from '@material-ui/core/MenuList';
 import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
 import { getUser, getUserProfile } from '../../selectors/current';
 import { Profile } from '../../models/user';
+import { openConfigDialog } from '../../ducks/config';
 
 const styleSheet: StyleRulesCallback = theme => ({ });
 
@@ -49,12 +50,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         auth().onAuthStateChanged(this.verifyLogin);
     }
 
-    googleLogin = async () => {
+    googleLogin = () => {
         let provider = new auth.GoogleAuthProvider();
         this.firebase.auth().signInWithPopup(provider);
     }
 
-    handleClose = async () => {
+    openConfig = () => {
+        this.handleClose();
+        this.props.openConfigDialog();
+    }
+
+    handleClose = () => {
         this.setState({
             accountMenuOpen: false,
             anchorEl: null
@@ -83,7 +89,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         if (this.props.profile && this.props.profile.admin) {
             items = items.concat(
                 <MenuItem key="user-management">User management</MenuItem>,
-                <MenuItem key="site-config">Site configuration</MenuItem>,
+                <MenuItem key="site-config" onClick={this.openConfig}>Site configuration</MenuItem>,
                 <MenuItem key="survey-data">Survey data</MenuItem>,
                 <Divider key="divider"/>
             );
@@ -169,7 +175,8 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     setUser, setUserProfile,
-    setFirebaseApplication
+    setFirebaseApplication,
+    openConfigDialog
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(Header));

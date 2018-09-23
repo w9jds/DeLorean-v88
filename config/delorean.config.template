@@ -13,12 +13,17 @@ const FirebaseConfig = {
     messagingSenderId: ''
 };
 
+const EventbriteConfig = {
+    eventId: ''
+}
+
 const MapsConfig = {
     apiKey: ''
 }
 
 module.exports = { 
+    MapsConfig,
     DevfestDetails,
     FirebaseConfig,
-    MapsConfig
+    EventbriteConfig
 }

@@ -30,7 +30,7 @@ module.exports = {
     devtool: NODE_ENV !== 'development' ? false : 'sourcemap',
     output: {
         path: path.resolve(__dirname, './build'),
-        filename: '[name].[hash].js',
+        filename: '[name].[hash].js'
     },
     module: {
         rules: [
@@ -91,6 +91,9 @@ module.exports = {
                 loaders: ['file-loader?name=/assets/[hash].[ext]']
             }
         ]
+    },
+    devServer: {
+        historyApiFallback: true,
     },
     plugins: [
         new ExtractTextPlugin('styles/main.css'),

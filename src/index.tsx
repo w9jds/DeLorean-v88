@@ -1,35 +1,38 @@
 import '../stylesheets/main.scss';
 
 import * as React from 'react';
-import {render} from 'react-dom';
-import {Provider} from 'react-redux';
-import {applyMiddleware, createStore, combineReducers} from 'redux';
-import {BrowserRouter, Route} from 'react-router-dom';
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 import * as colors from '@material-ui/core/colors';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { applyMiddleware, createStore, combineReducers } from 'redux';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import Home from './components/pages/Home';
-import Speakers from './components/pages/Speakers';
-import Schedule from './components/pages/Schedule';
 import Tickets from './components/pages/Tickets';
 import Footer from './components/controls/Footer';
 import Header from './components/controls/Header';
+import Speakers from './components/pages/Speakers';
+import Schedule from './components/pages/Schedule';
+import SiteConfig from './components/dialogs/SiteConfig';
 
-
+import { CurrentState, ConfigState } from './models/states';
 import createSagaMiddleware from 'redux-saga';
 import current from './ducks/current';
+import config from './ducks/config';
 import sagas from './sagas/sagas';
-import { CurrentState } from './models/states';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export interface ApplicationState {
-    readonly current: CurrentState
+    readonly current: CurrentState,
+    readonly config: ConfigState
 }
 
 const store = createStore(
     combineReducers<ApplicationState>({
-        current
+        current,
+        config
     }), applyMiddleware(sagaMiddleware)
 );
 
@@ -39,10 +42,12 @@ const theme = createMuiTheme({
         primary: {
             main: '#13191e',
         },
-        secondary: colors.lightBlue,
+        secondary: {
+            main: '#00abfe'
+        }
     },
     typography: {
-        htmlFontSize: 10,
+        htmlFontSize: 16,
     },
     overrides: {
         MuiAppBar: {
@@ -61,10 +66,15 @@ render(
             <BrowserRouter>
                 <div className="app-frame">
                     <Header />
-                    <Route exact path="/" component={Home} />
-                    <Route path="/speakers" component={Speakers} />
-                    <Route path="/schedule" component={Schedule} />
-                    <Route path="/buy-tickets" component={Tickets} />
+                    <SiteConfig theme={theme} />
+
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route path="/speakers" component={Speakers} />
+                        <Route path="/schedule" component={Schedule} />
+                        <Route path="/buy-tickets" component={Tickets} />
+                    </Switch>
+                    
                     <Footer />
                 </div>
             </BrowserRouter>

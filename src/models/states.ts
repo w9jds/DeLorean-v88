@@ -6,3 +6,7 @@ export type CurrentState = {
     profile: Profile;
     firebase: app.App;
 };
+
+export type ConfigState = {
+    open: boolean;
+}
