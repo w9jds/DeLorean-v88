@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
-import Map from '../controls/Map';
 
 import Logo from '../../assets/event-logo.svg';
 import * as background from '../../assets/intro-background.jpg';

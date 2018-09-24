@@ -22,6 +22,7 @@ import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/cur
 import { getUser, getUserProfile } from '../../selectors/current';
 import { Profile } from '../../models/user';
 import { openConfigDialog } from '../../ducks/config';
+import { getSiteConfig } from '../../sagas/current';
 
 const styleSheet: StyleRulesCallback = theme => ({ });
 
@@ -48,6 +49,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         props.setFirebaseApplication(this.firebase);
         auth().onAuthStateChanged(this.verifyLogin);
+        props.getSiteConfig();
     }
 
     googleLogin = () => {
@@ -176,7 +178,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     setUser, setUserProfile,
     setFirebaseApplication,
-    openConfigDialog
+    openConfigDialog, getSiteConfig
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(Header));

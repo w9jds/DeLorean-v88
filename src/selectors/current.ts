@@ -4,3 +4,4 @@ export const getFirebaseApp = (state: ApplicationState) => state.current.firebas
 export const getFirestore = (state: ApplicationState) => state.current.firebase.firestore();
 export const getUser = (state: ApplicationState) => state.current.user;
 export const getUserProfile = (state: ApplicationState) => state.current.profile;
+export const getCurrentConfig = (state: ApplicationState) => state.current.config;

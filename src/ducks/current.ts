@@ -1,20 +1,22 @@
 import { createAction, handleActions } from 'redux-actions';
-import { firestore, app } from 'firebase';
+import { app, User } from 'firebase';
 import { Reducer } from 'redux';
 import { CurrentState } from '../models/states';
-import { actionChannel } from 'redux-saga/effects';
 import { Profile } from '../models/user';
+import Configuration from '../models/config';
 
 export enum CurrentTypes {
     SET_USER = 'SET_USER',
     SET_PROFILE = 'SET_PROFILE',
-    SET_FIREBASE = 'SET_FIREBASE'
+    SET_FIREBASE = 'SET_FIREBASE',
+    SET_CONFIG = 'SET_CONFIG'
 }
 
 const initialState: CurrentState = {
     user: undefined,
     profile: undefined,
-    firebase: undefined
+    firebase: undefined,
+    config: undefined
 };
 
 const current: Reducer<CurrentState> = handleActions<any>({
@@ -30,10 +32,15 @@ const current: Reducer<CurrentState> = handleActions<any>({
         ...state,
         firebase: action.payload
     }),
+    [CurrentTypes.SET_CONFIG]: (state: CurrentState, action: ReturnType<typeof setSiteConfig>) => ({
+        ...state,
+        config: action.payload
+    })
 }, initialState);
 
-export const setUser = createAction<firebase.User>(CurrentTypes.SET_USER);
+export const setUser = createAction<User>(CurrentTypes.SET_USER);
 export const setUserProfile = createAction<Profile>(CurrentTypes.SET_PROFILE);
 export const setFirebaseApplication = createAction<app.App>(CurrentTypes.SET_FIREBASE);
+export const setSiteConfig = createAction<Configuration>(CurrentTypes.SET_CONFIG);
 
 export default current;

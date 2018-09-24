@@ -23,7 +23,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
-import { getFirestore } from '../../selectors/current';
+import { getFirestore, getCurrentConfig } from '../../selectors/current';
 import Configuration from '../../models/config';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
@@ -65,11 +65,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
     constructor(props: SiteConfigProps) {
         super(props);
 
-        this.state = {
-            email: 'contact@devfest.io',
-            venueName: '',
-            address: ''
-        }
+        this.state = this.buildStateFromProps(props);
     }
 
     handleClose = () => {
@@ -77,8 +73,12 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.autocomplete = null;
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps: SiteConfigProps) {
         let element = document.getElementById('venue-address');
+
+        if (!prevProps.config && this.props.config) {
+            this.setState(this.buildStateFromProps(this.props));
+        }
 
         if (window['google'] && element && this.props.open && !this.autocomplete) {
             this.autocomplete = new google.maps.places.Autocomplete(element as HTMLInputElement, {
@@ -86,6 +86,12 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
             });
         }
     }
+
+    buildStateFromProps = (props: SiteConfigProps) => ({
+        email: props.config ? props.config.email : '',
+        venueName: props.config ? props.config.venue.name : '',
+        address: props.config ? props.config.venue.address : ''
+    });
 
     save = async () => {
         let update: Configuration;
@@ -163,7 +169,8 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     open: isConfigDialogOpen(state),
-    firestore: getFirestore(state)
+    firestore: getFirestore(state),
+    config: getCurrentConfig(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({ closeConfigDialog }, dispatch);
