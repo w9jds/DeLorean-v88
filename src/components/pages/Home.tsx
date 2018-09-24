@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import Map from '../controls/Map';
 
 import Logo from '../../assets/event-logo.svg';
 import * as background from '../../assets/intro-background.jpg';
@@ -43,7 +43,7 @@ class Home extends React.Component {
 
                 </section>
                 <section className="venue">
-                    
+
                 </section>
                 <section className="sponsors">
                     <header>

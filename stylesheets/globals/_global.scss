@@ -79,6 +79,10 @@ ol, ul {
     margin-right: auto;
 }
 
+.pac-container {
+    z-index: 3000;
+}
+
 .flex-auto {
     flex: 1 1 auto !important;
 }

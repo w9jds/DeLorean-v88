@@ -40,10 +40,7 @@ const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: {
-            main: '#13191e',
-        },
-        secondary: {
-            main: '#00abfe'
+            main: '#00abfe',
         }
     },
     typography: {
@@ -51,6 +48,10 @@ const theme = createMuiTheme({
     },
     overrides: {
         MuiAppBar: {
+            colorPrimary: {
+                backgroundColor: '#13191e',
+                color: '#fff'
+            },
             root: {
                 boxShadow: 'none'
             }
