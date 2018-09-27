@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const { DevfestDetails } = require('./config/delorean.config.js');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-const plugins = [];
+let plugins = [];
 
 if (NODE_ENV !== 'development') {
     plugins = plugins.concat([

@@ -1,16 +1,13 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
 
-class Speakers extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-    }
+type SpeakersProps = RouteComponentProps;
+class Speakers extends React.Component<SpeakersProps> {
 
     render() {
         return (
-            <div></div>
-        )
+            <div />
+        );
     }
 
 }

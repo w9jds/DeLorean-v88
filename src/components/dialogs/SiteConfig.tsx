@@ -56,7 +56,11 @@ type SiteConfigState = {
     email: string;
     address: string;
     venueName: string;
-}
+    startDate: string;
+    endDate: string;
+    picture: string;
+    multiDay: boolean;
+};
 
 class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
 
@@ -68,11 +72,6 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.state = this.buildStateFromProps(props);
     }
 
-    handleClose = () => {
-        this.props.closeConfigDialog();
-        this.autocomplete = null;
-    }
-
     componentDidUpdate(prevProps: SiteConfigProps) {
         let element = document.getElementById('venue-address');
 
@@ -80,18 +79,22 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
             this.setState(this.buildStateFromProps(this.props));
         }
 
-        if (window['google'] && element && this.props.open && !this.autocomplete) {
+        if (google && element && this.props.open && !this.autocomplete) {
             this.autocomplete = new google.maps.places.Autocomplete(element as HTMLInputElement, {
-                fields: ['photos', 'geometry', 'formatted_address']
+                fields: ['photos', 'geometry', 'formatted_address', 'place_id', 'url']
             });
         }
     }
 
     buildStateFromProps = (props: SiteConfigProps) => ({
         email: props.config ? props.config.email : '',
-        venueName: props.config ? props.config.venue.name : '',
-        address: props.config ? props.config.venue.address : ''
-    });
+        venueName: props.config && props.config.venue ? props.config.venue.name : '',
+        address: props.config && props.config.venue ? props.config.venue.address : '',
+        startDate: props.config && props.config.date ? props.config.date.startDate : new Date().toISOString(),
+        endDate: props.config && props.config.date ? props.config.date.endDate : new Date().toISOString(),
+        multiDay: props.config && props.config.date ? props.config.date.multiDay : false,
+        picture: props.config && props.config.venue ? props.config.venue.pictureUrl : ''
+    })
 
     save = async () => {
         let update: Configuration;
@@ -101,8 +104,11 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
             update = {
                 email: this.state.email,
                 venue: {
+                    url: place.url,
                     name: this.state.venueName,
+                    pictureUrl: this.state.picture,
                     address: place.formatted_address,
+                    placeId: place.place_id,
                     coordinates: {
                         lng: place.geometry.location.lng(),
                         lat: place.geometry.location.lat()
@@ -112,7 +118,11 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         }
         else {
             update = {
-                email: this.state.email
+                email: this.state.email,
+                venue: {
+                    name: this.state.venueName,
+                    pictureUrl: this.state.picture
+                }
             };
         }
 
@@ -120,10 +130,49 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.handleClose();
     }
 
-    onAddressChange = event => this.setState({ address: event.target.value });
+    handleClose = () => {
+        this.props.closeConfigDialog();
+        this.autocomplete = null;
+    }
 
+    onStartDateChange = date => this.setState({ startDate: date });
+    onEndDateChange = date => this.setState({ endDate: date });
+    onAddressChange = event => this.setState({ address: event.target.value });
     onNameChange = event => this.setState({ venueName: event.target.value });
+    onPictureChange = event => this.setState({ picture: event.target.value });
     
+    buildDateSection = () => {
+        const { classes } = this.props;
+
+        // if (this.state.multiDay) {
+        //     return (
+        //         <div>
+        //             <FormControl className={classes.formControl}>
+        //                 <DatePicker label="Start Date"
+        //                     value={this.state.startDate}
+        //                     onChange={this.onStartDateChange}
+        //                     animateYearScrolling />
+        //             </FormControl>
+        //             <FormControl className={classes.formControl}>
+        //                 <DatePicker label="End Date"
+        //                     value={this.state.endDate}
+        //                     onChange={this.onEndDateChange}
+        //                     animateYearScrolling />
+        //             </FormControl>
+        //         </div>
+        //     )
+        // }
+
+        // return (
+        //     <FormControl className={classes.formControl}>
+        //         <DatePicker label={this.state.multiDay ? 'Start Date' : 'Date'}
+        //             value={this.state.startDate}
+        //             onChange={this.onStartDateChange}
+        //             animateYearScrolling />
+        //     </FormControl>
+        // );
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -144,6 +193,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                 </AppBar>
 
                 <div className={classes.dialogForm}>
+                    {this.buildDateSection()}
                     <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="contact-email">Email</InputLabel>
                         <Input id="contact-email" value={this.state.email} />
@@ -155,14 +205,18 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                         <FormHelperText>Displayed in intro (top of home page)</FormHelperText>
                     </FormControl>
                     <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="venue-picture">Venue Picture</InputLabel>
+                        <Input id="venue-picture" value={this.state.picture} onChange={this.onPictureChange} />
+                        <FormHelperText>Displays in card on venue map</FormHelperText>
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="venue-address">Venue Address</InputLabel>
                         <Input id="venue-address" value={this.state.address} onChange={this.onAddressChange} />
                         <FormHelperText>Used to build static Google Map</FormHelperText>
                     </FormControl>
                 </div>
-
             </Dialog>
-        )
+        );
     }
 
 }

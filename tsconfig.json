@@ -11,15 +11,20 @@
       "importHelpers": true,
       "removeComments": true,
       "preserveConstEnums": true,
-      "strictNullChecks": false
+      "strictNullChecks": false,
+      "typeRoots": [
+        "node_modules/@types",
+        "node_modules"
+      ],
+      "types": [
+        "googlemaps", "node", "react", "react-dom", "react-redux",
+        "react-router", "react-router-dom", "redux-actions"
+      ]
     },
-    "exclude": [
-      "node_modules",
-      "build",
-      "scripts",
-      "webpack"
-    ],
-    "types": [
-      "typePatches"
+    "include": [
+      "src",
+      // "node_modules/**/*.d.ts",
+      // "node_modules/@types/**/*.d.ts",
+      "typings.d.ts"
     ]
 }

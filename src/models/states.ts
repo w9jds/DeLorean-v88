@@ -11,4 +11,4 @@ export type CurrentState = {
 
 export type ConfigState = {
     open: boolean;
-}
+};

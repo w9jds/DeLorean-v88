@@ -35,10 +35,10 @@ class Tickets extends React.Component<TicketsProps> {
                     <Typography variant="title" color="inherit" className={classes.flex}>
                         {`Register for ${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`}
                     </Typography>
-                    <div id={`devfest-eventbright-checkout-${EventbriteConfig.eventId}`}></div>
+                    <div id={`devfest-eventbright-checkout-${EventbriteConfig.eventId}`} />
                 </div>
             </main>
-        )
+        );
     }
 
 }

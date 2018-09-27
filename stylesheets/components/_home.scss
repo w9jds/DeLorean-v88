@@ -4,6 +4,16 @@
     position: relative;
     overflow: hidden;
     min-height: 300px;
+
+    .card {
+        position: absolute;
+        z-index: 100;
+        top: 50%;
+        right: 30%;
+        max-width: 400px;
+        -webkit-transform: translate3d(50%, -50%, 0);
+        transform: translate3d(50%, -50%, 0);
+    }
 }
 
 .intro {
@@ -39,11 +49,22 @@
     }
 }
 
+.map-container {
+    display: flex;
+    min-height: 600px;
+    align-items: center;
+}
+
+
 
 @media (min-width: 1004px) {
     .intro {
         min-height: 90vh;
         background-size: 100vw 90vh;
+    }
+
+    .map-container {
+        min-height: 90vh
     }
 }
 

@@ -3,7 +3,6 @@ import '../stylesheets/main.scss';
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import * as colors from '@material-ui/core/colors';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -25,8 +24,8 @@ import sagas from './sagas/sagas';
 const sagaMiddleware = createSagaMiddleware();
 
 export interface ApplicationState {
-    readonly current: CurrentState,
-    readonly config: ConfigState
+    readonly current: CurrentState;
+    readonly config: ConfigState;
 }
 
 const store = createStore(
@@ -63,19 +62,19 @@ sagaMiddleware.run(sagas);
 
 render(
     <Provider store={store}>
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={theme}>  
             <BrowserRouter>
                 <div className="app-frame">
                     <Header />
-                    <SiteConfig theme={theme} />
+                    <SiteConfig />
 
                     <Switch>
                         <Route exact path="/" component={Home} />
-                        <Route path="/speakers" component={Speakers} />
-                        <Route path="/schedule" component={Schedule} />
-                        <Route path="/buy-tickets" component={Tickets} />
+                        <Route exact path="/speakers" component={Speakers} />
+                        <Route exact path="/schedule" component={Schedule} />
+                        <Route exact path="/buy-tickets" component={Tickets} />
                     </Switch>
-                    
+
                     <Footer />
                 </div>
             </BrowserRouter>

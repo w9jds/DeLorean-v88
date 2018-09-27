@@ -30,7 +30,7 @@ type HeaderProps = ReturnType<typeof styleSheet> & ReturnType<typeof mapStateToP
 type HeaderState = {
     accountMenuOpen: boolean;
     anchorEl: HTMLElement;
-}
+};
 
 class Header extends React.Component<HeaderProps, HeaderState> {
 
@@ -81,7 +81,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             this.props.setUser(user);
 
             let profile = await this.firebase.firestore().doc(`/users/${user.uid}`).get();
-            this.props.setUserProfile(profile.data() as Profile)
+            this.props.setUserProfile(profile.data() as Profile);
         }
     }
 
@@ -104,7 +104,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     buildLoginItems = () => {
         if (!this.props.user) {
-            return <Button onClick={this.googleLogin}>Sign In</Button>
+            return <Button onClick={this.googleLogin}>Sign In</Button>;
         }
 
         return (
@@ -112,7 +112,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 <img className={this.state.accountMenuOpen ? 'user-selected' : ''} 
                     onClick={this.openAccountMenu} 
                     src={this.props.user.photoURL} />
-                <Popover classes={{ paper: "user-menu" }}
+                <Popover classes={{ paper: 'user-menu' }}
                     open={this.state.accountMenuOpen}
                     anchorEl={this.state.anchorEl}
                     onClose={this.handleClose}
@@ -136,7 +136,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
                 </Popover>
             </div>
-        )
+        );
     }
 
     render() {

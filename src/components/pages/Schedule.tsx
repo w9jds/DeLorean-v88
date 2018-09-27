@@ -1,16 +1,13 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
 
-class Schedule extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-    }
+type ScheduleProps = RouteComponentProps;
+class Schedule extends React.Component<ScheduleProps> {
 
     render() {
         return (
-            <div></div>
-        )
+            <div />
+        );
     }
 
 }
