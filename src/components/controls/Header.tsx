@@ -151,14 +151,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         </Link>
                     </div>
 
-                    <nav className="nav">
-                        <div>
-                            <Link to="/schedule">Schedule</Link>
-                        </div>
-                        <div>
-                            <Link to="/speakers">Speakers</Link>
-                        </div>
-                    </nav>
+                    <nav className="nav" />
 
                     <div className="login">
                         {this.buildLoginItems()}

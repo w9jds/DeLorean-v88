@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import Map from '../controls/Map';
 import Button from '@material-ui/core/Button';
+import RightArrow from '@material-ui/icons/KeyboardArrowRight';
+import { EventbriteConfig } from '../../../config/delorean.config';
 
 import { ApplicationState } from '../..';
 import { getCurrentConfig } from '../../selectors/current';
@@ -11,13 +13,24 @@ import Logo from '../../assets/event-logo.svg';
 import * as background from '../../assets/intro-background.jpg';
 import { RouteComponentProps } from 'react-router';
 
+import { DevfestDetails } from '../../../config/delorean.config';
+
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
 class Home extends React.Component<MainLayoutProps> {
 
-    getTickets = () => {
-        this.props.history.push('/buy-tickets');
+    constructor(props: MainLayoutProps) {
+        super(props);
+
+        window['EBWidgets'].createWidget({
+            widgetType: 'checkout',
+            eventId: EventbriteConfig.eventId,
+            modal: true,
+            modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
+        });
     }
+
+    openCalltoAction = () => window.open(this.props.config.papercall.url);
 
     render() {
         let { config } = this.props;
@@ -37,13 +50,31 @@ class Home extends React.Component<MainLayoutProps> {
                         <p>{config && config.venue ? config.venue.name : ''}</p>
 
                         <div className="mt-4">
-                            <Button variant="contained" color="secondary" onClick={this.getTickets}>
+                            <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
                                 Get Tickets
                             </Button>
                         </div>
                     </div>
                 </section>
-                <section className="pictures" />
+                
+                {
+                    config && config.papercall ?
+                        <section className="call-to-action">
+                            <div className="container">
+                                <h1 className="container-thin">
+                                    {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
+                                </h1>
+
+                                <p>Consider submitting your talk by December 1st, 2018</p>
+
+                                <div className="action">
+                                    <Button variant="fab" onClick={this.openCalltoAction}>
+                                        <RightArrow />
+                                    </Button>
+                                </div>
+                            </div>
+                        </section> : null
+                }
 
                 {
                     config && config.venue ?
@@ -52,10 +83,6 @@ class Home extends React.Component<MainLayoutProps> {
                         </section> : null
                 }
 
-                <section className="sponsors">
-                    <header />
-                    <div />
-                </section>
             </main>
         );
     }

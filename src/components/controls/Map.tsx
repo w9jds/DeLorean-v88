@@ -94,7 +94,7 @@ class Map extends React.Component<MapProps> {
 
     buildGoogleMap = () => {
         this.map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
+            zoom: 16,
             zoomControl: false,
             mapTypeControl: false,
             scaleControl: false,

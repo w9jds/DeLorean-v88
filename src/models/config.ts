@@ -16,4 +16,8 @@ export default interface Configuration {
         startDate?: string;
         endDate?: string;
     };
+    papercall?: {
+        url?: string;
+        closing?: Date;
+    };
 }

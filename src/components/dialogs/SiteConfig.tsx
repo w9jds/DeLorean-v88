@@ -56,10 +56,8 @@ type SiteConfigState = {
     email: string;
     address: string;
     venueName: string;
-    startDate: string;
-    endDate: string;
     picture: string;
-    multiDay: boolean;
+    papercall: string;
 };
 
 class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
@@ -90,38 +88,34 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         email: props.config ? props.config.email : '',
         venueName: props.config && props.config.venue ? props.config.venue.name : '',
         address: props.config && props.config.venue ? props.config.venue.address : '',
-        startDate: props.config && props.config.date ? props.config.date.startDate : new Date().toISOString(),
-        endDate: props.config && props.config.date ? props.config.date.endDate : new Date().toISOString(),
-        multiDay: props.config && props.config.date ? props.config.date.multiDay : false,
-        picture: props.config && props.config.venue ? props.config.venue.pictureUrl : ''
+        picture: props.config && props.config.venue ? props.config.venue.pictureUrl : '',
+        papercall: props.config && props.config.papercall ? props.config.papercall.url : '',
+
     })
 
     save = async () => {
-        let update: Configuration;
-        let place = this.autocomplete.getPlace();
+        let update: Configuration = {
+            email: this.state.email,
+            venue: {
+                name: this.state.venueName,
+                pictureUrl: this.state.picture
+            },
+            papercall: {
+                url: this.state.papercall
+            }
+        };
 
+        let place = this.autocomplete.getPlace();
         if (this.state.address && place) {
-            update = {
-                email: this.state.email,
-                venue: {
-                    url: place.url,
-                    name: this.state.venueName,
-                    pictureUrl: this.state.picture,
-                    address: place.formatted_address,
-                    placeId: place.place_id,
-                    coordinates: {
-                        lng: place.geometry.location.lng(),
-                        lat: place.geometry.location.lat()
-                    }
-                }
-            };
-        }
-        else {
-            update = {
-                email: this.state.email,
-                venue: {
-                    name: this.state.venueName,
-                    pictureUrl: this.state.picture
+            update.venue = {
+                url: place.url,
+                name: this.state.venueName,
+                pictureUrl: this.state.picture,
+                address: place.formatted_address,
+                placeId: place.place_id,
+                coordinates: {
+                    lng: place.geometry.location.lng(),
+                    lat: place.geometry.location.lat()
                 }
             };
         }
@@ -135,43 +129,12 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.autocomplete = null;
     }
 
-    onStartDateChange = date => this.setState({ startDate: date });
-    onEndDateChange = date => this.setState({ endDate: date });
+    // onStartDateChange = date => this.setState({ startDate: date });
+    // onEndDateChange = date => this.setState({ endDate: date });
     onAddressChange = event => this.setState({ address: event.target.value });
     onNameChange = event => this.setState({ venueName: event.target.value });
     onPictureChange = event => this.setState({ picture: event.target.value });
-    
-    buildDateSection = () => {
-        const { classes } = this.props;
-
-        // if (this.state.multiDay) {
-        //     return (
-        //         <div>
-        //             <FormControl className={classes.formControl}>
-        //                 <DatePicker label="Start Date"
-        //                     value={this.state.startDate}
-        //                     onChange={this.onStartDateChange}
-        //                     animateYearScrolling />
-        //             </FormControl>
-        //             <FormControl className={classes.formControl}>
-        //                 <DatePicker label="End Date"
-        //                     value={this.state.endDate}
-        //                     onChange={this.onEndDateChange}
-        //                     animateYearScrolling />
-        //             </FormControl>
-        //         </div>
-        //     )
-        // }
-
-        // return (
-        //     <FormControl className={classes.formControl}>
-        //         <DatePicker label={this.state.multiDay ? 'Start Date' : 'Date'}
-        //             value={this.state.startDate}
-        //             onChange={this.onStartDateChange}
-        //             animateYearScrolling />
-        //     </FormControl>
-        // );
-    }
+    onPapercallChange = event => this.setState({ papercall: event.target.value });
 
     render() {
         const { classes } = this.props;
@@ -193,27 +156,37 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                 </AppBar>
 
                 <div className={classes.dialogForm}>
-                    {this.buildDateSection()}
                     <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="contact-email">Email</InputLabel>
                         <Input id="contact-email" value={this.state.email} />
                         <FormHelperText>Displayed in footer</FormHelperText>
                     </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="venue-name">Venue Name</InputLabel>
-                        <Input id="venue-name" value={this.state.venueName} onChange={this.onNameChange} />
-                        <FormHelperText>Displayed in intro (top of home page)</FormHelperText>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="venue-picture">Venue Picture</InputLabel>
-                        <Input id="venue-picture" value={this.state.picture} onChange={this.onPictureChange} />
-                        <FormHelperText>Displays in card on venue map</FormHelperText>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="venue-address">Venue Address</InputLabel>
-                        <Input id="venue-address" value={this.state.address} onChange={this.onAddressChange} />
-                        <FormHelperText>Used to build static Google Map</FormHelperText>
-                    </FormControl>
+
+                    <div>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="venue-name">Venue Name</InputLabel>
+                            <Input id="venue-name" value={this.state.venueName} onChange={this.onNameChange} />
+                            <FormHelperText>Displayed in intro (top of home page)</FormHelperText>
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="venue-picture">Venue Picture</InputLabel>
+                            <Input id="venue-picture" value={this.state.picture} onChange={this.onPictureChange} />
+                            <FormHelperText>Displays in card on venue map</FormHelperText>
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="venue-address">Venue Address</InputLabel>
+                            <Input id="venue-address" value={this.state.address} onChange={this.onAddressChange} />
+                            <FormHelperText>Used to build static Google Map</FormHelperText>
+                        </FormControl>
+                    </div>
+
+                    <div>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="venue-name">Submit Talk Uri</InputLabel>
+                            <Input id="venue-name" value={this.state.papercall} onChange={this.onPapercallChange} />
+                        </FormControl>
+                    </div>
+
                 </div>
             </Dialog>
         );

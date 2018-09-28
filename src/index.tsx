@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+import { SiteTheme } from '../config/delorean.config';
+
 import Home from './components/pages/Home';
 import Tickets from './components/pages/Tickets';
 import Footer from './components/controls/Footer';
@@ -39,7 +41,10 @@ const theme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: {
-            main: '#00abfe',
+            main: SiteTheme.Primary,
+        },
+        secondary: {
+            main: SiteTheme.Secondary
         }
     },
     typography: {
@@ -48,8 +53,8 @@ const theme = createMuiTheme({
     overrides: {
         MuiAppBar: {
             colorPrimary: {
-                backgroundColor: '#13191e',
-                color: '#fff'
+                backgroundColor: SiteTheme.AppBar.Primary,
+                color: SiteTheme.AppBar.Color
             },
             root: {
                 boxShadow: 'none'
@@ -75,7 +80,6 @@ render(
                         <Route exact path="/buy-tickets" component={Tickets} />
                     </Switch>
 
-                    <Footer />
                 </div>
             </BrowserRouter>
         </MuiThemeProvider>
