@@ -1,9 +1,11 @@
 import { createAction, handleActions } from 'redux-actions';
-import { app, User } from 'firebase';
+
 import { Reducer } from 'redux';
 import { CurrentState } from '../models/states';
 import { Profile } from '../models/user';
 import Configuration from '../models/config';
+import { FirebaseApp } from '@firebase/app-types';
+import { User } from '@firebase/auth-types';
 
 export enum CurrentTypes {
     SET_USER = 'SET_USER',
@@ -40,7 +42,7 @@ const current: Reducer<CurrentState> = handleActions<any>({
 
 export const setUser = createAction<User>(CurrentTypes.SET_USER);
 export const setUserProfile = createAction<Profile>(CurrentTypes.SET_PROFILE);
-export const setFirebaseApplication = createAction<app.App>(CurrentTypes.SET_FIREBASE);
+export const setFirebaseApplication = createAction<FirebaseApp>(CurrentTypes.SET_FIREBASE);
 export const setSiteConfig = createAction<Configuration>(CurrentTypes.SET_CONFIG);
 
 export default current;

@@ -15,12 +15,12 @@ import { RouteComponentProps } from 'react-router';
 
 import { DevfestDetails } from '../../../config/delorean.config';
 
-type MainLayoutProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
+type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
-class Home extends React.Component<MainLayoutProps> {
+class Home extends React.Component<HomeProps> {
 
-    constructor(props: MainLayoutProps) {
-        super(props);
+    constructor(props: HomeProps, context: any) {
+        super(props, context);
 
         window['EBWidgets'].createWidget({
             widgetType: 'checkout',
@@ -30,7 +30,7 @@ class Home extends React.Component<MainLayoutProps> {
         });
     }
 
-    openCalltoAction = () => window.open(this.props.config.papercall.url);
+    openCalltoAction = () => window.open(this.props.config.event.papercall.url);
 
     render() {
         let { config } = this.props;
@@ -58,7 +58,7 @@ class Home extends React.Component<MainLayoutProps> {
                 </section>
                 
                 {
-                    config && config.papercall ?
+                    config && config.event && config.event.papercall ?
                         <section className="call-to-action">
                             <div className="container">
                                 <h1 className="container-thin">
@@ -79,7 +79,7 @@ class Home extends React.Component<MainLayoutProps> {
                 {
                     config && config.venue ?
                         <section className="venue">
-                            <Map theme={null} />
+                            <Map theme={this.context.theme} />
                         </section> : null
                 }
 

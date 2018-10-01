@@ -1,14 +1,14 @@
-import { eventChannel, buffers } from 'redux-saga';
+import { eventChannel } from 'redux-saga';
 import { put, take, call, cancel, fork, takeEvery } from 'redux-saga/effects';
-import { firestore, database } from 'firebase';
+import { DocumentReference, DocumentSnapshot } from '@firebase/firestore-types';
 
 export const FIREBASE_REMOVE_LISTENER_REQUESTED = 'FIREBASE_REMOVE_LISTENER_REQUESTED';
 
 let tasks = {};
 
 type Payload = {
-    ref: firestore.DocumentReference,
-    action: (snapshot: firestore.DocumentSnapshot, emit: any) => void
+    ref: DocumentReference,
+    action: (snapshot: DocumentSnapshot, emit: any) => void
 };
 
 export function* watchListener(eventName: string) {
@@ -34,7 +34,7 @@ function* forkListener(listenRequestAction: {type: string, payload: Payload}) {
     );
 }
 
-function* attachListeners(reference: firestore.DocumentReference, action: (snapshot: firestore.DocumentSnapshot, emit: any) => void) {
+function* attachListeners(reference: DocumentReference, action: (snapshot: DocumentSnapshot, emit: any) => void) {
     let channel = yield call(listener, reference, action);
 
     try {
@@ -47,7 +47,7 @@ function* attachListeners(reference: firestore.DocumentReference, action: (snaps
     }
 }
 
-const listener = (reference: firestore.DocumentReference, action: (snapshot: firestore.DocumentSnapshot, emit: any) => void) =>
-    eventChannel(emit => reference.onSnapshot((snapshot: firestore.DocumentSnapshot) => {
+const listener = (reference: DocumentReference, action: (snapshot: DocumentSnapshot, emit: any) => void) =>
+    eventChannel(emit => reference.onSnapshot((snapshot: DocumentSnapshot) => {
         action(snapshot, emit);
     }));

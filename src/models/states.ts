@@ -1,11 +1,13 @@
-import { app } from 'firebase';
 import { Profile } from './user';
 import Configuration from './config';
 
+import { FirebaseApp } from '@firebase/app-types';
+import { User } from '@firebase/auth-types';
+
 export type CurrentState = {
-    user: firebase.User;
+    user: User;
     profile: Profile;
-    firebase: app.App;
+    firebase: FirebaseApp;
     config: Configuration
 };
 

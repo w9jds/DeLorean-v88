@@ -1,23 +1,39 @@
 export default interface Configuration {
-    email?: string;
-    venue?: {
-        url?: string;
-        name?: string;
-        address?: string;
-        placeId?: string;
-        pictureUrl?: string;
-        coordinates?: {
-            lat: number;
-            lng: number;
-        }
+    org?: Organization;
+    venue?: Venue;
+    event?: Event;
+}
+
+interface Organization {
+    name?: any;
+    email?: any;
+    facebook?: any;
+    twitter?: any;
+    github?: any;
+    meetup?: any;
+}
+
+interface Venue {
+    url?: any;
+    name?: any;
+    address?: any;
+    placeId?: any;
+    pictureUrl?: any;
+    coordinates?: {
+        lat: number;
+        lng: number;
     };
-    date?: {
-        multiDay?: boolean;
-        startDate?: string;
-        endDate?: string;
-    };
-    papercall?: {
-        url?: string;
-        closing?: Date;
-    };
+}
+
+interface Event {
+    multiDay?: boolean;
+    startDate?: any;
+    endDate?: any;
+    papercall?: PaperCall;
+    sponsors?: any;
+}
+
+interface PaperCall {
+    url?: any;
+    closing?: Date;
 }

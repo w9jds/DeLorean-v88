@@ -1,60 +1,59 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Dispatch, bindActionCreators } from 'redux';
 
 import { ApplicationState } from '../..';
-import { FirebaseConfig } from '../../../config/delorean.config';
-import { app, auth, initializeApp } from 'firebase';
 
-import { StyleRulesCallback, withStyles } from '@material-ui/core';
+import firebase from '@firebase/app';
+import '@firebase/auth';
+
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
-import { getUser, getUserProfile } from '../../selectors/current';
-import { Profile } from '../../models/user';
+import { getUser, getUserProfile, getFirebaseApp } from '../../selectors/current';
+
 import { openConfigDialog } from '../../ducks/config';
 import { getSiteConfig } from '../../sagas/current';
 
-const styleSheet: StyleRulesCallback = theme => ({ });
+const styleSheet: StyleRulesCallback = theme => ({
+    tabs: {
+        height: '100%'
+    }
+});
 
-type HeaderProps = ReturnType<typeof styleSheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+type HeaderProps = WithStyles<typeof styleSheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 type HeaderState = {
     accountMenuOpen: boolean;
     anchorEl: HTMLElement;
+    route: number;
 };
 
 class Header extends React.Component<HeaderProps, HeaderState> {
-
-    private firebase: app.App;
 
     constructor(props: HeaderProps) {
         super(props);
 
         this.state = {
             accountMenuOpen: false,
-            anchorEl: null
+            anchorEl: null,
+            route: 0
         };
-
-        this.firebase = initializeApp(FirebaseConfig);
-        this.firebase.firestore().settings({ timestampsInSnapshots: true });
-
-        props.setFirebaseApplication(this.firebase);
-        auth().onAuthStateChanged(this.verifyLogin);
-        props.getSiteConfig();
     }
 
     googleLogin = () => {
-        let provider = new auth.GoogleAuthProvider();
-        this.firebase.auth().signInWithPopup(provider);
+        let provider = new firebase.auth.GoogleAuthProvider();
+        this.props.firebase.auth().signInWithPopup(provider);
     }
 
     openConfig = () => {
@@ -74,15 +73,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             anchorEl: e.currentTarget,
             accountMenuOpen: true
         });
-    }
-
-    verifyLogin = async (user: firebase.User) => {
-        if (user) {
-            this.props.setUser(user);
-
-            let profile = await this.firebase.firestore().doc(`/users/${user.uid}`).get();
-            this.props.setUserProfile(profile.data() as Profile);
-        }
     }
 
     buildMenuItems = () => {
@@ -139,24 +129,53 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         );
     }
 
+    onNavigationChanged = (event, value) => {
+        let route = '/';
+
+        switch (value) {
+            case 1:
+                route += 'schedule';
+                break;
+            case 2:
+                route += 'speakers';
+                break;
+            case 3:
+                route += 'team';
+                break;
+            default:
+                break;
+        }
+
+        this.props.history.push(route);
+        this.setState({ route: value });
+    }
+
     render() {
         const { classes } = this.props;
 
         return (
             <AppBar position="sticky" className="header">
-                <Toolbar className="inner container">
+                <div className="inner container">
                     <div className="logo">
                         <Link to="/">
                             <img src="https://gdg-logo-generator.appspot.com/gdg_icon.svg"/>
                         </Link>
                     </div>
 
-                    <nav className="nav" />
+                    <nav className="nav" >
+                        <Tabs value={this.state.route} onChange={this.onNavigationChanged}
+                              classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
+                            <Tab label="Home" />
+                            <Tab label="Schedule" />
+                            <Tab label="Speakers" />
+                            <Tab label="Team" />
+                        </Tabs>
+                    </nav>
 
                     <div className="login">
                         {this.buildLoginItems()}
                     </div>
-                </Toolbar>
+                </div>
             </AppBar>
         );
     }
@@ -165,7 +184,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     user: getUser(state),
-    profile: getUserProfile(state)
+    profile: getUserProfile(state),
+    firebase: getFirebaseApp(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
@@ -174,4 +194,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     openConfigDialog, getSiteConfig
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(Header));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(Header)));

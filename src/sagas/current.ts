@@ -1,12 +1,12 @@
-import * as React from 'react';
-
 import { put, takeEvery, all, select } from 'redux-saga/effects';
 import { watchListener } from './firestore';
 import { getFirestore } from '../selectors/current';
-import { firestore } from 'firebase';
+
 import Configuration from '../models/config';
 import { setSiteConfig } from '../ducks/current';
 import { createAction } from 'redux-actions';
+
+import { DocumentSnapshot } from '@firebase/firestore-types';
 
 enum CurrentSagaTypes {
     GET_SITE_CONFIG = 'GET_SITE_CONFIG'
@@ -24,7 +24,7 @@ function* loadSiteConfig() {
     });
 }
 
-const emitUpdateConfig = (snapshot: firestore.DocumentSnapshot, emit) => emit(
+const emitUpdateConfig = (snapshot: DocumentSnapshot, emit) => emit(
     setSiteConfig(snapshot.data() as Configuration)
 );
 

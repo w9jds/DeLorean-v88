@@ -2,6 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
+import firebase from '@firebase/app';
+import '@firebase/firestore';
+
 import { ApplicationState } from '../..';
 import { isConfigDialogOpen } from '../../selectors/config';
 import { closeConfigDialog } from '../../ducks/config';
@@ -52,13 +55,7 @@ const stylesheet: StyleRulesCallback = theme => ({
 });
 
 type SiteConfigProps = WithStyles<typeof stylesheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
-type SiteConfigState = {
-    email: string;
-    address: string;
-    venueName: string;
-    picture: string;
-    papercall: string;
-};
+type SiteConfigState = Record<string, any>;
 
 class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
 
@@ -84,33 +81,51 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         }
     }
 
-    buildStateFromProps = (props: SiteConfigProps) => ({
-        email: props.config ? props.config.email : '',
-        venueName: props.config && props.config.venue ? props.config.venue.name : '',
-        address: props.config && props.config.venue ? props.config.venue.address : '',
-        picture: props.config && props.config.venue ? props.config.venue.pictureUrl : '',
-        papercall: props.config && props.config.papercall ? props.config.papercall.url : '',
+    buildStateFromProps = (props: SiteConfigProps) => {
+        const { config } = props;
 
-    })
+        return  {
+            name: config && config.org ? config.org.name : '',
+            email: config && config.org ? config.org.email : '',
+            twitter: config && config.org ? config.org.twitter : '',
+            facebook: config && config.org ? config.org.facebook : '',
+            meetup: config && config.org ? config.org.meetup : '',
+            github: config && config.org ? config.org.github : '',
+            venueName: config && config.venue ? config.venue.name : '',
+            address: config && config.venue ? config.venue.address : '',
+            picture: config && config.venue ? config.venue.pictureUrl : '',
+            papercall: config && config.event && config.event.papercall ? config.event.papercall.url : '',
+        };
+    }
 
     save = async () => {
+        const remove = firebase.firestore.FieldValue.delete();
         let update: Configuration = {
-            email: this.state.email,
-            venue: {
-                name: this.state.venueName,
-                pictureUrl: this.state.picture
+            org: {
+                name: this.state.name || remove,
+                email: this.state.email || remove,
+                facebook: this.state.facebook || remove,
+                twitter: this.state.twitter || remove,
+                meetup: this.state.meetup || remove,
+                github: this.state.github || remove
             },
-            papercall: {
-                url: this.state.papercall
+            venue: {
+                name: this.state.venueName || remove,
+                pictureUrl: this.state.picture || remove
+            },
+            event: {
+                papercall: {
+                    url: this.state.papercall || remove
+                }
             }
         };
 
-        let place = this.autocomplete.getPlace();
+        let place = this.autocomplete ? this.autocomplete.getPlace() : null;
         if (this.state.address && place) {
             update.venue = {
                 url: place.url,
-                name: this.state.venueName,
-                pictureUrl: this.state.picture,
+                name: this.state.venueName || remove,
+                pictureUrl: this.state.picture || remove,
                 address: place.formatted_address,
                 placeId: place.place_id,
                 coordinates: {
@@ -129,12 +144,9 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.autocomplete = null;
     }
 
-    // onStartDateChange = date => this.setState({ startDate: date });
-    // onEndDateChange = date => this.setState({ endDate: date });
-    onAddressChange = event => this.setState({ address: event.target.value });
-    onNameChange = event => this.setState({ venueName: event.target.value });
-    onPictureChange = event => this.setState({ picture: event.target.value });
-    onPapercallChange = event => this.setState({ papercall: event.target.value });
+    onSettingChange = (e, name: string) => this.setState({ 
+        [name]: e.target.value 
+    })
 
     render() {
         const { classes } = this.props;
@@ -156,26 +168,48 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                 </AppBar>
 
                 <div className={classes.dialogForm}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="contact-email">Email</InputLabel>
-                        <Input id="contact-email" value={this.state.email} />
-                        <FormHelperText>Displayed in footer</FormHelperText>
-                    </FormControl>
+
+                    <div>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name">Name</InputLabel>
+                            <Input id="name" value={this.state.name} onChange={e => this.onSettingChange(e, 'name')} />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="contact-email">Email</InputLabel>
+                            <Input id="contact-email" value={this.state.email} onChange={e => this.onSettingChange(e, 'email')} />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="twitter">Twitter Handle</InputLabel>
+                            <Input id="twitter" value={this.state.twitter} onChange={e => this.onSettingChange(e, 'twitter')} />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="meetup">Meetup Handle</InputLabel>
+                            <Input id="meetup" value={this.state.meetup} onChange={e => this.onSettingChange(e, 'meetup')} />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="facebook">Facebook Handle</InputLabel>
+                            <Input id="facebook" value={this.state.facebook} onChange={e => this.onSettingChange(e, 'facebook')} />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="github">Github Handle</InputLabel>
+                            <Input id="github" value={this.state.github} onChange={e => this.onSettingChange(e, 'github')} />
+                        </FormControl>
+                    </div>
 
                     <div>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="venue-name">Venue Name</InputLabel>
-                            <Input id="venue-name" value={this.state.venueName} onChange={this.onNameChange} />
+                            <Input id="venue-name" value={this.state.venueName} onChange={e => this.onSettingChange(e, 'venueName')} />
                             <FormHelperText>Displayed in intro (top of home page)</FormHelperText>
                         </FormControl>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="venue-picture">Venue Picture</InputLabel>
-                            <Input id="venue-picture" value={this.state.picture} onChange={this.onPictureChange} />
+                            <Input id="venue-picture" value={this.state.picture} onChange={e => this.onSettingChange(e, 'picture')} />
                             <FormHelperText>Displays in card on venue map</FormHelperText>
                         </FormControl>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="venue-address">Venue Address</InputLabel>
-                            <Input id="venue-address" value={this.state.address} onChange={this.onAddressChange} />
+                            <Input id="venue-address" value={this.state.address} onChange={e => this.onSettingChange(e, 'address')} />
                             <FormHelperText>Used to build static Google Map</FormHelperText>
                         </FormControl>
                     </div>
@@ -183,7 +217,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                     <div>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="venue-name">Submit Talk Uri</InputLabel>
-                            <Input id="venue-name" value={this.state.papercall} onChange={this.onPapercallChange} />
+                            <Input id="venue-name" value={this.state.papercall} onChange={e => this.onSettingChange(e, 'papercall')} />
                         </FormControl>
                     </div>
 
