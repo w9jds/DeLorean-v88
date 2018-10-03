@@ -1,3 +1,5 @@
+import { Timestamp } from '@firebase/firestore-types';
+
 export default interface Configuration {
     org?: Organization;
     venue?: Venue;
@@ -35,5 +37,5 @@ interface Event {
 
 interface PaperCall {
     url?: any;
-    closing?: Date;
+    closing?: Timestamp;
 }

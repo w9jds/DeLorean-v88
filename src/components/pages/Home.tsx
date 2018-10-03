@@ -13,6 +13,8 @@ import Logo from '../../assets/event-logo.svg';
 import * as background from '../../assets/intro-background.jpg';
 import { RouteComponentProps } from 'react-router';
 
+import { isAfter, format } from 'date-fns';
+
 import { DevfestDetails } from '../../../config/delorean.config';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
@@ -31,6 +33,50 @@ class Home extends React.Component<HomeProps> {
     }
 
     openCalltoAction = () => window.open(this.props.config.event.papercall.url);
+
+    buildVenueSection = () => {
+        const { config } = this.props;
+
+        if (!config || !config.venue) {
+            return null;
+        }
+
+        return (
+            <section className="venue">
+                <Map theme={this.context.theme} />
+            </section>
+        );
+    }
+
+    buildPapercallSection = () => {
+        const { config } = this.props;
+        
+        if (!config || !config.event || !config.event.papercall) {
+            return null;
+        }
+
+        if (isAfter(new Date(), config.event.papercall.closing.toDate())) {
+            return null;
+        }
+
+        return (
+            <section className="call-to-action">
+                <div className="container">
+                    <h1 className="container-thin">
+                        {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
+                    </h1>
+
+                    <p>{`Consider submitting your talk by ${format(config.event.papercall.closing.toDate(), 'MMMM D, YYYY')}`}</p>
+
+                    <div className="action">
+                        <Button variant="fab" onClick={this.openCalltoAction}>
+                            <RightArrow />
+                        </Button>
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     render() {
         let { config } = this.props;
@@ -57,32 +103,8 @@ class Home extends React.Component<HomeProps> {
                     </div>
                 </section>
                 
-                {
-                    config && config.event && config.event.papercall ?
-                        <section className="call-to-action">
-                            <div className="container">
-                                <h1 className="container-thin">
-                                    {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
-                                </h1>
-
-                                <p>Consider submitting your talk by December 1st, 2018</p>
-
-                                <div className="action">
-                                    <Button variant="fab" onClick={this.openCalltoAction}>
-                                        <RightArrow />
-                                    </Button>
-                                </div>
-                            </div>
-                        </section> : null
-                }
-
-                {
-                    config && config.venue ?
-                        <section className="venue">
-                            <Map theme={this.context.theme} />
-                        </section> : null
-                }
-
+                {this.buildPapercallSection()}
+                {this.buildVenueSection()}
             </main>
         );
     }

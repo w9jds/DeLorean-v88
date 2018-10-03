@@ -1,3 +1,12 @@
+const SiteTheme = {
+    Secondary: '#03dac4',
+    Primary: '#1565c0',
+    AppBar: {
+        Primary: '#13191e',
+        Color: '#fff'
+    }
+}
+
 const DevfestDetails = {
     name: 'DevFest',
     location: 'Windy City',
@@ -22,6 +31,7 @@ const MapsConfig = {
 }
 
 module.exports = { 
+    SiteTheme,
     MapsConfig,
     DevfestDetails,
     FirebaseConfig,

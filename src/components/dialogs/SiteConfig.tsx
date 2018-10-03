@@ -26,6 +26,10 @@ import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
+import DatePicker from 'material-ui-pickers/DatePicker';
+
 import { getFirestore, getCurrentConfig } from '../../selectors/current';
 import Configuration from '../../models/config';
 
@@ -95,6 +99,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
             address: config && config.venue ? config.venue.address : '',
             picture: config && config.venue ? config.venue.pictureUrl : '',
             papercall: config && config.event && config.event.papercall ? config.event.papercall.url : '',
+            speakerClose: config && config.event && config.event.papercall ? config.event.papercall.closing.toDate() : new Date()
         };
     }
 
@@ -115,7 +120,8 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
             },
             event: {
                 papercall: {
-                    url: this.state.papercall || remove
+                    url: this.state.papercall || remove,
+                    closing: this.state.speakerClose || remove
                 }
             }
         };
@@ -144,6 +150,8 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.autocomplete = null;
     }
 
+    onSpeakerCloseDateChange = date => this.setState({ speakerClose: date});
+
     onSettingChange = (e, name: string) => this.setState({ 
         [name]: e.target.value 
     })
@@ -152,77 +160,85 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         const { classes } = this.props;
 
         return (
-            <Dialog fullScreen open={this.props.open}
-                onClose={this.handleClose}
-                TransitionComponent={Transition}>
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>
-                            Site Configuration
-                        </Typography>
-                        <Button color="inherit" onClick={this.save}>save</Button>
-                    </Toolbar>
-                </AppBar>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Dialog fullScreen open={this.props.open}
+                    onClose={this.handleClose}
+                    TransitionComponent={Transition}>
+                    <AppBar className={classes.appBar}>
+                        <Toolbar>
+                            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                                <CloseIcon />
+                            </IconButton>
+                            <Typography variant="title" color="inherit" className={classes.flex}>
+                                Site Configuration
+                            </Typography>
+                            <Button color="inherit" onClick={this.save}>save</Button>
+                        </Toolbar>
+                    </AppBar>
 
-                <div className={classes.dialogForm}>
+                    <div className={classes.dialogForm}>
 
-                    <div>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="name">Name</InputLabel>
-                            <Input id="name" value={this.state.name} onChange={e => this.onSettingChange(e, 'name')} />
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="contact-email">Email</InputLabel>
-                            <Input id="contact-email" value={this.state.email} onChange={e => this.onSettingChange(e, 'email')} />
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="twitter">Twitter Handle</InputLabel>
-                            <Input id="twitter" value={this.state.twitter} onChange={e => this.onSettingChange(e, 'twitter')} />
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="meetup">Meetup Handle</InputLabel>
-                            <Input id="meetup" value={this.state.meetup} onChange={e => this.onSettingChange(e, 'meetup')} />
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="facebook">Facebook Handle</InputLabel>
-                            <Input id="facebook" value={this.state.facebook} onChange={e => this.onSettingChange(e, 'facebook')} />
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="github">Github Handle</InputLabel>
-                            <Input id="github" value={this.state.github} onChange={e => this.onSettingChange(e, 'github')} />
-                        </FormControl>
+                        <div>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="name">Name</InputLabel>
+                                <Input id="name" value={this.state.name} onChange={e => this.onSettingChange(e, 'name')} />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="contact-email">Email</InputLabel>
+                                <Input id="contact-email" value={this.state.email} onChange={e => this.onSettingChange(e, 'email')} />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="twitter">Twitter Handle</InputLabel>
+                                <Input id="twitter" value={this.state.twitter} onChange={e => this.onSettingChange(e, 'twitter')} />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="meetup">Meetup Handle</InputLabel>
+                                <Input id="meetup" value={this.state.meetup} onChange={e => this.onSettingChange(e, 'meetup')} />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="facebook">Facebook Handle</InputLabel>
+                                <Input id="facebook" value={this.state.facebook} onChange={e => this.onSettingChange(e, 'facebook')} />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="github">Github Handle</InputLabel>
+                                <Input id="github" value={this.state.github} onChange={e => this.onSettingChange(e, 'github')} />
+                            </FormControl>
+                        </div>
+
+                        <div>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="venue-name">Venue Name</InputLabel>
+                                <Input id="venue-name" value={this.state.venueName} onChange={e => this.onSettingChange(e, 'venueName')} />
+                                <FormHelperText>Displayed in intro (top of home page)</FormHelperText>
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="venue-picture">Venue Picture</InputLabel>
+                                <Input id="venue-picture" value={this.state.picture} onChange={e => this.onSettingChange(e, 'picture')} />
+                                <FormHelperText>Displays in card on venue map</FormHelperText>
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="venue-address">Venue Address</InputLabel>
+                                <Input id="venue-address" value={this.state.address} onChange={e => this.onSettingChange(e, 'address')} />
+                                <FormHelperText>Used to build static Google Map</FormHelperText>
+                            </FormControl>
+                        </div>
+
+                        <div>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="venue-name">Submit Talk Uri</InputLabel>
+                                <Input id="venue-name" value={this.state.papercall} onChange={e => this.onSettingChange(e, 'papercall')} />
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <DatePicker 
+                                    label="Closing Date"
+                                    value={this.state.speakerClose} 
+                                    onChange={this.onSpeakerCloseDateChange} />
+                            </FormControl>
+                        </div>
+
                     </div>
-
-                    <div>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="venue-name">Venue Name</InputLabel>
-                            <Input id="venue-name" value={this.state.venueName} onChange={e => this.onSettingChange(e, 'venueName')} />
-                            <FormHelperText>Displayed in intro (top of home page)</FormHelperText>
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="venue-picture">Venue Picture</InputLabel>
-                            <Input id="venue-picture" value={this.state.picture} onChange={e => this.onSettingChange(e, 'picture')} />
-                            <FormHelperText>Displays in card on venue map</FormHelperText>
-                        </FormControl>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="venue-address">Venue Address</InputLabel>
-                            <Input id="venue-address" value={this.state.address} onChange={e => this.onSettingChange(e, 'address')} />
-                            <FormHelperText>Used to build static Google Map</FormHelperText>
-                        </FormControl>
-                    </div>
-
-                    <div>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="venue-name">Submit Talk Uri</InputLabel>
-                            <Input id="venue-name" value={this.state.papercall} onChange={e => this.onSettingChange(e, 'papercall')} />
-                        </FormControl>
-                    </div>
-
-                </div>
-            </Dialog>
+                </Dialog>
+            </MuiPickersUtilsProvider>
         );
     }
 
