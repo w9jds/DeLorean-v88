@@ -63,6 +63,7 @@ class MainLayout extends React.Component<MainLayoutProps> {
                     <Route exact path="/team" components={Team} />
                 </Switch>
                 
+                <Footer />
             </div>
         );
     }

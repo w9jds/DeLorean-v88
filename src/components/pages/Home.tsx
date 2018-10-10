@@ -15,7 +15,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { isAfter, format } from 'date-fns';
 
-import { DevfestDetails } from '../../../config/delorean.config';
+import { DevfestDetails, SiteTheme } from '../../../config/delorean.config';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
@@ -60,13 +60,13 @@ class Home extends React.Component<HomeProps> {
         }
 
         return (
-            <section className="call-to-action">
+            <section className="call-to-action" style={SiteTheme.CallToAction}>
                 <div className="container">
                     <h1 className="container-thin">
                         {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
                     </h1>
 
-                    <p>{`Consider submitting your talk by ${format(config.event.papercall.closing.toDate(), 'MMMM D, YYYY')}`}</p>
+                    <p>{`Consider submitting your talk by ${format(config.event.papercall.closing.toDate(), 'MMMM d, YYYY')}`}</p>
 
                     <div className="action">
                         <Button variant="fab" onClick={this.openCalltoAction}>
@@ -105,6 +105,24 @@ class Home extends React.Component<HomeProps> {
                 
                 {this.buildPapercallSection()}
                 {this.buildVenueSection()}
+
+                <section className="sponsors">
+                    <header style={SiteTheme.SponsorHeader}>
+                        <div className="container">
+                            <h1>Sponsors and Community Partners</h1>
+                        </div>
+                    </header>
+
+                    <div className="organizations">
+                        <div className="action container-thin">
+                            <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, `}</span>
+                            <a href={config && config.org ? `mailto:${config.org.email}` : ''}>email us</a>
+                        </div>
+
+                        <div className="container" />
+                    </div>
+                </section>
+
             </main>
         );
     }

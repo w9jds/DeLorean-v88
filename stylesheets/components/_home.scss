@@ -10,8 +10,34 @@
         top: 50%;
         right: 30%;
         max-width: 400px;
-        -webkit-transform: translate3d(50%, -50%, 0);
         transform: translate3d(50%, -50%, 0);
+        -webkit-transform: translate3d(50%, -50%, 0);
+    }
+}
+
+.sponsors {
+    display: flex;
+    flex-flow: column;
+
+    header {
+        display: flex;
+        width: 100vw;
+        min-height: 200px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .organizations {
+        background-color: #fff;
+        min-height: 250px;
+        color: #000;
+
+        .action {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 25px;
+            text-align: center;
+        }
     }
 }
 
@@ -19,7 +45,6 @@
     display: flex;
     min-height: 350px;
     align-items: center;
-    background-color: #5e8499;
 
     & > div {
         position: relative;
