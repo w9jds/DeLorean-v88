@@ -1,3 +1,3 @@
 import { ApplicationState } from '..';
 
-export const isConfigDialogOpen = (state: ApplicationState) => state.config.open;
+export const isConfigDialogOpen = (state: ApplicationState) => state.config.isOpen;

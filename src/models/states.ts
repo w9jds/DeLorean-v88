@@ -8,9 +8,10 @@ export type CurrentState = {
     user: User;
     profile: Profile;
     firebase: FirebaseApp;
-    config: Configuration
+    config: Configuration;
+    isEditMode: boolean;
 };
 
 export type ConfigState = {
-    open: boolean;
+    isOpen: boolean;
 };

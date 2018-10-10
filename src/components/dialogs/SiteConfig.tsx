@@ -152,8 +152,8 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
 
     onSpeakerCloseDateChange = date => this.setState({ speakerClose: date});
 
-    onSettingChange = (e, name: string) => this.setState({ 
-        [name]: e.target.value 
+    onSettingChange = (e, name: string) => this.setState({
+        [name]: e.target.value
     })
 
     render() {
@@ -229,9 +229,9 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                                 <Input id="venue-name" value={this.state.papercall} onChange={e => this.onSettingChange(e, 'papercall')} />
                             </FormControl>
                             <FormControl className={classes.formControl}>
-                                <DatePicker 
+                                <DatePicker
                                     label="Closing Date"
-                                    value={this.state.speakerClose} 
+                                    value={this.state.speakerClose}
                                     onChange={this.onSpeakerCloseDateChange} />
                             </FormControl>
                         </div>
@@ -254,6 +254,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({ closeCon
 
 const ConfigDialog = connect(mapStateToProps, mapDispatchToProps)(withStyles(stylesheet)(SiteConfig));
 
-export default makeAsyncScriptLoader(`https://maps.googleapis.com/maps/api/js?key=${MapsConfig.apiKey}&libraries=places`, { 
-    globalName: 'google' 
+export default makeAsyncScriptLoader(`https://maps.googleapis.com/maps/api/js?key=${MapsConfig.apiKey}&libraries=places`, {
+    globalName: 'google'
 })(ConfigDialog);

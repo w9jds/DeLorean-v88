@@ -8,15 +8,15 @@ export enum ConfigTypes {
 }
 
 const initialState: ConfigState = {
-    open: false
+    isOpen: false
 };
 
 const config: Reducer<ConfigState> = handleActions<any>({
     [ConfigTypes.SET_CONFIG_OPEN]: () => ({
-        open: true
+        isOpen: true
     }),
     [ConfigTypes.SET_CONFIG_CLOSE]: () => ({
-        open: false
+        isOpen: false
     })
 }, initialState);
 

@@ -2,10 +2,9 @@
   <img width="300" height="300" src="./event-logo.svg">
 </p>
 
-<p align="center">
-
-  # Code of Conduct
-</p>
+<h1 align="center">
+  Code of Conduct
+</h1>
 
 Purpose
 -------
@@ -24,31 +23,31 @@ Expected Behavior
 -----------------
 The following behaviors are expected and requested of all community members:
 
-- Participate in an authentic and active way. In doing so, you contribute to the health and longevity of this community. 
-- Exercise consideration and respect in your speech and actions. 
-- Attempt collaboration before a conflict. 
-- Refrain from demeaning, discriminatory, or harassing behavior and speech. 
-- Be mindful of your surroundings and your fellow participants. Alert community leaders if you notice a dangerous situation, someone in distress, or violations of this Code of Conduct, even if they seem inconsequential. 
+- Participate in an authentic and active way. In doing so, you contribute to the health and longevity of this community.
+- Exercise consideration and respect in your speech and actions.
+- Attempt collaboration before a conflict.
+- Refrain from demeaning, discriminatory, or harassing behavior and speech.
+- Be mindful of your surroundings and your fellow participants. Alert community leaders if you notice a dangerous situation, someone in distress, or violations of this Code of Conduct, even if they seem inconsequential.
 
 Unacceptable Behavior
 ---------------------
 The following actions are considered harassment and are unacceptable within our community:
 
-- Violence, threats of violence or violent language directed against another person. 
-- Sexist, racist, homophobic, transphobic, ableist or otherwise discriminatory jokes and language. 
-- Posting or displaying sexually explicit or violent material. 
-- Posting or threatening to post other people’s personally identifying information ("doxing"). 
-- Personal insults, particularly those related to gender, sexual orientation, race, religion, or disability. 
-- Inappropriate photography or recording. 
-- Inappropriate physical contact. You should have someone’s consent before touching them. 
-- Unwelcome sexual attention. This includes sexualized comments or jokes; inappropriate touching, groping, and unwelcome sexual advances. 
-- Deliberate intimidation, stalking or following (online or in person). 
-- Advocating for, or encouraging, any of the above behavior. 
-- Sustained disruption of community events, including talks and, presentations. 
+- Violence, threats of violence or violent language directed against another person.
+- Sexist, racist, homophobic, transphobic, ableist or otherwise discriminatory jokes and language.
+- Posting or displaying sexually explicit or violent material.
+- Posting or threatening to post other people’s personally identifying information ("doxing").
+- Personal insults, particularly those related to gender, sexual orientation, race, religion, or disability.
+- Inappropriate photography or recording.
+- Inappropriate physical contact. You should have someone’s consent before touching them.
+- Unwelcome sexual attention. This includes sexualized comments or jokes; inappropriate touching, groping, and unwelcome sexual advances.
+- Deliberate intimidation, stalking or following (online or in person).
+- Advocating for, or encouraging, any of the above behavior.
+- Sustained disruption of community events, including talks and, presentations.
 
 Consequences of Unacceptable Behavior
 -------------------------------------
-Unacceptable behavior from any community member, including sponsors and those with decision-making authority, will not be tolerated. 
+Unacceptable behavior from any community member, including sponsors and those with decision-making authority, will not be tolerated.
 
 Anyone asked to stop unacceptable behavior is expected to comply immediately. If a community member engages in unacceptable behavior, Windy City DevFest organizers may take any action they deem appropriate, up to and including a warning, temporary ban, or permanent expulsion from the community/event without warning (and without refund in the case of a paid event).
 
@@ -75,8 +74,8 @@ You can make a personal report by getting in contact with any of the event organ
 - Lead Organizer/GDG Mentor: Dan Baran – 630 212 1540 ([danbaran@gmail.com](mailto:danbaran@gmail.com))
 - Women Techmakers Lead/GDG Co-Organizer: Deana Greenfield – ([deanagreenfield@gmail.com](mailto:deanagreenfield@gmail.com))
 - GDG North America Program Manager: Kyle Paul
-- Emergency: 911 
-- ICASA Hotline (24/7): (888) 293-2080 
+- Emergency: 911
+- ICASA Hotline (24/7): (888) 293-2080
 
 When taking a personal report, our staff will ensure you are safe and cannot be overheard. They may involve other event staff to ensure your report is managed properly. Once safe, we'll ask you to tell us about what happened. This can be upsetting, but we'll handle it as respectfully as possible, and you can bring someone to support you. You won't be asked to confront anyone, and we won't tell anyone who you are.
 

@@ -7,7 +7,7 @@ import RightArrow from '@material-ui/icons/KeyboardArrowRight';
 import { EventbriteConfig } from '../../../config/delorean.config';
 
 import { ApplicationState } from '../..';
-import { getCurrentConfig } from '../../selectors/current';
+import { getCurrentConfig, getIsEditMode } from '../../selectors/current';
 
 import Logo from '../../assets/event-logo.svg';
 import * as background from '../../assets/intro-background.jpg';
@@ -50,7 +50,7 @@ class Home extends React.Component<HomeProps> {
 
     buildPapercallSection = () => {
         const { config } = this.props;
-        
+
         if (!config || !config.event || !config.event.papercall) {
             return null;
         }
@@ -102,7 +102,7 @@ class Home extends React.Component<HomeProps> {
                         </div>
                     </div>
                 </section>
-                
+
                 {this.buildPapercallSection()}
                 {this.buildVenueSection()}
 
@@ -129,7 +129,8 @@ class Home extends React.Component<HomeProps> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    config: getCurrentConfig(state)
+    config: getCurrentConfig(state),
+    isEditMode: getIsEditMode(state)
 });
 
 export default connect(mapStateToProps)(Home);

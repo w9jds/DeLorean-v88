@@ -20,7 +20,7 @@ import MenuList from '@material-ui/core/MenuList';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
+import { setFirebaseApplication, setUser, setUserProfile, toggleEditMode } from '../../ducks/current';
 import { getUser, getUserProfile, getFirebaseApp } from '../../selectors/current';
 
 import { openConfigDialog } from '../../ducks/config';
@@ -82,7 +82,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             items = items.concat(
                 <MenuItem key="user-management">User management</MenuItem>,
                 <MenuItem key="site-config" onClick={this.openConfig}>Site configuration</MenuItem>,
-                <MenuItem key="survey-data">Survey data</MenuItem>,
+                <MenuItem key="toggle-edit-mode" onClick={this.props.toggleEditMode}>Toggle Edit Mode</MenuItem>,
                 <Divider key="divider"/>
             );
         }
@@ -99,8 +99,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         return (
             <div>
-                <img className={this.state.accountMenuOpen ? 'user-selected' : ''} 
-                    onClick={this.openAccountMenu} 
+                <img className={this.state.accountMenuOpen ? 'user-selected' : ''}
+                    onClick={this.openAccountMenu}
                     src={this.props.user.photoURL} />
                 <Popover classes={{ paper: 'user-menu' }}
                     open={this.state.accountMenuOpen}
@@ -190,7 +190,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     setUser, setUserProfile,
-    setFirebaseApplication,
+    setFirebaseApplication, toggleEditMode,
     openConfigDialog, getSiteConfig
 }, dispatch);
 
