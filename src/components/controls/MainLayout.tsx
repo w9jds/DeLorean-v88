@@ -53,7 +53,7 @@ class MainLayout extends React.Component<MainLayoutProps> {
     render() {
         return (
             <div className="app-frame">
-                <Header theme={this.context.theme} />
+                <Header />
                 <SiteConfig />
 
                 <Switch>
@@ -62,7 +62,7 @@ class MainLayout extends React.Component<MainLayoutProps> {
                     <Route exact path="/schedule" component={Schedule} />
                     <Route exact path="/team" components={Team} />
                 </Switch>
-                
+
                 <Footer />
             </div>
         );

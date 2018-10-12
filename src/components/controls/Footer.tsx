@@ -44,7 +44,7 @@ class Footer extends React.Component<FooterProps> {
                         </a> : null
                     }
                     {
-                        config.org.meetup ? 
+                        config.org.meetup ?
                         <a href={`https://meetup.com/${config.org.meetup}`}>
                             <Meetup />
                         </a> : null

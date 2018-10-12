@@ -169,7 +169,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                             <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                                 <CloseIcon />
                             </IconButton>
-                            <Typography variant="title" color="inherit" className={classes.flex}>
+                            <Typography variant="h6" color="inherit" className={classes.flex}>
                                 Site Configuration
                             </Typography>
                             <Button color="inherit" onClick={this.save}>save</Button>
@@ -230,7 +230,6 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                             </FormControl>
                             <FormControl className={classes.formControl}>
                                 <DatePicker
-                                    label="Closing Date"
                                     value={this.state.speakerClose}
                                     onChange={this.onSpeakerCloseDateChange} />
                             </FormControl>

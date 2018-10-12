@@ -56,6 +56,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.firebase.auth().signInWithPopup(provider);
     }
 
+    signout = async () => {
+        await this.props.firebase.auth().signOut();
+        window.location.reload();
+    }
+
     openConfig = () => {
         this.handleClose();
         this.props.openConfigDialog();
@@ -80,7 +85,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         if (this.props.profile && this.props.profile.admin) {
             items = items.concat(
-                <MenuItem key="user-management">User management</MenuItem>,
                 <MenuItem key="site-config" onClick={this.openConfig}>Site configuration</MenuItem>,
                 <MenuItem key="toggle-edit-mode" onClick={this.props.toggleEditMode}>Toggle Edit Mode</MenuItem>,
                 <Divider key="divider"/>
@@ -88,7 +92,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
 
         return items.concat(
-            <MenuItem key="sign-out">Sign out</MenuItem>
+            <MenuItem key="sign-out" onClick={this.signout}>Sign out</MenuItem>
         );
     }
 
@@ -165,10 +169,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     <nav className="nav" >
                         <Tabs value={this.state.route} onChange={this.onNavigationChanged}
                               classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
-                            <Tab label="Home" />
-                            <Tab label="Schedule" />
-                            <Tab label="Speakers" />
-                            <Tab label="Team" />
+
+                            {
+                                /*
+                                    <Tab label="Home" />
+                                    <Tab label="Schedule" />
+                                    <Tab label="Speakers" />
+                                    <Tab label="Team" />
+                                */
+                            }
                         </Tabs>
                     </nav>
 

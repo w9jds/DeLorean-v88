@@ -127,14 +127,14 @@ class Map extends React.Component<MapProps> {
                 <Card className="card">
                     <CardActionArea>
                         {
-                            config.venue && config.venue.pictureUrl ? 
+                            config.venue && config.venue.pictureUrl ?
                                 <CardMedia
                                     className={classes.media}
                                     image={config.venue.pictureUrl}
                                     title={config.venue.name}/> : null
                         }
                         <CardContent>
-                            <Typography gutterBottom variant="headline" component="h2">
+                            <Typography gutterBottom variant="h2" component="h2">
                                 {config.venue.name}
                             </Typography>
                             <Typography component="p">
@@ -161,8 +161,8 @@ const mapStateToProps = (state: ApplicationState) => ({
     config: getCurrentConfig(state)
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({ 
-    closeConfigDialog 
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    closeConfigDialog
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(stylesheet)(Map));
