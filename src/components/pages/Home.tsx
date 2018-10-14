@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Map from '../controls/Map';
+import Map from '../sections/Map';
 import Button from '@material-ui/core/Button';
 import RightArrow from '@material-ui/icons/KeyboardArrowRight';
 import { EventbriteConfig } from '../../../config/delorean.config';
@@ -16,7 +16,7 @@ import { RouteComponentProps } from 'react-router';
 import { isAfter, format } from 'date-fns';
 
 import { DevfestDetails, SiteTheme } from '../../../config/delorean.config';
-import EditOverlay from '../controls/EditOverlay';
+import Sponsors from '../sections/Sponsors';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
@@ -122,11 +122,11 @@ class Home extends React.Component<HomeProps> {
                             <a href={config && config.org ? `mailto:${config.org.email}` : ''}>email us</a>
                         </div>
 
-                        <div className="container" />
+                        <div className="container">
+                            <Sponsors />
+                        </div>
                     </div>
                 </section>
-
-                {this.props.isEditMode ? <EditOverlay /> : null}
 
             </main>
         );
@@ -134,8 +134,7 @@ class Home extends React.Component<HomeProps> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    config: getCurrentConfig(state),
-    isEditMode: getIsEditMode(state)
+    config: getCurrentConfig(state)
 });
 
 export default connect(mapStateToProps)(Home);

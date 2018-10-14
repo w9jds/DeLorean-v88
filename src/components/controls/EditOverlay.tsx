@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../..';
-
-import { getIsEditMode } from '../../selectors/current';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { bindActionCreators, Dispatch } from 'redux';
 
 import { Add } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 
-type EditOverlayProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
+import CreateSponsor from '../dialogs/create/Sponsor';
+
+import { openDialogWindow } from '../../ducks/dialogs';
+import { getIsEditMode } from '../../selectors/current';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+
+type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
 class EditOverlay extends React.Component<EditOverlayProps> {
 
@@ -17,11 +21,25 @@ class EditOverlay extends React.Component<EditOverlayProps> {
 
     }
 
+    onAddClick = () => {
+        // this.props.location.
+
+        this.props.openDialogWindow(
+            <CreateSponsor />,
+            false
+        );
+    }
+
     render() {
         return (
-            <Button className="edit-fab" variant="fab">
-                <Add />
-            </Button>
+            <div className="overlay">
+                <div className="container fab-container">
+                    <Button className="edit-fab" variant="fab"
+                        onClick={this.onAddClick}>
+                        <Add />
+                    </Button>
+                </div>
+            </div>
         );
     }
 
@@ -31,4 +49,8 @@ const mapStateToProps = (state: ApplicationState) => ({
     isEditMode: getIsEditMode(state)
 });
 
-export default withRouter(connect(mapStateToProps)(EditOverlay));
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    openDialogWindow
+}, dispatch);
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditOverlay));

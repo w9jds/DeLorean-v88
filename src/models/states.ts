@@ -15,3 +15,9 @@ export type CurrentState = {
 export type ConfigState = {
     isOpen: boolean;
 };
+
+export type DialogsState = {
+    readonly open: boolean;
+    readonly fullscreen: boolean;
+    readonly views: React.ReactElement<any> | React.ReactElement<any>[];
+};

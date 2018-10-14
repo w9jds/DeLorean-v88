@@ -57,13 +57,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
 
     signout = async () => {
+        this.handleClose();
         await this.props.firebase.auth().signOut();
         window.location.reload();
     }
 
-    openConfig = () => {
+    onMenuClick = (handler: () => void) => {
         this.handleClose();
-        this.props.openConfigDialog();
+        handler();
     }
 
     handleClose = () => {
@@ -85,8 +86,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         if (this.props.profile && this.props.profile.admin) {
             items = items.concat(
-                <MenuItem key="site-config" onClick={this.openConfig}>Site configuration</MenuItem>,
-                <MenuItem key="toggle-edit-mode" onClick={this.props.toggleEditMode}>Toggle Edit Mode</MenuItem>,
+                <MenuItem key="site-config" onClick={() => this.onMenuClick(this.props.openConfigDialog)}>
+                    Site configuration
+                </MenuItem>,
+                <MenuItem key="toggle-edit-mode" onClick={() => this.onMenuClick(this.props.toggleEditMode)}>
+                    Toggle Edit Mode
+                </MenuItem>,
                 <Divider key="divider"/>
             );
         }

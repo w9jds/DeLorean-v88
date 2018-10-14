@@ -123,7 +123,7 @@ class Map extends React.Component<MapProps> {
         let { classes, config } = this.props;
 
         return (
-            <div>
+            <React.Fragment>
                 <Card className="card">
                     <CardActionArea>
                         {
@@ -134,7 +134,7 @@ class Map extends React.Component<MapProps> {
                                     title={config.venue.name}/> : null
                         }
                         <CardContent>
-                            <Typography gutterBottom variant="h2" component="h2">
+                            <Typography gutterBottom variant="h6" component="h6">
                                 {config.venue.name}
                             </Typography>
                             <Typography component="p">
@@ -151,7 +151,7 @@ class Map extends React.Component<MapProps> {
                 </Card>
 
                 <div id="map" className="map-container" />
-            </div>
+            </React.Fragment>
         );
     }
 

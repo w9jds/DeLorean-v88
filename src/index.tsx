@@ -9,10 +9,11 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { SiteTheme } from '../config/delorean.config';
 
-import { CurrentState, ConfigState } from './models/states';
+import { CurrentState, ConfigState, DialogsState } from './models/states';
 import createSagaMiddleware from 'redux-saga';
 import current from './ducks/current';
 import config from './ducks/config';
+import dialogs from './ducks/dialogs';
 import sagas from './sagas/sagas';
 import MainLayout from './components/controls/MainLayout';
 
@@ -21,12 +22,14 @@ const sagaMiddleware = createSagaMiddleware();
 export interface ApplicationState {
     readonly current: CurrentState;
     readonly config: ConfigState;
+    readonly dialogs: DialogsState;
 }
 
 const store = createStore(
     combineReducers<ApplicationState>({
         current,
-        config
+        config,
+        dialogs
     }), applyMiddleware(sagaMiddleware)
 );
 
@@ -42,6 +45,7 @@ const theme = createMuiTheme({
     },
     typography: {
         htmlFontSize: 16,
+        useNextVariants: true
     },
     overrides: {
         MuiAppBar: {
@@ -59,7 +63,7 @@ const theme = createMuiTheme({
 sagaMiddleware.run(sagas);
 
 render(
-    <MuiThemeProvider theme={theme}>  
+    <MuiThemeProvider theme={theme}>
         <Provider store={store}>
             <BrowserRouter>
                 <MainLayout />

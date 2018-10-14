@@ -1,6 +1,21 @@
-.edit-fab {
-    position: fixed !important;
-    right: 16px;
-    bottom: 16px;
+.overlay {
+    position: fixed;
     z-index: 1000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    .fab-container {
+        display: flex;
+        height: 100%;
+        width: 100%;
+    }
+
+    .edit-fab {
+        margin-left: auto;
+        margin-top: auto;
+        margin-bottom: 32px;
+    }
 }
+

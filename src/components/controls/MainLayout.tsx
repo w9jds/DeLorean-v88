@@ -12,7 +12,7 @@ import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 
 import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
-import { getUser, getUserProfile } from '../../selectors/current';
+import { getUser, getUserProfile, getIsEditMode } from '../../selectors/current';
 import { Profile } from '../../models/user';
 import { getSiteConfig } from '../../sagas/current';
 import Header from './Header';
@@ -21,8 +21,10 @@ import { Switch, Route, withRouter, RouteComponentProps } from 'react-router';
 import Footer from './Footer';
 import Team from '../pages/Team';
 import Home from '../pages/Home';
+import Dialogs from '../controls/Dialog';
 import Speakers from '../pages/Speakers';
 import Schedule from '../pages/Schedule';
+import EditOverlay from './EditOverlay';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -54,7 +56,9 @@ class MainLayout extends React.Component<MainLayoutProps> {
         return (
             <div className="app-frame">
                 <Header />
+
                 <SiteConfig />
+                <Dialogs />
 
                 <Switch>
                     <Route exact path="/" component={Home} />
@@ -62,6 +66,11 @@ class MainLayout extends React.Component<MainLayoutProps> {
                     <Route exact path="/schedule" component={Schedule} />
                     <Route exact path="/team" components={Team} />
                 </Switch>
+
+                {
+                    this.props.isEditMode ?
+                    <EditOverlay /> : null
+                }
 
                 <Footer />
             </div>
@@ -72,7 +81,8 @@ class MainLayout extends React.Component<MainLayoutProps> {
 
 const mapStateToProps = (state: ApplicationState) => ({
     user: getUser(state),
-    profile: getUserProfile(state)
+    profile: getUserProfile(state),
+    isEditMode: getIsEditMode(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({

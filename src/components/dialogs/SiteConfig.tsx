@@ -150,7 +150,9 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         this.autocomplete = null;
     }
 
-    onSpeakerCloseDateChange = date => this.setState({ speakerClose: date});
+    onSpeakerCloseDateChange = date => this.setState({
+        speakerClose: date
+    })
 
     onSettingChange = (e, name: string) => this.setState({
         [name]: e.target.value
