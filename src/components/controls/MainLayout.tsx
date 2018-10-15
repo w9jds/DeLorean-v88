@@ -15,7 +15,7 @@ import { User } from '@firebase/auth-types';
 import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
 import { getUser, getUserProfile, getIsEditMode } from '../../selectors/current';
 import { Profile } from '../../models/user';
-import { getSiteConfig } from '../../sagas/current';
+import { getSiteData } from '../../sagas/current';
 import Header from './Header';
 import SiteConfig from '../dialogs/SiteConfig';
 import { Switch, Route, withRouter, RouteComponentProps } from 'react-router';
@@ -41,7 +41,7 @@ class MainLayout extends React.Component<MainLayoutProps> {
 
         props.setFirebaseApplication(this.firebase);
         firebase.auth().onAuthStateChanged(this.verifyLogin);
-        props.getSiteConfig();
+        props.getSiteData();
     }
 
     verifyLogin = async (user: User) => {
@@ -89,7 +89,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     setUser, setUserProfile,
     setFirebaseApplication,
-    getSiteConfig
+    getSiteData
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainLayout));

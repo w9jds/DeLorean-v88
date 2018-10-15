@@ -122,7 +122,7 @@ class Home extends React.Component<HomeProps> {
                             <a href={config && config.org ? `mailto:${config.org.email}` : ''}>email us</a>
                         </div>
 
-                        <div className="container">
+                        <div className="container" style={{ margin: '16px auto' }}>
                             <Sponsors />
                         </div>
                     </div>

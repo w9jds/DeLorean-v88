@@ -20,11 +20,10 @@ import MenuList from '@material-ui/core/MenuList';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { setFirebaseApplication, setUser, setUserProfile, toggleEditMode } from '../../ducks/current';
+import { toggleEditMode } from '../../ducks/current';
 import { getUser, getUserProfile, getFirebaseApp } from '../../selectors/current';
 
 import { openConfigDialog } from '../../ducks/config';
-import { getSiteConfig } from '../../sagas/current';
 
 const styleSheet: StyleRulesCallback = theme => ({
     tabs: {
@@ -203,9 +202,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    setUser, setUserProfile,
-    setFirebaseApplication, toggleEditMode,
-    openConfigDialog, getSiteConfig
+    toggleEditMode, openConfigDialog
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(Header)));

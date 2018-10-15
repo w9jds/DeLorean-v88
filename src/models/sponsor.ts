@@ -1,5 +1,6 @@
 export default interface Sponsor {
     name: string;
-    logo: string;
-    tier: string;
+    logoUri: string;
+    siteUri: string;
+    tier?: string;
 }

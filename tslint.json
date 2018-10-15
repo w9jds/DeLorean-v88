@@ -8,7 +8,6 @@
             "check-space"
         ],
         "eofline": false,
-        "forin": true,
         "indent": [ true, "spaces" ],
         "interface-name": [true, "never-prefix"],
         "jsdoc-format": true,
@@ -67,10 +66,10 @@
             }
         ],
         "variable-name": [
-            true, 
-            "ban-keywords", 
-            "check-format", 
-            "allow-leading-underscore", 
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore",
             "allow-pascal-case"
         ],
         "whitespace": [

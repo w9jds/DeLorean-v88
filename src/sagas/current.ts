@@ -3,13 +3,14 @@ import { watchListener } from './firestore';
 import { getFirestore } from '../selectors/current';
 
 import Configuration from '../models/config';
-import { setSiteConfig } from '../ducks/current';
+import { setSiteConfig, setSponsors } from '../ducks/current';
 import { createAction } from 'redux-actions';
 
-import { DocumentSnapshot } from '@firebase/firestore-types';
+import { DocumentSnapshot, FirebaseFirestore, QuerySnapshot } from '@firebase/firestore-types';
+import Sponsor from '../models/sponsor';
 
 enum CurrentSagaTypes {
-    GET_SITE_CONFIG = 'GET_SITE_CONFIG'
+    LOAD_SITE_DATA = 'LOAD_SITE_DATA'
 }
 
 function* loadSiteConfig() {
@@ -24,15 +25,39 @@ function* loadSiteConfig() {
     });
 }
 
+function* loadEventSponsors() {
+    let firestore: FirebaseFirestore = yield select(getFirestore);
+
+    yield put({
+        type: '/sponsors',
+        payload: {
+            ref: firestore.collection('sponsors'),
+            action: emitSponsors
+        }
+    });
+}
+
 const emitUpdateConfig = (snapshot: DocumentSnapshot, emit) => emit(
     setSiteConfig(snapshot.data() as Configuration)
 );
 
-export const getSiteConfig = createAction(CurrentSagaTypes.GET_SITE_CONFIG);
+const emitSponsors = (snapshot: QuerySnapshot, emit) => {
+    let sponsors: Record<string, Sponsor> = {};
+
+    snapshot.forEach(document => {
+        sponsors[document.id] = document.data() as Sponsor;
+    });
+
+    emit(setSponsors(sponsors));
+};
+
+export const getSiteData = createAction(CurrentSagaTypes.LOAD_SITE_DATA);
 
 export function* sagas() {
     yield all([
-        takeEvery(CurrentSagaTypes.GET_SITE_CONFIG, loadSiteConfig),
-        watchListener('/config/devfest')
+        takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadSiteConfig),
+        takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadEventSponsors),
+        watchListener('/config/devfest'),
+        watchListener('/sponsors')
     ]);
 }
