@@ -43,6 +43,24 @@
     }
 }
 
+.drag-drop-preview {
+    width: 35%;
+    margin: 16px;
+    display: flex;
+
+    > div {
+        margin: auto 0;
+    }
+
+    img {
+        display: block;
+        margin: 0 auto;
+        max-width: 80%;
+        max-height: 90px;
+        width: auto;
+    }
+}
+
 .create-sponsor-form {
     display: flex;
     flex-direction: row;

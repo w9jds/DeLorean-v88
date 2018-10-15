@@ -1,17 +1,16 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-  	function isUserAdmin() {
-    	return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
-    }
-  
     match /users/{uid} {
       allow write: if false;
-      allow read: if request.auth.uid == uid || isUserAdmin();
+      allow read: if request.auth.uid == uid || request.auth.token.admin == true;
     }
     match /config/devfest {
-    	allow write: if isUserAdmin();
-      allow read: if true;
+    	allow write: if request.auth.token.admin == true;
+      allow read;
+    }
+    match /sponsors/{uid} {
+    	allow write: if request.auth.token.admin == true;
+    	allow read;
     }
   }
 }

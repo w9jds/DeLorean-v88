@@ -12,9 +12,10 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
-import Dropzone from 'react-dropzone';
-import { getFirestore } from '../../../selectors/current';
+import Dropzone, { FileWithPreview } from 'react-dropzone';
+import { getFirestore, getFirebaseApp } from '../../../selectors/current';
 import { closeDialogWindow } from '../../../ducks/dialogs';
+import { UploadTaskSnapshot } from '@firebase/storage-types';
 
 const stylesheet: StyleRulesCallback = theme => ({
     formControl: {
@@ -37,6 +38,10 @@ type SponsorDialogProps = WithStyles<typeof stylesheet> & ReturnType<typeof mapS
 interface SponsorDialogState {
     name?: string;
     site?: string;
+    file?: {
+        preview: string;
+        contents: File;
+    };
 }
 
 class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogState> {
@@ -46,7 +51,8 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
 
         this.state = {
             name: '',
-            site: ''
+            site: '',
+            file: null
         };
 
     }
@@ -55,9 +61,53 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
         [name]: e.target.value
     })
 
-    onSaveSponsor = () => {
+    onFileLoaded = (preview: string, file: File) => this.setState({
+        file: { preview, contents: file }
+    })
+
+    onSaveSponsor = async () => {
+        let storage = this.props.firebase.storage().ref('sponsors');
+        let sponsor = await this.props.firestore.doc(`/sponsors/${this.state.name}`).get();
+
+        if (!sponsor.exists && this.state.name && this.state.site && this.state.file) {
+            storage.child(this.state.name)
+                .put(this.state.file.contents)
+                .then(this.onImageStored);
+        }
+    }
+
+    onImageStored = async (task: UploadTaskSnapshot) => {
+        await this.props.firestore.doc(`/sponsors/${this.state.name}`).set({
+            name: this.state.name,
+            siteUrl: this.state.site,
+            logoUrl: await task.ref.getDownloadURL()
+        });
 
         this.props.closeDialogWindow();
+    }
+
+    onFileDrop = (accepted: FileWithPreview[], rejected: FileWithPreview[], e: React.DragEvent<HTMLDivElement>) => {
+        if (accepted && accepted.length > 0 && e.dataTransfer.files.length > 0) {
+            this.onFileLoaded(accepted[0].preview, e.dataTransfer.files[0]);
+        }
+    }
+
+    buildDropZone = () => {
+        if (!this.state.file) {
+            return (
+                <Dropzone onDrop={this.onFileDrop} className="drag-drop-logo">
+                    <p>Drop sponsor logo</p>
+                </Dropzone>
+            );
+        }
+
+        return (
+            <div className="drag-drop-preview">
+                <div>
+                    <img src={this.state.file.preview} />
+                </div>
+            </div>
+        );
     }
 
     render() {
@@ -69,9 +119,7 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
                 <DialogContent>
 
                     <div className="create-sponsor-form">
-                        <Dropzone className="drag-drop-logo">
-                            <p>Drop sponsor logo</p>
-                        </Dropzone>
+                        {this.buildDropZone()}
 
                         <div className="sponsor-details">
                             <FormControl className={classes.formControl}>
@@ -97,7 +145,8 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    firestore: getFirestore(state)
+    firestore: getFirestore(state),
+    firebase: getFirebaseApp(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({

@@ -7,6 +7,7 @@ import { FirebaseConfig } from '../../../config/delorean.config';
 
 import firebase from '@firebase/app';
 import '@firebase/firestore';
+import '@firebase/storage';
 
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';

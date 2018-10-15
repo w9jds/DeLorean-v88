@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
-import { auth, initializeApp } from 'firebase-admin';
+import { initializeApp } from 'firebase-admin';
+import AuthHandlers from './handlers/Auth';
 
 const firebase = initializeApp();
 
@@ -7,10 +8,9 @@ firebase.firestore().settings({
     timestampsInSnapshots: true
 });
 
-export const createProfile = functions.auth.user().onCreate((user: auth.UserRecord) => {
-    return firebase.firestore().doc(`/users/${user.uid}`).set({
-        name: user.displayName,
-        email: user.email,
-        admin: false
-    });
-});
+const loginHandlers = new AuthHandlers(firebase);
+
+export const createProfile = functions.auth.user()
+    .onCreate(loginHandlers.exportNewUser);
+export const updateClaims = functions.firestore.document('/users/{uid}')
+    .onUpdate(loginHandlers.onClaimsChange);
