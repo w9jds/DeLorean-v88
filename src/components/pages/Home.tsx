@@ -22,8 +22,7 @@ type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
 class Home extends React.Component<HomeProps> {
 
-    constructor(props: HomeProps, context: any) {
-        super(props, context);
+    componentDidMount() {
 
         window['EBWidgets'].createWidget({
             widgetType: 'checkout',
@@ -31,6 +30,7 @@ class Home extends React.Component<HomeProps> {
             modal: true,
             modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
         });
+
     }
 
     openCalltoAction = () => window.open(this.props.config.event.papercall.url);
@@ -92,9 +92,8 @@ class Home extends React.Component<HomeProps> {
                             A community-run conference offering sessions, hack-a-thons, and codelabs accross many different technologies
                         </h1>
 
-                        <h5 className="mb-2">Feb 01, 2019</h5>
-
-                        <p>{config && config.venue ? config.venue.name : ''}</p>
+                        <h3>Feb 01, 2019</h3>
+                        <h3>{config && config.venue ? config.venue.name : ''}</h3>
 
                         <div className="mt-4">
                             <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">

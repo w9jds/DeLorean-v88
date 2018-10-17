@@ -1,12 +1,13 @@
-const path = require('path');
-const app = require('./package.json');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const { DevfestDetails } = require('./config/delorean.config.js');
+let path = require('path');
+let app = require('./package.json');
+let webpack = require('webpack');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let { DevfestDetails } = require('./config/delorean.config.js');
+let FaviconsWebpackPlugin = require('favicons-webpack-plugin')
+let plugins = [];
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-let plugins = [];
 
 if (NODE_ENV !== 'development') {
     plugins = plugins.concat([
@@ -96,6 +97,7 @@ module.exports = {
         historyApiFallback: true,
     },
     plugins: [
+        new FaviconsWebpackPlugin('./src/assets/event-logo.svg'),
         new ExtractTextPlugin('styles/main.css'),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
@@ -105,7 +107,9 @@ module.exports = {
             'NODE_ENV'
         ]),
         new HtmlWebpackPlugin({
-            title: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
+            eventName: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
+            description: DevfestDetails.description,
+            url: DevfestDetails.url,
             filename: 'index.html',
             environment: NODE_ENV,
             template: path.join(__dirname, './template.ejs'),

@@ -77,11 +77,17 @@
         width: 100%;
         height: 100%;
         position: absolute;
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: rgba(0, 0, 0, 0.65);
     }
 
     & > div {
         z-index: 5;
+    }
+
+    h3 {
+        margin-bottom: 6px;
+        margin-top: 0;
+        font-weight: 400;
     }
 
     .description {

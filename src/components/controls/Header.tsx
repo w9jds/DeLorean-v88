@@ -22,6 +22,7 @@ import Tab from '@material-ui/core/Tab';
 
 import { toggleEditMode } from '../../ducks/current';
 import { getUser, getUserProfile, getFirebaseApp } from '../../selectors/current';
+import { EventbriteConfig } from '../../../config/delorean.config';
 
 import { openConfigDialog } from '../../ducks/config';
 
@@ -34,6 +35,7 @@ const styleSheet: StyleRulesCallback = theme => ({
 type HeaderProps = WithStyles<typeof styleSheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 type HeaderState = {
     accountMenuOpen: boolean;
+    isTicketsVisible: boolean;
     anchorEl: HTMLElement;
     route: number;
 };
@@ -45,9 +47,25 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         this.state = {
             accountMenuOpen: false,
+            isTicketsVisible: true,
             anchorEl: null,
             route: 0
         };
+
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.onScrollEvent);
+        window['EBWidgets'].createWidget({
+            widgetType: 'checkout',
+            eventId: EventbriteConfig.eventId,
+            modal: true,
+            modalTriggerElementId: `get-header-event-tickets-${EventbriteConfig.eventId}`
+        });
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.onScrollEvent);
     }
 
     googleLogin = () => {
@@ -106,35 +124,77 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
 
         return (
-            <div>
+            <React.Fragment>
                 <img className={this.state.accountMenuOpen ? 'user-selected' : ''}
                     onClick={this.openAccountMenu}
                     src={this.props.user.photoURL} />
-                <Popover classes={{ paper: 'user-menu' }}
-                    open={this.state.accountMenuOpen}
-                    anchorEl={this.state.anchorEl}
-                    onClose={this.handleClose}
-                    anchorPosition={{ top: 5, left: 0 }}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right'
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right'
-                    }}>
 
-                    <Paper>
-                        <ClickAwayListener onClickAway={this.handleClose}>
-                            <MenuList>
-                                {this.buildMenuItems()}
-                            </MenuList>
-                        </ClickAwayListener>
-                    </Paper>
-
-                </Popover>
-            </div>
+                {this.state.accountMenuOpen ? this.buildUserMenu() : null}
+            </React.Fragment>
         );
+    }
+
+    buildUserMenu = () => {
+        let { accountMenuOpen, anchorEl } = this.state;
+
+        return (
+            <Popover classes={{ paper: 'user-menu' }}
+                open={accountMenuOpen}
+                anchorEl={anchorEl}
+                onClose={this.handleClose}
+                anchorPosition={{ top: 5, left: 0 }}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                }}>
+
+                <Paper>
+                    <ClickAwayListener onClickAway={this.handleClose}>
+                        <MenuList>
+                            {this.buildMenuItems()}
+                        </MenuList>
+                    </ClickAwayListener>
+                </Paper>
+            </Popover>
+        );
+    }
+
+    isElementInViewport = (el: Element) => {
+        var rect = el.getBoundingClientRect();
+
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    onScrollEvent = () => {
+        let intro = document.querySelector(`.intro #get-event-tickets-${EventbriteConfig.eventId}`);
+
+        if (intro) {
+            let isVisible = this.isElementInViewport(intro);
+
+            if (this.state.isTicketsVisible !== isVisible) {
+                this.setState({
+                    isTicketsVisible: isVisible
+                });
+            }
+        }
+    }
+
+    displayTicketButton = () => {
+        return this.state.isTicketsVisible ? null :
+            <div className="get-tickets-header">
+                <Button id={`get-header-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
+                    Get Tickets
+                </Button>
+            </div>;
     }
 
     onNavigationChanged = (event, value) => {
@@ -164,19 +224,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         return (
             <AppBar position="sticky" className="header">
                 <div className="inner container">
-                    <div className="logo">
-                        <Link to="/">
-                            <img src="https://gdg-logo-generator.appspot.com/gdg_icon.svg"/>
-                        </Link>
-                    </div>
-
                     <nav className="nav" >
                         <Tabs value={this.state.route} onChange={this.onNavigationChanged}
                               classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
 
+                            <Tab label="Home" />
                             {
                                 /*
-                                    <Tab label="Home" />
                                     <Tab label="Schedule" />
                                     <Tab label="Speakers" />
                                     <Tab label="Team" />
@@ -184,6 +238,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                             }
                         </Tabs>
                     </nav>
+
+                    {this.displayTicketButton()}
 
                     <div className="login">
                         {this.buildLoginItems()}
