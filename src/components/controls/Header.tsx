@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Dispatch, bindActionCreators } from 'redux';
 
 import { ApplicationState } from '../..';
@@ -189,12 +189,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
 
     displayTicketButton = () => {
-        return this.state.isTicketsVisible ? null :
-            <div className="get-tickets-header">
+        let display: string = this.state.isTicketsVisible ? 'none' : 'block';
+
+        return (
+            <div className="get-tickets-header" style={{ display }}>
                 <Button id={`get-header-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
                     Get Tickets
                 </Button>
-            </div>;
+            </div>
+        );
     }
 
     onNavigationChanged = (event, value) => {
