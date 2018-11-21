@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "../build/dist",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "es6",
+    "lib": ["es6", "es5", "dom"],
+    "sourceMap": true,
+    "jsx": "react",
+    "declaration": false,
+    "importHelpers": true,
+    "removeComments": true,
+    "strictNullChecks": false,
+  },
+  "exclude": [
+    "node_modules",
+    "functions"
+  ]
+}

@@ -29,12 +29,11 @@
         <meta name="twitter:description" content="<%= htmlWebpackPlugin.options.description %>">
         <meta name="twitter:image" content="assets/event-logo.svg">
 
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script src="https://www.eventbrite.com/static/widgets/eb_widgets.js"></script>
-        <title>
-                <%= htmlWebpackPlugin.options.eventName %>
-        </title>
+        <link async href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link async href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <script async src="https://www.eventbrite.com/static/widgets/eb_widgets.js"></script>
+
+        <title><%= htmlWebpackPlugin.options.eventName %></title>
     </head>
 
     <body>
@@ -45,6 +44,15 @@
                 release: '<%= htmlWebpackPlugin.options.version %>',
                 environment: '<%= htmlWebpackPlugin.options.environment %>'
             };
+
+            if (navigator.serviceWorker) {
+                navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker Registeration succeeded');
+                    registration.unregister();
+                }).catch(function(err) {
+                    console.log('SW error', err);
+                });
+            }
         </script>
     </body>
 </html>

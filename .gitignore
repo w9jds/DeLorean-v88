@@ -68,3 +68,4 @@ Dockerfile
 /functions/lib
 /.firebaserc
 /config/delorean.config.js
+/src/config/delorean.config.js

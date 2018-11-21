@@ -3,10 +3,7 @@
     "rules": {
         "ban": false,
         "class-name": true,
-        "comment-format": [
-            true,
-            "check-space"
-        ],
+        "comment-format": [ true, "check-space" ],
         "eofline": false,
         "indent": [ true, "spaces" ],
         "interface-name": [true, "never-prefix"],
@@ -35,7 +32,7 @@
         "no-duplicate-variable": true,
         "no-empty": true,
         "no-eval": true,
-        // "no-string-literal": true,
+        "no-string-literal": true,
         "no-switch-case-fall-through": true,
         "no-trailing-whitespace": false,
         "no-unused-expression": true,
@@ -50,7 +47,6 @@
         "semicolon": [true, "always"],
         "switch-default": true,
         "trailing-comma": false,
-        "triple-equals": [ true, "allow-null-check" ],
         "typedef": [
             true,
             "parameter",
@@ -65,13 +61,7 @@
                 "property-declaration": "nospace"
             }
         ],
-        "variable-name": [
-            true,
-            "ban-keywords",
-            "check-format",
-            "allow-leading-underscore",
-            "allow-pascal-case"
-        ],
+        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
         "whitespace": [
             true,
             "check-branch",

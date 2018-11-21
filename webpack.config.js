@@ -1,13 +1,13 @@
 const path = require('path');
-const app = require('./package.json');
 const webpack = require('webpack');
+const app = require('./package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const { DevfestDetails } = require('./config/delorean.config.js');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-let plugins = [];
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const { DevfestDetails } = require('./src/config/delorean.config.js');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+var plugins = [];
 
 if (NODE_ENV !== 'development') {
     plugins = plugins.concat([
@@ -31,42 +31,30 @@ module.exports = {
     devtool: NODE_ENV !== 'development' ? false : 'sourcemap',
     output: {
         path: path.resolve(__dirname, './build'),
-        filename: '[name].[hash].js'
+        filename: '[name].[hash].js',
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
-                loaders: 'ts-loader',
-                exclude: /node_modules/
-            },
-            {
                 test: /\.js$/,
-                use: ["source-map-loader"],
-                enforce: "pre"
+                use: ['babel-loader', 'source-map-loader'],
+                exclude: /node_modules/,
             },
             {
-                test: /\.s?css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader: 'resolve-url-loader'
-                        },
-                        {
-                            loader: 'sass-loader',
-                            options: {
-                                sourceMap: true
-                            }
-                        }
-                    ]
-                }),
+                test: /\.tsx?$/,
+                use: ['ts-loader'],
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', { loader: 'css-loader', options: { importLoaders: 1 } }],
+            },
+            {
+                test: /\.scss$/,
+                loaders: [
+                    'style-loader',
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    'sass-loader',
+                ],
             },
             {
                 test: /\.(ttf|eot|woff|woff2)$/,
@@ -92,9 +80,6 @@ module.exports = {
                 loaders: ['file-loader?name=/assets/[hash].[ext]']
             }
         ]
-    },
-    devServer: {
-        historyApiFallback: true,
     },
     plugins: [
         new FaviconsWebpackPlugin('./src/assets/event-logo.svg'),

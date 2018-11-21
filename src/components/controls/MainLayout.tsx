@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
 import { ApplicationState } from '../..';
-import { FirebaseConfig } from '../../../config/delorean.config';
+import { FirebaseConfig } from '../../config/delorean.config';
 
 import firebase from '@firebase/app';
 import '@firebase/firestore';
@@ -12,20 +12,19 @@ import '@firebase/storage';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 
-import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
-import { getUser, getUserProfile, getIsEditMode } from '../../selectors/current';
+import { setFirebaseApplication, setUser, setUserProfile, getUser, getUserProfile, getIsEditMode } from '../../ducks/current';
 import { Profile } from '../../models/user';
 import { getSiteData } from '../../sagas/current';
-import Header from './Header';
-import SiteConfig from '../dialogs/SiteConfig';
+import Header from './Header/Header';
+import SiteConfig from '../dialogs/SiteConfig/SiteConfig';
 import { Switch, Route, withRouter, RouteComponentProps } from 'react-router';
-import Footer from './Footer';
+import Footer from './Footer/Footer';
 import Team from '../pages/Team';
-import Home from '../pages/Home';
-import Dialogs from '../controls/Dialog';
+import Home from '../pages/Home/Home';
+import Dialogs from './Dialog/Dialog';
 import Speakers from '../pages/Speakers';
 import Schedule from '../pages/Schedule';
-import EditOverlay from './EditOverlay';
+import EditOverlay from './EditOverlay/EditOverlay';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -87,9 +86,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    setUser, setUserProfile,
-    setFirebaseApplication,
-    getSiteData
+    setUser, setUserProfile, setFirebaseApplication, getSiteData
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainLayout));

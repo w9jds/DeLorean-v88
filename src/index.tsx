@@ -1,16 +1,15 @@
-import '../stylesheets/main.scss';
+import './stylesheets/main.scss';
 
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
 import { BrowserRouter } from 'react-router-dom';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import { SiteTheme } from '../config/delorean.config';
-
+import { SiteTheme } from './config/delorean.config';
 import { CurrentState, ConfigState, DialogsState } from './models/states';
-import createSagaMiddleware from 'redux-saga';
 import current from './ducks/current';
 import config from './ducks/config';
 import dialogs from './ducks/dialogs';

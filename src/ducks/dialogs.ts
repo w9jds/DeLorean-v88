@@ -1,6 +1,11 @@
 import { Reducer } from 'redux';
 import { DialogsState } from '../models/States';
 import { createAction, handleActions } from 'redux-actions';
+import { ApplicationState } from '..';
+
+export const getDialogViews = (state: ApplicationState) => state.dialogs.views;
+export const isDialogVisible = (state: ApplicationState) => state.dialogs.open;
+export const isDialogFullscreen = (state: ApplicationState) => state.dialogs.fullscreen;
 
 enum DialogTypes {
     OPEN_DIALOG = 'OPEN_DIALOG',

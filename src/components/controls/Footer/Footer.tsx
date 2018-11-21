@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ApplicationState } from '../..';
+import { ApplicationState } from '../../..';
 import { connect } from 'react-redux';
-import { getCurrentConfig } from '../../selectors/current';
 
-import Code from '../../assets/code.svg';
-import Configuration from '../../models/config';
-import Facebook from '../../assets/facebook.svg';
-import Twitter from '../../assets/twitter.svg';
-import Github from '../../assets/github.svg';
-import Meetup from '../../assets/meetup.svg';
+import Code from '../../../assets/code.svg';
+import Facebook from '../../../assets/facebook.svg';
+import Twitter from '../../../assets/twitter.svg';
+import Github from '../../../assets/github.svg';
+import Meetup from '../../../assets/meetup.svg';
+import Configuration from '../../../models/config';
+import { getCurrentConfig } from '../../../ducks/current';
 
 type FooterProps = ReturnType<typeof mapStateToProps>;
 

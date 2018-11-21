@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Map from '../sections/Map';
+import Map from '../../sections/Map/Map';
 import Button from '@material-ui/core/Button';
 import RightArrow from '@material-ui/icons/KeyboardArrowRight';
 import { EventbriteConfig } from '../../../config/delorean.config';
+import { ApplicationState } from '../../..';
 
-import { ApplicationState } from '../..';
-import { getCurrentConfig, getIsEditMode } from '../../selectors/current';
-
-import Logo from '../../assets/event-logo.svg';
-import * as background from '../../assets/intro-background.jpg';
+import Logo from '../../../assets/event-logo.svg';
+import * as background from '../../../assets/intro-background.jpg';
 import { RouteComponentProps } from 'react-router';
 
 import { isAfter, format } from 'date-fns';
 
 import { DevfestDetails, SiteTheme } from '../../../config/delorean.config';
-import Sponsors from '../sections/Sponsors';
+import Sponsors from '../../sections/Sponsors/Sponsors';
+import { getCurrentConfig } from '../../../ducks/current';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
@@ -24,6 +23,7 @@ class Home extends React.Component<HomeProps> {
 
     componentDidMount() {
 
+        // tslint:disable-next-line:no-string-literal
         window['EBWidgets'].createWidget({
             widgetType: 'checkout',
             eventId: EventbriteConfig.eventId,
@@ -89,7 +89,7 @@ class Home extends React.Component<HomeProps> {
                         <Logo className="event-logo mb-4"/>
 
                         <h1 className="container-thin">
-                            A community-run conference offering sessions, hack-a-thons, and codelabs accross many different technologies
+                            {DevfestDetails.description}
                         </h1>
 
                         <h3>Feb 01, 2019</h3>

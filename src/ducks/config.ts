@@ -1,6 +1,9 @@
 import { createAction, handleActions } from 'redux-actions';
 import { Reducer } from 'redux';
 import { ConfigState } from '../models/states';
+import { ApplicationState } from '..';
+
+export const isConfigDialogOpen = (state: ApplicationState) => state.config.isOpen;
 
 export enum ConfigTypes {
     SET_CONFIG_OPEN = 'SET_CONFIG_OPEN',

@@ -11,12 +11,17 @@
   },
   "hosting": {
     "public": "build",
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }],
+    "headers": [{
+      "source": "service-worker.js",
+      "headers": [{
+        "key": "Cache-Control",
+        "value": "no-store"
+      }]
+    }]
   },
   "storage": {
     "rules": "storage.rules"

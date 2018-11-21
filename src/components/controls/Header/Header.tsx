@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Dispatch, bindActionCreators } from 'redux';
 
-import { ApplicationState } from '../..';
+import { ApplicationState } from '../../..';
 
 import firebase from '@firebase/app';
 import '@firebase/auth';
@@ -20,11 +20,9 @@ import MenuList from '@material-ui/core/MenuList';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { toggleEditMode } from '../../ducks/current';
-import { getUser, getUserProfile, getFirebaseApp } from '../../selectors/current';
+import { toggleEditMode, getUser, getUserProfile, getFirebaseApp } from '../../../ducks/current';
+import { openConfigDialog } from '../../../ducks/config';
 import { EventbriteConfig } from '../../../config/delorean.config';
-
-import { openConfigDialog } from '../../ducks/config';
 
 const styleSheet: StyleRulesCallback = theme => ({
     tabs: {
@@ -56,6 +54,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     componentDidMount() {
         window.addEventListener('scroll', this.onScrollEvent);
+        // tslint:disable-next-line:no-string-literal
         window['EBWidgets'].createWidget({
             widgetType: 'checkout',
             eventId: EventbriteConfig.eventId,
