@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const app = require('./package.json');
+// const app = require('./package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
@@ -9,15 +9,15 @@ const { DevfestDetails } = require('./src/config/delorean.config.js');
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 var plugins = [];
 
-if (NODE_ENV !== 'development') {
-    plugins = plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.BannerPlugin([
-            `    ${app.name} by ${app.author}`,
-            `    Date: ${new Date().toISOString()}`
-        ].join('\n'))
-    ]);
-}
+// if (NODE_ENV !== 'development') {
+//     plugins = plugins.concat([
+//         new webpack.optimize.ModuleConcatenationPlugin(),
+//         new webpack.BannerPlugin([
+//             `    ${app.name} by ${app.author}`,
+//             `    Date: ${new Date().toISOString()}`
+//         ].join('\n'))
+//     ]);
+// }
 
 module.exports = {
     context: __dirname,
@@ -58,13 +58,15 @@ module.exports = {
             },
             {
                 test: /\.(ttf|eot|woff|woff2)$/,
-                loaders: [
-                    'url-loader?name=/fonts/[name].[ext]',
-                    'file-loader?name=/fonts/[hash].[ext]'
-                ]
+                loader: 'file-loader',
+                options: {
+                    name: '[path][name].[ext]',
+                    output: 'fonts/'
+                }
             },
             {
                 test: /\.svg$/,
+                exclude: [/node_modules/],
                 loaders: ['babel-loader',
                     {
                         loader: 'react-svg-loader',
@@ -73,11 +75,24 @@ module.exports = {
                         }
                     }
                 ]
-
             },
             {
-                test: /\.(jpe?g|png)$/i,
-                loaders: ['file-loader?name=/assets/[hash].[ext]']
+                test: /\.svg$/,
+                include: [/node_modules/],
+                exclude: [/src/],
+                loader: 'file-loader',
+                options: {
+                    name: '[path][name].[ext]',
+                    outputPath: 'assets/'
+                }
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[path][name].[ext]',
+                    outputPath: 'assets/'
+                }
             }
         ]
     },

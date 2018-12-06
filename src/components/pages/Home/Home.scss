@@ -49,11 +49,12 @@
 
     & > div {
         position: relative;
+        padding: 0 75px 0 16px;
     }
 
     .action {
         top: 50%;
-        right: 0;
+        right: 24px;
         position: absolute;
         -webkit-transform: translateY(-50%);
         transform: translateY(-50%);
