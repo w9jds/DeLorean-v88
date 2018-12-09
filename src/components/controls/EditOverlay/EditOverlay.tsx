@@ -1,15 +1,18 @@
 import * as React from 'react';
+import classnames from 'classnames';
+
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../..';
 import { bindActionCreators, Dispatch } from 'redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
+import Fab from '@material-ui/core/Fab';
 import { Add } from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
 import CreateSponsor from '../../dialogs/Sponsor/Sponsor';
 
 import { openDialogWindow } from '../../../ducks/dialogs';
-import { getIsEditMode } from '../../../ducks/current';
+import { getIsEditMode, getIsCreateOpen, toggleCreateMenu } from '../../../ducks/current';
+import Button from '@material-ui/core/Button';
 
 type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -20,36 +23,67 @@ class EditOverlay extends React.Component<EditOverlayProps> {
 
     }
 
-    onAddClick = () => {
-        // this.props.location.
+    onCreateSponsor = () => {
+        this.props.toggleCreateMenu();
+        this.props.openDialogWindow(<CreateSponsor />, false);
+    }
 
-        this.props.openDialogWindow(
-            <CreateSponsor />,
-            false
-        );
+    buildActions = () => {
+        const { isOpen } = this.props;
+        const actionsClass = classnames('menu-contents', {
+            'hidden': !isOpen
+        });
+
+        return [
+            (<div className={actionsClass}>
+                <Button variant="contained" className="label" onClick={this.onCreateSponsor}>
+                    Add Sponsor
+                </Button>
+                <Fab size="medium" color="primary" onClick={this.onCreateSponsor} />
+            </div>),
+            (<div className={actionsClass}>
+                <Button variant="contained" className="label">
+                    Add Speaker
+                </Button>
+                <Fab size="medium" color="primary" />
+            </div>)
+        ];
     }
 
     render() {
+        const { isOpen } = this.props;
+        const overlayClass = classnames('menu-overlay', {
+            'hidden': !isOpen
+        });
+        const menuClass = classnames('fab-button', {
+            'menu-open': isOpen
+        });
+
         return (
-            <div className="overlay">
-                <div className="container fab-container">
-                    <Button className="edit-fab" variant="fab"
-                        onClick={this.onAddClick}>
+            <React.Fragment>
+                <div className={overlayClass} onClick={this.props.toggleCreateMenu} />
+
+                <div className="action-menu">
+                    {this.buildActions()}
+
+                    <Fab className={menuClass} onClick={this.props.toggleCreateMenu}>
                         <Add />
-                    </Button>
+                    </Fab>
                 </div>
-            </div>
+            </React.Fragment>
+
         );
     }
 
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    isEditMode: getIsEditMode(state)
+    isEditMode: getIsEditMode(state),
+    isOpen: getIsCreateOpen(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    openDialogWindow
+    openDialogWindow, toggleCreateMenu
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditOverlay));

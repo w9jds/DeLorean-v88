@@ -87,11 +87,23 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
         this.props.closeDialogWindow();
     }
 
-    onFileDrop = (accepted, rejected, e: React.DragEvent<HTMLDivElement>) => {
-        if (accepted && accepted.length > 0 && e.dataTransfer.files.length > 0) {
-            this.onFileLoaded(accepted[0].preview, e.dataTransfer.files[0]);
-        }
+    onFileDrop = files => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const fileAsBinaryString = reader.result;
+            // do whatever you want with the file content
+        };
+        reader.onabort = () => console.log('file reading was aborted');
+        reader.onerror = () => console.log('file reading has failed');
+
+        reader.readAsBinaryString(files[0]);
     }
+
+    // onFileDrop = (accepted, rejected, e: React.DragEvent<HTMLDivElement>) => {
+    //     if (accepted && accepted.length > 0 && e.dataTransfer.files.length > 0) {
+    //         this.onFileLoaded(accepted[0].preview, e.dataTransfer.files[0]);
+    //     }
+    // }
 
     buildDropZone = () => {
         if (!this.state.file) {

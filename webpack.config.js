@@ -1,23 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
-// const app = require('./package.json');
+const renderer = require("marked").Renderer();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+// const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const { DevfestDetails } = require('./src/config/delorean.config.js');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-var plugins = [];
-
-// if (NODE_ENV !== 'development') {
-//     plugins = plugins.concat([
-//         new webpack.optimize.ModuleConcatenationPlugin(),
-//         new webpack.BannerPlugin([
-//             `    ${app.name} by ${app.author}`,
-//             `    Date: ${new Date().toISOString()}`
-//         ].join('\n'))
-//     ]);
-// }
 
 module.exports = {
     context: __dirname,
@@ -55,6 +44,16 @@ module.exports = {
                     { loader: 'css-loader', options: { importLoaders: 1 } },
                     'sass-loader',
                 ],
+            },
+            {
+                test: /\.md$/,
+                use: [
+                    { loader: "html-loader" },
+                    {
+                        loader: "markdown-loader",
+                        options: { pedantic: true, renderer }
+                    }
+                ]
             },
             {
                 test: /\.(ttf|eot|woff|woff2)$/,
@@ -97,15 +96,17 @@ module.exports = {
         ]
     },
     plugins: [
-        new FaviconsWebpackPlugin('./src/assets/event-logo.svg'),
+        // new FaviconsWebpackPlugin('./src/assets/event-logo.svg'),
         new ExtractTextPlugin('styles/main.css'),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
+            'process.env': {
+                NODE_ENV: JSON.stringify(NODE_ENV),
+                DELOREAN_API_KEY: JSON.stringify(process.env.DELOREAN_API_KEY),
+                DELOREAN_MAP_API: JSON.stringify(process.env.DELOREAN_MAP_API),
+                WINDY_CITY_EVENT_ID: JSON.stringify(process.env.WINDY_CITY_EVENT_ID),
+            }
         }),
-        new webpack.EnvironmentPlugin([
-            'NODE_ENV'
-        ]),
         new HtmlWebpackPlugin({
             eventName: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
             description: DevfestDetails.description,
@@ -113,8 +114,7 @@ module.exports = {
             filename: 'index.html',
             environment: NODE_ENV,
             template: path.join(__dirname, './template.ejs'),
-        }),
-        ...plugins
+        })
     ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']

@@ -49,9 +49,9 @@ class Map extends React.Component<MapProps> {
     }
 
     populateFromProps = (nextProps: MapProps) => {
-        if (this.marker) {
-            this.marker.setMap(null);
-        }
+        // if (this.marker) {
+        //     this.marker.setMap(null);
+        // }
 
         if (!nextProps.config.venue) {
             return true;

@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { DialogsState } from '../models/States';
+import { DialogsState } from '../models/states';
 import { createAction, handleActions } from 'redux-actions';
 import { ApplicationState } from '..';
 

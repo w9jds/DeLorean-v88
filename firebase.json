@@ -9,7 +9,15 @@
       "npm --prefix ./functions run build"
     ]
   },
-  "hosting": {
+  "hosting": [{
+      "target": "dev",
+      "public": "build",
+      "rewrites": [{
+        "source": "**",
+        "destination": "/index.html"
+      }]
+  }, {
+    "target": "prod",
     "public": "build",
     "rewrites": [{
       "source": "**",
@@ -22,7 +30,7 @@
         "value": "no-store"
       }]
     }]
-  },
+  }],
   "storage": {
     "rules": "storage.rules"
   }

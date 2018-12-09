@@ -6,16 +6,17 @@ import { User } from '@firebase/auth-types';
 import Sponsor from './sponsor';
 
 export type CurrentState = {
-    user: User;
-    profile: Profile;
-    firebase: FirebaseApp;
-    config: Configuration;
-    sponsors: Record<string, Sponsor>
-    isEditMode: boolean;
+    readonly user: User;
+    readonly profile: Profile;
+    readonly firebase: FirebaseApp;
+    readonly config: Configuration;
+    readonly sponsors: Record<string, Sponsor>
+    readonly isEditMode: boolean;
+    readonly isCreateOpen: boolean;
 };
 
 export type ConfigState = {
-    isOpen: boolean;
+    readonly isOpen: boolean;
 };
 
 export type DialogsState = {

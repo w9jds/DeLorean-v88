@@ -1,26 +1,53 @@
-.overlay {
-    pointer-events: none;
-    background: none;
-    overflow: visible;
+.menu-contents {
+    margin-top: 16px;
+
+    .label {
+        border-radius: 25px;
+        text-transform: none;
+        margin: 0 12px;
+    }
+
+     & > button {
+         margin: 0 4px;
+     }
+}
+
+.menu-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
     position: fixed;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    top: 0;
+    z-index: 1500;
+    bottom: 0;
+    right: 0;
     left: 0;
+    top: 0;
+}
 
-    .fab-container {
+.action-menu {
+    position: fixed;
+    right: 1.6rem;
+    bottom: 1.6rem;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+    z-index: 3000;
+
+    & > button {
         display: flex;
-        height: 100%;
-        background: none;
-        overflow: visible;
-        pointer-events: none;
-    }
-
-    .edit-fab {
+        margin-top: 1.6rem;
         margin-left: auto;
-        margin-top: auto;
-        margin-bottom: 32px;
-        pointer-events: all;
     }
+}
+
+.fab-button {
+    -webkit-transition: -webkit-transform .5s !important;
+    -moz-transition: -moz-transform .5s !important;
+    -o-transition: -o-transform .5s !important;
+    transition: transform .5s !important;
+}
+
+.menu-open {
+    -moz-transform: rotate(225deg);
+    -webkit-transform: rotate(225deg);
+    -o-transform: rotate(225deg);
+    transform: rotate(225deg);
 }

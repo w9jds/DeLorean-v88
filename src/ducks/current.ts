@@ -8,15 +8,22 @@ import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 import Sponsor from '../models/sponsor';
 import { ApplicationState } from '..';
-import { FirebaseFirestore } from '@firebase/firestore-types';
+import { createSelector } from 'reselect';
 
 export const getFirebaseApp = (state: ApplicationState): FirebaseApp => state.current.firebase;
-export const getFirestore = (state: ApplicationState): FirebaseFirestore => state.current.firebase.firestore();
+// export const getFirestore = (state: ApplicationState): FirebaseFirestore => state.current.firebase.firestore();
 export const getUser = (state: ApplicationState) => state.current.user;
 export const getUserProfile = (state: ApplicationState) => state.current.profile;
 export const getCurrentConfig = (state: ApplicationState) => state.current.config;
 export const getIsEditMode = (state: ApplicationState) => state.current.isEditMode;
+export const getIsCreateOpen = (state: ApplicationState) => state.current.isCreateOpen;
 export const getSponsors = (state: ApplicationState) => state.current.sponsors;
+
+export const getFirestore = createSelector(
+    [getFirebaseApp], app => {
+        return app && app.firestore ? app.firestore() : undefined;
+    }
+);
 
 export enum CurrentTypes {
     SET_USER = 'SET_USER',
@@ -24,7 +31,8 @@ export enum CurrentTypes {
     SET_FIREBASE = 'SET_FIREBASE',
     SET_CONFIG = 'SET_CONFIG',
     SET_SPONSORS = 'SET_SPONSORS',
-    TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE'
+    TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE',
+    TOGGLE_CREATE_MENU = 'TOGGLE_CREATE_MENU'
 }
 
 const initialState: CurrentState = {
@@ -33,7 +41,8 @@ const initialState: CurrentState = {
     firebase: undefined,
     config: undefined,
     sponsors: undefined,
-    isEditMode: false
+    isEditMode: false,
+    isCreateOpen: false
 };
 
 const current: Reducer<CurrentState> = handleActions<any>({
@@ -55,7 +64,12 @@ const current: Reducer<CurrentState> = handleActions<any>({
     }),
     [CurrentTypes.TOGGLE_EDIT_MODE]: (state: CurrentState) => ({
         ...state,
-        isEditMode: !state.isEditMode
+        isEditMode: !state.isEditMode,
+        isCreateOpen: !state.isEditMode === false ? false : state.isCreateOpen
+    }),
+    [CurrentTypes.TOGGLE_CREATE_MENU]: (state: CurrentState) => ({
+        ...state,
+        isCreateOpen: !state.isCreateOpen
     }),
     [CurrentTypes.SET_SPONSORS]: (state: CurrentState, action: ReturnType<typeof setSponsors>) => ({
         ...state,
@@ -69,5 +83,6 @@ export const setSponsors = createAction<Record<string, Sponsor>>(CurrentTypes.SE
 export const setFirebaseApplication = createAction<FirebaseApp>(CurrentTypes.SET_FIREBASE);
 export const setSiteConfig = createAction<Configuration>(CurrentTypes.SET_CONFIG);
 export const toggleEditMode = createAction(CurrentTypes.TOGGLE_EDIT_MODE);
+export const toggleCreateMenu = createAction(CurrentTypes.TOGGLE_CREATE_MENU);
 
 export default current;

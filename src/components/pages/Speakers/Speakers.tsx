@@ -6,7 +6,9 @@ class Speakers extends React.Component<SpeakersProps> {
 
     render() {
         return (
-            <div />
+            <main>
+
+            </main>
         );
     }
 

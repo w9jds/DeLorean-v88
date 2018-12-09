@@ -231,10 +231,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                               classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
 
                             <Tab label="Home" />
+                            <Tab label="Schedule" />
+                            <Tab label="Speakers" />
                             {
                                 /*
-                                    <Tab label="Schedule" />
-                                    <Tab label="Speakers" />
+
+
                                     <Tab label="Team" />
                                 */
                             }

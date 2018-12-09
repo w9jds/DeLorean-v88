@@ -1,20 +1,3 @@
-.venue {
-    display: block;
-    position: relative;
-    overflow: hidden;
-    min-height: 600px;
-
-    .card {
-        position: absolute;
-        z-index: 100;
-        top: 50%;
-        right: 30%;
-        max-width: 400px;
-        transform: translate3d(50%, -50%, 0);
-        -webkit-transform: translate3d(50%, -50%, 0);
-    }
-}
-
 .sponsors {
     display: flex;
     flex-flow: column;

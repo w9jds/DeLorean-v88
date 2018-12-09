@@ -76,7 +76,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
             this.setState(this.buildStateFromProps(this.props));
         }
 
-        if (google && element && this.props.open && !this.autocomplete) {
+        if (this.props.open && !this.autocomplete && element && google) {
             this.autocomplete = new google.maps.places.Autocomplete(element as HTMLInputElement, {
                 fields: ['photos', 'geometry', 'formatted_address', 'place_id', 'url']
             });

@@ -22,8 +22,9 @@ import Footer from './Footer/Footer';
 import Team from '../pages/Team';
 import Home from '../pages/Home/Home';
 import Dialogs from './Dialog/Dialog';
-import Speakers from '../pages/Speakers';
 import Schedule from '../pages/Schedule';
+import Speakers from '../pages/Speakers/Speakers';
+import Conduct from '../pages/Conduct/Conduct';
 import EditOverlay from './EditOverlay/EditOverlay';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
@@ -62,15 +63,13 @@ class MainLayout extends React.Component<MainLayoutProps> {
 
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route exact path="/speakers" component={Speakers} />
+                    <Route exact path="/speakers" render={props => <Speakers {...props} />} />
                     <Route exact path="/schedule" component={Schedule} />
-                    <Route exact path="/team" components={Team} />
+                    <Route exact path="/team" render={props => <Team {...props} />} />
+                    <Route exact path="/code-of-conduct" component={Conduct} />
                 </Switch>
 
-                {
-                    this.props.isEditMode ?
-                    <EditOverlay /> : null
-                }
+                {this.props.isEditMode ? <EditOverlay /> : null}
 
                 <Footer />
             </div>

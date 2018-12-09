@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import Fab from '@material-ui/core/Fab';
 import Map from '../../sections/Map/Map';
 import Button from '@material-ui/core/Button';
 import RightArrow from '@material-ui/icons/KeyboardArrowRight';
+
 import { EventbriteConfig } from '../../../config/delorean.config';
 import { ApplicationState } from '../../..';
 
@@ -67,12 +69,12 @@ class Home extends React.Component<HomeProps> {
                         {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
                     </h1>
 
-                    <p>{`Consider submitting your talk by ${format(config.event.papercall.closing.toDate(), 'MMMM d, YYYY')}`}</p>
+                    <p>{`Consider submitting your talk by ${format(config.event.papercall.closing.toDate(), 'MMMM d, YYYY', { awareOfUnicodeTokens: true })}`}</p>
 
                     <div className="action">
-                        <Button variant="fab" onClick={this.openCalltoAction}>
+                        <Fab onClick={this.openCalltoAction}>
                             <RightArrow />
-                        </Button>
+                        </Fab>
                     </div>
                 </div>
             </section>
@@ -126,7 +128,6 @@ class Home extends React.Component<HomeProps> {
                         </div>
                     </div>
                 </section>
-
             </main>
         );
     }
