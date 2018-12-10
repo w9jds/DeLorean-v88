@@ -3,12 +3,14 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
+    list-style: none;
 
     li {
         width: 33.333333%;
         padding: 20px 5px;
         transition: all .5s ease;
-        border-radius: 8px;
+        border-radius: 6px;
+        margin: 0 8px;
 
         &:hover {
             -webkit-box-shadow: 0.4rem 0.4rem 2rem rgba(0,0,0,0.7);

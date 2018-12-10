@@ -40,8 +40,9 @@ interface SponsorDialogState {
     name?: string;
     site?: string;
     file?: {
+        metadata: File;
         preview: string;
-        contents: File;
+        contents: ArrayBuffer;
     };
 }
 
@@ -62,17 +63,15 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
         [name]: e.target.value
     })
 
-    onFileLoaded = (preview: string, file: File) => this.setState({
-        file: { preview, contents: file }
-    })
-
     onSaveSponsor = async () => {
         let storage = this.props.firebase.storage().ref('sponsors');
         let sponsor = await this.props.firestore.doc(`/sponsors/${this.state.name}`).get();
 
         if (!sponsor.exists && this.state.name && this.state.site && this.state.file) {
             storage.child(this.state.name)
-                .put(this.state.file.contents)
+                .put(this.state.file.contents, {
+                    contentType: this.state.file.metadata.type
+                })
                 .then(this.onImageStored);
         }
     }
@@ -80,35 +79,36 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
     onImageStored = async (task: UploadTaskSnapshot) => {
         await this.props.firestore.doc(`/sponsors/${this.state.name}`).set({
             name: this.state.name,
-            siteUrl: this.state.site,
-            logoUrl: await task.ref.getDownloadURL()
+            siteUri: this.state.site,
+            logoUri: await task.ref.getDownloadURL()
         });
 
         this.props.closeDialogWindow();
     }
 
     onFileDrop = files => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const fileAsBinaryString = reader.result;
-            // do whatever you want with the file content
-        };
-        reader.onabort = () => console.log('file reading was aborted');
-        reader.onerror = () => console.log('file reading has failed');
+        if (files.length > 0 && files[0].type.startsWith('image')) {
+            const reader = new FileReader();
 
-        reader.readAsBinaryString(files[0]);
+            reader.onload = () => this.setState({
+                file: {
+                    metadata: files[0],
+                    preview: URL.createObjectURL(files[0]),
+                    contents: reader.result as ArrayBuffer
+                }
+            });
+
+            reader.onabort = () => console.error('file reading was aborted');
+            reader.onerror = () => console.error('file reading has failed');
+
+            reader.readAsArrayBuffer(files[0]);
+        }
     }
-
-    // onFileDrop = (accepted, rejected, e: React.DragEvent<HTMLDivElement>) => {
-    //     if (accepted && accepted.length > 0 && e.dataTransfer.files.length > 0) {
-    //         this.onFileLoaded(accepted[0].preview, e.dataTransfer.files[0]);
-    //     }
-    // }
 
     buildDropZone = () => {
         if (!this.state.file) {
             return (
-                <Dropzone onDrop={this.onFileDrop} className="drag-drop-logo">
+                <Dropzone accept="image/*" onDrop={this.onFileDrop} className="drag-drop-logo">
                     <p>Drop sponsor logo</p>
                 </Dropzone>
             );

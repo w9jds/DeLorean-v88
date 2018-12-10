@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Logo from '../../../assets/event-logo.svg';
 
 export default class CodeOfConduct extends React.PureComponent {
 
@@ -12,8 +13,14 @@ export default class CodeOfConduct extends React.PureComponent {
 
     render() {
         return(
-            <div className="container code-of-conduct"
-                dangerouslySetInnerHTML={{ __html: this.conduct }} />
+            <main className="conduct-page">
+                <p className="event-logo">
+                    <Logo />
+                </p>
+
+                <div className="container code-of-conduct"
+                    dangerouslySetInnerHTML={{ __html: this.conduct }} />
+            </main>
         );
     }
 

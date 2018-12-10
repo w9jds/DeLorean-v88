@@ -8,7 +8,6 @@ body {
     line-height: 1.5;
     font-weight: normal;
     background-color: #13191e;
-    font-smoothing: antialiased;
     font-family: 'Roboto', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -18,10 +17,6 @@ button, select,
 button:focus,
 select:focus {
     outline: none;
-}
-
-ol, ul {
-    list-style: none;
 }
 
 @media (min-width: 768px) {

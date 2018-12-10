@@ -29,6 +29,14 @@ import EditOverlay from './EditOverlay/EditOverlay';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
+export enum DeloreanRoutes {
+    HOME = '/',
+    SPEAKERS = '/speakers',
+    SCHEDULE = '/schedule',
+    TEAM = '/team',
+    CODE_OF_CONDUCT = '/code-of-conduct'
+}
+
 class MainLayout extends React.Component<MainLayoutProps> {
 
     private firebase: FirebaseApp;
@@ -62,11 +70,11 @@ class MainLayout extends React.Component<MainLayoutProps> {
                 <Dialogs />
 
                 <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/speakers" render={props => <Speakers {...props} />} />
-                    <Route exact path="/schedule" component={Schedule} />
-                    <Route exact path="/team" render={props => <Team {...props} />} />
-                    <Route exact path="/code-of-conduct" component={Conduct} />
+                    <Route exact path={DeloreanRoutes.HOME} component={Home} />
+                    <Route exact path={DeloreanRoutes.SPEAKERS} render={props => <Speakers {...props} />} />
+                    <Route exact path={DeloreanRoutes.SCHEDULE} component={Schedule} />
+                    <Route exact path={DeloreanRoutes.TEAM} render={props => <Team {...props} />} />
+                    <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT} component={Conduct} />
                 </Switch>
 
                 {this.props.isEditMode ? <EditOverlay /> : null}

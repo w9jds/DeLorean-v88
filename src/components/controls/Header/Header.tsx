@@ -23,6 +23,7 @@ import Tab from '@material-ui/core/Tab';
 import { toggleEditMode, getUser, getUserProfile, getFirebaseApp } from '../../../ducks/current';
 import { openConfigDialog } from '../../../ducks/config';
 import { EventbriteConfig } from '../../../config/delorean.config';
+import { DeloreanRoutes } from '../MainLayout';
 
 const styleSheet: StyleRulesCallback = theme => ({
     tabs: {
@@ -65,6 +66,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onScrollEvent);
+    }
+
+    static getDerivedStateFromProps(props: HeaderProps, state: HeaderState) {
+        let update: HeaderState = { ...state };
+
+        switch (props.location.pathname) {
+            case DeloreanRoutes.HOME:
+                update.route = 0;
+                break;
+            case DeloreanRoutes.SPEAKERS:
+                update.route = 2;
+                break;
+            case DeloreanRoutes.SCHEDULE:
+                update.route = 1;
+                break;
+            default:
+                update.route = -1;
+                break;
+        }
+
+        return update;
     }
 
     googleLogin = () => {
@@ -200,24 +222,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
 
     onNavigationChanged = (event, value) => {
-        let route = '/';
-
         switch (value) {
+            case 0:
+                this.props.history.push(DeloreanRoutes.HOME);
+                break;
             case 1:
-                route += 'schedule';
+                this.props.history.push(DeloreanRoutes.SCHEDULE);
                 break;
             case 2:
-                route += 'speakers';
+                this.props.history.push(DeloreanRoutes.SPEAKERS);
                 break;
             case 3:
-                route += 'team';
+                this.props.history.push(DeloreanRoutes.TEAM);
                 break;
             default:
                 break;
         }
-
-        this.props.history.push(route);
-        this.setState({ route: value });
     }
 
     render() {
@@ -235,8 +255,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                             <Tab label="Speakers" />
                             {
                                 /*
-
-
                                     <Tab label="Team" />
                                 */
                             }

@@ -1,7 +1,3 @@
-<p align="center">
-  <img width="300" height="300" src="./event-logo.svg">
-</p>
-
 <h1 align="center">
   Code of Conduct
 </h1>
@@ -59,23 +55,19 @@ You can make a report either personally or anonymously.
 
 Anonymous Report
 ----------------
-You can make an anonymous report here:
-
-[https://bit.ly/2RstTJ8](https://bit.ly/2RstTJ8)
-
-We can't follow up an anonymous report with you directly, but we will fully investigate it and take whatever action is necessary to prevent a recurrence.
+You can make an anonymous report [here](https://bit.ly/2RstTJ8). We can't follow up on an anonymous report with you directly, but we will fully investigate it and take whatever action is necessary to prevent a recurrence.
 
 Personal Report
 ---------------
 You can make a personal report by getting in contact with any of the event organizers. Event Organizers can be identified by special lanyards and/or special badges. If you wish, you can also use the anonymous form but provide your contact information at the end. In the event organizers are not able to be reached, please reach out to us directly by phone/email at:
 
-- General GDG/DevFest Organizer: – ([chicagogdg@gmail.com](mailto:chicagogdg@gmail.com))
-- GDG Co-Organizer: Joel Vasallo – 773 318 8144 ([joelvasallo@gmail.com](mailto:joelvasallo@gmail.com))
-- Lead Organizer/GDG Mentor: Dan Baran – 630 212 1540 ([danbaran@gmail.com](mailto:danbaran@gmail.com))
-- Women Techmakers Lead/GDG Co-Organizer: Deana Greenfield – ([deanagreenfield@gmail.com](mailto:deanagreenfield@gmail.com))
+- General GDG/DevFest Organizer: [GDG Chicago](mailto:chicagogdg@gmail.com)
+- GDG Co-Organizer: [Joel Vasallo](mailto:joelvasallo@gmail.com) / [(773) 318-8144](tel:7733188144)
+- Lead Organizer/GDG Mentor: [Dan Baran](mailto:danbaran@gmail.com) / [(630) 212-1540](tel:6302121540)
+- Women Techmakers Lead/GDG Co-Organizer: [Deana Greenfield](mailto:deanagreenfield@gmail.com)
 - GDG North America Program Manager: Kyle Paul
-- Emergency: 911
-- ICASA Hotline (24/7): (888) 293-2080
+- Emergency: [911](tel:911)
+- ICASA Hotline (24/7): [(888) 293-2080](tel:8882932080)
 
 When taking a personal report, our staff will ensure you are safe and cannot be overheard. They may involve other event staff to ensure your report is managed properly. Once safe, we'll ask you to tell us about what happened. This can be upsetting, but we'll handle it as respectfully as possible, and you can bring someone to support you. You won't be asked to confront anyone, and we won't tell anyone who you are.
 

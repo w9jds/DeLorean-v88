@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const renderer = require("marked").Renderer();
+const renderer = require('marked').Renderer();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
