@@ -1,53 +1,62 @@
-import { eventChannel } from 'redux-saga';
-import { put, take, call, cancel, fork, takeEvery } from 'redux-saga/effects';
-import { DocumentReference, DocumentSnapshot } from '@firebase/firestore-types';
+import { eventChannel, buffers, Channel } from 'redux-saga';
+import { put, take, call, fork, cancelled } from 'redux-saga/effects';
+import { DocumentSnapshot, DocumentReference, QuerySnapshot, CollectionReference, FirestoreError } from '@firebase/firestore-types';
+import { ActionCreator } from 'redux';
 
-export const FIREBASE_REMOVE_LISTENER_REQUESTED = 'FIREBASE_REMOVE_LISTENER_REQUESTED';
-
-let tasks = {};
-
-type Payload = {
-    ref: DocumentReference,
-    action: (snapshot: DocumentSnapshot, emit: any) => void
+export type Payload = {
+    snapshot: DocumentSnapshot | QuerySnapshot
 };
 
-export function* watchListener(eventName: string) {
-    yield takeEvery(eventName, forkListener);
+export type SyncOptions = {
+    successAction: ActionCreator<any>;
+    errorAction?: ActionCreator<any>;
+    transform?: (data: Payload) => any;
+};
+
+function createChannel(ref: DocumentReference) {
+    const channel = eventChannel(emit => {
+        return ref.onSnapshot(
+            dataSnapshot => emit({ snapshot: dataSnapshot }),
+            (error: FirestoreError) => { throw error; }
+        );
+    }, buffers.expanding(1));
+
+    return channel;
 }
 
-export function* watchRemove() {
-    yield takeEvery(FIREBASE_REMOVE_LISTENER_REQUESTED, closeListener);
+const defaultTransform = (data: Payload) => data.snapshot;
+
+export function* sync(ref: DocumentReference | CollectionReference, options: SyncOptions) {
+    const channel = yield call(createChannel, ref);
+
+    yield fork(syncChannel, channel, {
+        transform: defaultTransform,
+        ...options,
+    });
 }
 
-function* closeListener(listenRequestAction: {type: string, task: string}) {
-    if (tasks[listenRequestAction.task]) {
-        yield cancel(tasks[listenRequestAction.task]);
-        delete tasks[listenRequestAction.task];
-    }
-}
-
-function* forkListener(listenRequestAction: {type: string, payload: Payload}) {
-    tasks[listenRequestAction.type] = yield fork(
-        attachListeners,
-        listenRequestAction.payload.ref,
-        listenRequestAction.payload.action
-    );
-}
-
-function* attachListeners(reference: DocumentReference, action: (snapshot: DocumentSnapshot, emit: any) => void) {
-    let channel = yield call(listener, reference, action);
+function* syncChannel(channel: Channel<any>, options: SyncOptions) {
+    const { successAction, errorAction, transform } = options;
 
     try {
         while (true) {
             const data = yield take(channel);
-            yield put(data);
+            const transformedData = transform ? transform(data) : data;
+            yield put(successAction(transformedData));
+        }
+    } catch (err) {
+        if (errorAction) {
+            yield put(errorAction(err));
+        }
+        else {
+            console.error(
+                'The following error has been ignored because no `failureAction` has been set:',
+                err,
+            );
         }
     } finally {
-        channel.close();
+        if (yield cancelled()) {
+            channel.close();
+        }
     }
 }
-
-const listener = (reference: DocumentReference, action: (snapshot: DocumentSnapshot, emit: any) => void) =>
-    eventChannel(emit => reference.onSnapshot((snapshot: DocumentSnapshot) => {
-        action(snapshot, emit);
-    }));

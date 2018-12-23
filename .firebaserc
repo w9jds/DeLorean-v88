@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "devfest-v88"
+  },
+  "targets": {
+    "devfest-v88": {
+      "hosting": {
+        "dev": [
+          "windycity-dev"
+        ],
+        "prod": [
+          "devfest-v88"
+        ]
+      }
+    }
+  }
+}

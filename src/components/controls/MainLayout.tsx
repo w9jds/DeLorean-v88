@@ -1,9 +1,11 @@
+import '../../stylesheets/main.scss';
+
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
 import { ApplicationState } from '../..';
-import { FirebaseConfig } from '../../../config/delorean.config';
+import { FirebaseConfig } from '../../config/delorean.config';
 
 import firebase from '@firebase/app';
 import '@firebase/firestore';
@@ -12,22 +14,32 @@ import '@firebase/storage';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 
-import { setFirebaseApplication, setUser, setUserProfile } from '../../ducks/current';
-import { getUser, getUserProfile, getIsEditMode } from '../../selectors/current';
+import { setFirebaseApplication, setUser, setUserProfile, getUser, getUserProfile } from '../../ducks/current';
 import { Profile } from '../../models/user';
 import { getSiteData } from '../../sagas/current';
-import Header from './Header';
-import SiteConfig from '../dialogs/SiteConfig';
+import Header from './Header/Header';
+import SiteConfig from '../dialogs/SiteConfig/SiteConfig';
 import { Switch, Route, withRouter, RouteComponentProps } from 'react-router';
-import Footer from './Footer';
+import Footer from './Footer/Footer';
 import Team from '../pages/Team';
-import Home from '../pages/Home';
-import Dialogs from '../controls/Dialog';
-import Speakers from '../pages/Speakers';
+import Home from '../pages/Home/Home';
+import Dialogs from './Dialog/Dialog';
 import Schedule from '../pages/Schedule';
-import EditOverlay from './EditOverlay';
+import Speakers from '../pages/Speakers/Speakers';
+import Conduct from '../pages/Conduct/Conduct';
+import EditOverlay from './EditOverlay/EditOverlay';
+import SpeakerEditor from '../dialogs/SpeakerEditor/SpeakerEditor';
+import { getIsEditMode } from '../../ducks/admin';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
+
+export enum DeloreanRoutes {
+    HOME = '/',
+    SPEAKERS = '/speakers',
+    SCHEDULE = '/schedule',
+    TEAM = '/team',
+    CODE_OF_CONDUCT = '/code-of-conduct'
+}
 
 class MainLayout extends React.Component<MainLayoutProps> {
 
@@ -53,25 +65,38 @@ class MainLayout extends React.Component<MainLayoutProps> {
         }
     }
 
+    buildAdminPanels = () => {
+        const { profile } = this.props;
+
+        if (profile && profile.admin === true) {
+            return (
+                <React.Fragment>
+                    <SpeakerEditor />
+                </React.Fragment>
+            );
+        }
+
+        return null;
+    }
+
     render() {
         return (
             <div className="app-frame">
                 <Header />
 
-                <SiteConfig />
                 <Dialogs />
+                <SiteConfig />
+                {this.buildAdminPanels()}
 
                 <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/speakers" component={Speakers} />
-                    <Route exact path="/schedule" component={Schedule} />
-                    <Route exact path="/team" components={Team} />
+                    <Route exact path={DeloreanRoutes.HOME} component={Home} />
+                    <Route exact path={DeloreanRoutes.SPEAKERS} render={props => <Speakers {...props} />} />
+                    <Route exact path={DeloreanRoutes.SCHEDULE} component={Schedule} />
+                    <Route exact path={DeloreanRoutes.TEAM} render={props => <Team {...props} />} />
+                    <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT} component={Conduct} />
                 </Switch>
 
-                {
-                    this.props.isEditMode ?
-                    <EditOverlay /> : null
-                }
+                {this.props.isEditMode ? <EditOverlay /> : null}
 
                 <Footer />
             </div>
@@ -87,9 +112,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    setUser, setUserProfile,
-    setFirebaseApplication,
-    getSiteData
+    setUser, setUserProfile, setFirebaseApplication, getSiteData
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainLayout));

@@ -1,0 +1,8 @@
+{
+  "presets": [
+    "@babel/typescript", "@babel/react", ["@babel/env", { "modules": false }]
+  ],
+  "plugins": [
+    "@babel/proposal-class-properties"
+  ]
+}

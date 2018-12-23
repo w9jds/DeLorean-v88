@@ -1,82 +1,78 @@
 const path = require('path');
-const app = require('./package.json');
 const webpack = require('webpack');
+const renderer = require('marked').Renderer();
+const { DevfestDetails } = require('./src/config/delorean.details.js');
+
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const { DevfestDetails } = require('./config/delorean.config.js');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-let plugins = [];
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-
-if (NODE_ENV !== 'development') {
-    plugins = plugins.concat([
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.BannerPlugin([
-            `    ${app.name} by ${app.author}`,
-            `    Date: ${new Date().toISOString()}`
-        ].join('\n'))
-    ]);
-}
+const isDev = NODE_ENV === 'development';
 
 module.exports = {
     context: __dirname,
     mode: NODE_ENV,
     entry: {
-        'DeLorean-v88': ['babel-polyfill', 'isomorphic-fetch', './src/index.tsx']
+        'DeLorean-v88': ['isomorphic-fetch', './src/index.tsx']
     },
     optimization: {
-        minimize: NODE_ENV !== 'development' ? true : false,
+        minimize: !isDev,
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    output: {
+                        comments: false,
+                    },
+                },
+            }),
+        ]
     },
-    devtool: NODE_ENV !== 'development' ? false : 'sourcemap',
+    devtool: isDev ? 'sourcemap' : false,
     output: {
         path: path.resolve(__dirname, './build'),
-        filename: '[name].[hash].js'
+        filename: '[name].[hash].js',
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
-                loaders: 'ts-loader',
-                exclude: /node_modules/
-            },
-            {
                 test: /\.js$/,
-                use: ["source-map-loader"],
-                enforce: "pre"
+                use: ['babel-loader', 'source-map-loader'],
+                exclude: /node_modules/,
             },
             {
-                test: /\.s?css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader: 'resolve-url-loader'
-                        },
-                        {
-                            loader: 'sass-loader',
-                            options: {
-                                sourceMap: true
-                            }
-                        }
-                    ]
-                }),
+                test: /\.tsx?$/,
+                use: ['ts-loader'],
             },
             {
-                test: /\.(ttf|eot|woff|woff2)$/,
-                loaders: [
-                    'url-loader?name=/fonts/[name].[ext]',
-                    'file-loader?name=/fonts/[hash].[ext]'
+                test: /\.(sa|sc|c)ss$/,
+                use: [
+                  isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+                  'css-loader',
+                  'sass-loader',
+                ],
+            },
+            {
+                test: /\.md$/,
+                use: [
+                    { loader: "html-loader" },
+                    {
+                        loader: "markdown-loader",
+                        options: { pedantic: true, renderer }
+                    }
                 ]
             },
             {
+                test: /\.(ttf|eot|woff|woff2)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'fonts/'
+                }
+            },
+            {
                 test: /\.svg$/,
+                exclude: [/node_modules/],
                 loaders: ['babel-loader',
                     {
                         loader: 'react-svg-loader',
@@ -85,23 +81,40 @@ module.exports = {
                         }
                     }
                 ]
-
             },
             {
-                test: /\.(jpe?g|png)$/i,
-                loaders: ['file-loader?name=/assets/[hash].[ext]']
+                test: /\.svg$/,
+                include: [/node_modules/],
+                exclude: [/src/],
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'assets/'
+                }
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                    outputPath: 'assets/'
+                }
             }
         ]
     },
-    devServer: {
-        historyApiFallback: true,
-    },
     plugins: [
-        new FaviconsWebpackPlugin('./src/assets/event-logo.svg'),
-        new ExtractTextPlugin('styles/main.css'),
+        new MiniCssExtractPlugin({
+            filename: isDev ? 'styles/[name].css' : 'styles/[name].[hash].css',
+            chunkFilename: isDev ? 'styles/[id].css' : 'styles/[id].[hash].css',
+        }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
+            'process.env': {
+                NODE_ENV: JSON.stringify(NODE_ENV),
+                DELOREAN_API_KEY: JSON.stringify(process.env.DELOREAN_API_KEY),
+                DELOREAN_MAP_API: JSON.stringify(process.env.DELOREAN_MAP_API),
+                WINDY_CITY_EVENT_ID: JSON.stringify(process.env.WINDY_CITY_EVENT_ID),
+            }
         }),
         new webpack.EnvironmentPlugin([
             'NODE_ENV'
@@ -113,10 +126,10 @@ module.exports = {
             filename: 'index.html',
             environment: NODE_ENV,
             template: path.join(__dirname, './template.ejs'),
-        }),
-        ...plugins
+        })
     ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     }
 };
+

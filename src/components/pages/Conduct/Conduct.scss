@@ -1,0 +1,19 @@
+.conduct-page {
+    color: #000;
+    background-color: #fff;
+    padding: 16px 0;
+}
+
+.event-logo {
+    text-align: center;
+
+    > svg {
+        height: 300px;
+        width: 300px;
+    }
+
+    > img {
+        height: 300px;
+        width: 300px;
+    }
+}

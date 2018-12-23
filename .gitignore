@@ -66,5 +66,3 @@ out/
 Dockerfile
 /.idea
 /functions/lib
-/.firebaserc
-/config/delorean.config.js

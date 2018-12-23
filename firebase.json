@@ -9,15 +9,28 @@
       "npm --prefix ./functions run build"
     ]
   },
-  "hosting": {
-    "public": "build",
-    "rewrites": [
-      {
+  "hosting": [{
+      "target": "dev",
+      "public": "build",
+      "rewrites": [{
         "source": "**",
         "destination": "/index.html"
-      }
-    ]
-  },
+      }]
+  }, {
+    "target": "prod",
+    "public": "build",
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }],
+    "headers": [{
+      "source": "service-worker.js",
+      "headers": [{
+        "key": "Cache-Control",
+        "value": "no-store"
+      }]
+    }]
+  }],
   "storage": {
     "rules": "storage.rules"
   }
