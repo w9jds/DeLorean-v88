@@ -1,3 +1,5 @@
+import './Header.scss';
+
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -20,10 +22,11 @@ import MenuList from '@material-ui/core/MenuList';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { toggleEditMode, getUser, getUserProfile, getFirebaseApp } from '../../../ducks/current';
+import { getUser, getUserProfile, getFirebaseApp } from '../../../ducks/current';
 import { openConfigDialog } from '../../../ducks/config';
 import { EventbriteConfig } from '../../../config/delorean.config';
 import { DeloreanRoutes } from '../MainLayout';
+import { toggleEditMode } from '../../../ducks/admin';
 
 const styleSheet: StyleRulesCallback = theme => ({
     tabs: {
@@ -251,10 +254,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                               classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
 
                             <Tab label="Home" />
-                            <Tab label="Schedule" />
-                            <Tab label="Speakers" />
                             {
                                 /*
+                                    <Tab label="Schedule" />
+                                    <Tab label="Speakers" />
                                     <Tab label="Team" />
                                 */
                             }

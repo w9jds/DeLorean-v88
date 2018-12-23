@@ -1,4 +1,4 @@
-const SiteTheme = {
+export const SiteTheme = {
     Secondary: '#03dac4',
     Primary: '#1565c0',
     AppBar: {
@@ -13,17 +13,9 @@ const SiteTheme = {
         backgroundColor: '#6200EE',
         color: '#fff'
     }
-}
+};
 
-const DevfestDetails = {
-    name: 'DevFest',
-    location: 'Windy City',
-    description: 'A community-run conference offering sessions, hack-a-thons, and codelabs across many different technologies',
-    year: 2019,
-    url: 'https://windycity.devfest.io'
-}
-
-const FirebaseConfig = {
+export const FirebaseConfig = {
     apiKey: process.env.DELOREAN_API_KEY,
     authDomain: 'devfest-v88.firebaseapp.com',
     databaseURL: 'https://devfest-v88.firebaseio.com',
@@ -31,18 +23,10 @@ const FirebaseConfig = {
     storageBucket: 'devfest-v88.appspot.com'
 };
 
-const EventbriteConfig = {
+export const EventbriteConfig = {
     eventId: process.env.WINDY_CITY_EVENT_ID
-}
+};
 
-const MapsConfig = {
+export const MapsConfig = {
     apiKey: process.env.DELOREAN_MAP_API
-}
-
-module.exports = {
-    SiteTheme,
-    MapsConfig,
-    DevfestDetails,
-    FirebaseConfig,
-    EventbriteConfig
-}
+};

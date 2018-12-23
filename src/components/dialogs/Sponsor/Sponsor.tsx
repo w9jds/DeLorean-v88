@@ -1,4 +1,7 @@
+import './Sponsor.scss';
+
 import * as React from 'react';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
@@ -105,11 +108,20 @@ class SponsorDialog extends React.Component<SponsorDialogProps, SponsorDialogSta
         }
     }
 
+    dropZoneRender = ({ getRootProps, getInputProps, isDragActive }) => {
+        return (
+            <div {...getRootProps()} className={classnames('dropzone', 'drag-drop-logo', {'dropzone--isActive': isDragActive})}>
+                <input {...getInputProps()} />
+                <p>Drop sponsor logo</p>
+            </div>
+        );
+    }
+
     buildDropZone = () => {
         if (!this.state.file) {
             return (
-                <Dropzone accept="image/*" onDrop={this.onFileDrop} className="drag-drop-logo">
-                    <p>Drop sponsor logo</p>
+                <Dropzone accept="image/*" onDrop={this.onFileDrop}>
+                    {this.dropZoneRender}
                 </Dropzone>
             );
         }

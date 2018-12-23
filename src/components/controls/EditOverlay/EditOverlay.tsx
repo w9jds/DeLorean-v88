@@ -11,8 +11,8 @@ import { Add } from '@material-ui/icons';
 import CreateSponsor from '../../dialogs/Sponsor/Sponsor';
 
 import { openDialogWindow } from '../../../ducks/dialogs';
-import { getIsEditMode, getIsCreateOpen, toggleCreateMenu } from '../../../ducks/current';
 import Button from '@material-ui/core/Button';
+import { getIsEditMode, getIsCreateOpen, toggleCreateMenu, toggleSponsorEditor } from '../../../ducks/admin';
 
 type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -28,26 +28,33 @@ class EditOverlay extends React.Component<EditOverlayProps> {
         this.props.openDialogWindow(<CreateSponsor />, false);
     }
 
+    onCreateSpeaker = () => {
+        this.props.toggleCreateMenu();
+        this.props.toggleSponsorEditor();
+    }
+
     buildActions = () => {
         const { isOpen } = this.props;
         const actionsClass = classnames('menu-contents', {
             'hidden': !isOpen
         });
 
-        return [
-            (<div className={actionsClass}>
-                <Button variant="contained" className="label" onClick={this.onCreateSponsor}>
-                    Add Sponsor
-                </Button>
-                <Fab size="medium" color="primary" onClick={this.onCreateSponsor} />
-            </div>),
-            (<div className={actionsClass}>
-                <Button variant="contained" className="label">
-                    Add Speaker
-                </Button>
-                <Fab size="medium" color="primary" />
-            </div>)
-        ];
+        return (
+            <React.Fragment>
+                <div className={actionsClass}>
+                    <Button variant="contained" className="label" onClick={this.onCreateSponsor}>
+                        Add Sponsor
+                    </Button>
+                    <Fab size="medium" color="primary" onClick={this.onCreateSponsor} />
+                </div>
+                <div className={actionsClass}>
+                    <Button variant="contained" className="label" onClick={this.onCreateSpeaker}>
+                        Add Speaker
+                    </Button>
+                    <Fab size="medium" color="primary" onClick={this.onCreateSpeaker}/>
+                </div>
+            </React.Fragment>
+        );
     }
 
     render() {
@@ -74,7 +81,6 @@ class EditOverlay extends React.Component<EditOverlayProps> {
 
         );
     }
-
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
@@ -83,7 +89,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    openDialogWindow, toggleCreateMenu
+    openDialogWindow, toggleCreateMenu, toggleSponsorEditor
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditOverlay));

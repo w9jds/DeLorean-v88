@@ -6,16 +6,15 @@ import Map from '../../sections/Map/Map';
 import Button from '@material-ui/core/Button';
 import RightArrow from '@material-ui/icons/KeyboardArrowRight';
 
-import { EventbriteConfig } from '../../../config/delorean.config';
+import { EventbriteConfig, SiteTheme } from '../../../config/delorean.config';
+import { DevfestDetails } from '../../../config/delorean.details';
 import { ApplicationState } from '../../..';
 
 import Logo from '../../../assets/event-logo.svg';
 import * as background from '../../../assets/intro-background.jpg';
 import { RouteComponentProps } from 'react-router';
-
 import { isAfter, format } from 'date-fns';
 
-import { DevfestDetails, SiteTheme } from '../../../config/delorean.config';
 import Sponsors from '../../sections/Sponsors/Sponsors';
 import { getCurrentConfig } from '../../../ducks/current';
 

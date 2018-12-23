@@ -62,10 +62,10 @@ Personal Report
 You can make a personal report by getting in contact with any of the event organizers. Event Organizers can be identified by special lanyards and/or special badges. If you wish, you can also use the anonymous form but provide your contact information at the end. In the event organizers are not able to be reached, please reach out to us directly by phone/email at:
 
 - General GDG/DevFest Organizer: [GDG Chicago](mailto:chicagogdg@gmail.com)
-- GDG Co-Organizer: [Joel Vasallo](mailto:joelvasallo@gmail.com) / [(773) 318-8144](tel:7733188144)
-- Lead Organizer/GDG Mentor: [Dan Baran](mailto:danbaran@gmail.com) / [(630) 212-1540](tel:6302121540)
+- GDG Co-Organizer: [Joel Vasallo](mailto:joelvasallo@gmail.com) | [(773) 318-8144](tel:7733188144)
+- Lead Organizer/GDG Mentor: [Dan Baran](mailto:danbaran@gmail.com) | [(630) 212-1540](tel:6302121540)
 - Women Techmakers Lead/GDG Co-Organizer: [Deana Greenfield](mailto:deanagreenfield@gmail.com)
-- GDG North America Program Manager: Kyle Paul
+- GDG North America Program Manager: [Kyle Paul](kylepaul@google.com)
 - Emergency: [911](tel:911)
 - ICASA Hotline (24/7): [(888) 293-2080](tel:8882932080)
 

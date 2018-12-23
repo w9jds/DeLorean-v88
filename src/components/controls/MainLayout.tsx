@@ -1,3 +1,5 @@
+import '../../stylesheets/main.scss';
+
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
@@ -12,7 +14,7 @@ import '@firebase/storage';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 
-import { setFirebaseApplication, setUser, setUserProfile, getUser, getUserProfile, getIsEditMode } from '../../ducks/current';
+import { setFirebaseApplication, setUser, setUserProfile, getUser, getUserProfile } from '../../ducks/current';
 import { Profile } from '../../models/user';
 import { getSiteData } from '../../sagas/current';
 import Header from './Header/Header';
@@ -26,6 +28,8 @@ import Schedule from '../pages/Schedule';
 import Speakers from '../pages/Speakers/Speakers';
 import Conduct from '../pages/Conduct/Conduct';
 import EditOverlay from './EditOverlay/EditOverlay';
+import SpeakerEditor from '../dialogs/SpeakerEditor/SpeakerEditor';
+import { getIsEditMode } from '../../ducks/admin';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -61,13 +65,28 @@ class MainLayout extends React.Component<MainLayoutProps> {
         }
     }
 
+    buildAdminPanels = () => {
+        const { profile } = this.props;
+
+        if (profile && profile.admin === true) {
+            return (
+                <React.Fragment>
+                    <SpeakerEditor />
+                </React.Fragment>
+            );
+        }
+
+        return null;
+    }
+
     render() {
         return (
             <div className="app-frame">
                 <Header />
 
-                <SiteConfig />
                 <Dialogs />
+                <SiteConfig />
+                {this.buildAdminPanels()}
 
                 <Switch>
                     <Route exact path={DeloreanRoutes.HOME} component={Home} />

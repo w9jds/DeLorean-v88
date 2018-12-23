@@ -11,12 +11,9 @@ import { ApplicationState } from '..';
 import { createSelector } from 'reselect';
 
 export const getFirebaseApp = (state: ApplicationState): FirebaseApp => state.current.firebase;
-// export const getFirestore = (state: ApplicationState): FirebaseFirestore => state.current.firebase.firestore();
 export const getUser = (state: ApplicationState) => state.current.user;
 export const getUserProfile = (state: ApplicationState) => state.current.profile;
 export const getCurrentConfig = (state: ApplicationState) => state.current.config;
-export const getIsEditMode = (state: ApplicationState) => state.current.isEditMode;
-export const getIsCreateOpen = (state: ApplicationState) => state.current.isCreateOpen;
 export const getSponsors = (state: ApplicationState) => state.current.sponsors;
 
 export const getFirestore = createSelector(
@@ -30,9 +27,7 @@ export enum CurrentTypes {
     SET_PROFILE = 'SET_PROFILE',
     SET_FIREBASE = 'SET_FIREBASE',
     SET_CONFIG = 'SET_CONFIG',
-    SET_SPONSORS = 'SET_SPONSORS',
-    TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE',
-    TOGGLE_CREATE_MENU = 'TOGGLE_CREATE_MENU'
+    SET_SPONSORS = 'SET_SPONSORS'
 }
 
 const initialState: CurrentState = {
@@ -40,9 +35,7 @@ const initialState: CurrentState = {
     profile: undefined,
     firebase: undefined,
     config: undefined,
-    sponsors: undefined,
-    isEditMode: false,
-    isCreateOpen: false
+    sponsors: undefined
 };
 
 const current: Reducer<CurrentState> = handleActions<any>({
@@ -62,15 +55,6 @@ const current: Reducer<CurrentState> = handleActions<any>({
         ...state,
         config: action.payload
     }),
-    [CurrentTypes.TOGGLE_EDIT_MODE]: (state: CurrentState) => ({
-        ...state,
-        isEditMode: !state.isEditMode,
-        isCreateOpen: !state.isEditMode === false ? false : state.isCreateOpen
-    }),
-    [CurrentTypes.TOGGLE_CREATE_MENU]: (state: CurrentState) => ({
-        ...state,
-        isCreateOpen: !state.isCreateOpen
-    }),
     [CurrentTypes.SET_SPONSORS]: (state: CurrentState, action: ReturnType<typeof setSponsors>) => ({
         ...state,
         sponsors: action.payload
@@ -82,7 +66,5 @@ export const setUserProfile = createAction<Profile>(CurrentTypes.SET_PROFILE);
 export const setSponsors = createAction<Record<string, Sponsor>>(CurrentTypes.SET_SPONSORS);
 export const setFirebaseApplication = createAction<FirebaseApp>(CurrentTypes.SET_FIREBASE);
 export const setSiteConfig = createAction<Configuration>(CurrentTypes.SET_CONFIG);
-export const toggleEditMode = createAction(CurrentTypes.TOGGLE_EDIT_MODE);
-export const toggleCreateMenu = createAction(CurrentTypes.TOGGLE_CREATE_MENU);
 
 export default current;

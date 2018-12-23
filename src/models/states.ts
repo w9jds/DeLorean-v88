@@ -11,8 +11,13 @@ export type CurrentState = {
     readonly firebase: FirebaseApp;
     readonly config: Configuration;
     readonly sponsors: Record<string, Sponsor>
+
+};
+
+export type AdminState = {
     readonly isEditMode: boolean;
     readonly isCreateOpen: boolean;
+    readonly isSpeakerEditorOpen: boolean;
 };
 
 export type ConfigState = {

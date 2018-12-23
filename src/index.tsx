@@ -1,5 +1,3 @@
-import './stylesheets/main.scss';
-
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -9,10 +7,11 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { SiteTheme } from './config/delorean.config';
-import { CurrentState, ConfigState, DialogsState } from './models/states';
+import { CurrentState, ConfigState, DialogsState, AdminState } from './models/states';
 import current from './ducks/current';
 import config from './ducks/config';
 import dialogs from './ducks/dialogs';
+import admin from './ducks/admin';
 import sagas from './sagas/sagas';
 import MainLayout from './components/controls/MainLayout';
 
@@ -22,13 +21,15 @@ export interface ApplicationState {
     readonly current: CurrentState;
     readonly config: ConfigState;
     readonly dialogs: DialogsState;
+    readonly admin: AdminState;
 }
 
 const store = createStore(
     combineReducers<ApplicationState>({
         current,
         config,
-        dialogs
+        dialogs,
+        admin
     }), applyMiddleware(sagaMiddleware)
 );
 
