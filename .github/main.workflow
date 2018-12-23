@@ -1,14 +1,8 @@
-workflow "Deployment Workflow" {
+workflow "Production Workflow" {
   on = "push"
   resolves = [
     "Deploy to Production",
-    "Deploy to Development",
   ]
-}
-
-action "Filter to Master Branch" {
-  uses = "actions/bin/filter@b2bea07"
-  args = "branch master"
 }
 
 action "Install Dependencies" {
@@ -22,7 +16,7 @@ action "Filter for Production" {
   args = "branch master"
 }
 
-action "GitHub Action for npm" {
+action "Build Production" {
   uses = "actions/npm@e7aaefe"
   needs = ["Filter for Production"]
   args = "run build-prod"
@@ -34,9 +28,14 @@ action "GitHub Action for npm" {
 
 action "Deploy to Production" {
   uses = "w9jds/firebase-action@master"
-  needs = ["GitHub Action for npm"]
+  needs = ["Build Production"]
   args = "deploy --only hosting:prod"
   secrets = ["FIREBASE_TOKEN"]
+}
+
+workflow "Development Workflow" {
+  on = "push"
+  resolves = ["Deploy to Development"]
 }
 
 action "Filter for Development" {
@@ -45,7 +44,7 @@ action "Filter for Development" {
   args = "branch development"
 }
 
-action "Build for Development" {
+action "Build Development" {
   uses = "actions/npm@e7aaefe"
   needs = ["Filter for Development"]
   args = "run build"
@@ -57,7 +56,9 @@ action "Build for Development" {
 
 action "Deploy to Development" {
   uses = "w9jds/firebase-action@master"
-  needs = ["Build for Development"]
+  needs = ["Build Development"]
   args = "deploy --only hosting:dev"
   secrets = ["FIREBASE_TOKEN"]
 }
+
+
