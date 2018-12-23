@@ -42,6 +42,7 @@ action "Deploy to Production" {
 action "Filter for Development" {
   uses = "actions/bin/filter@b2bea07"
   needs = ["Install Dependencies"]
+  args = "branch development"
 }
 
 action "Build for Development" {
