@@ -38,11 +38,12 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: ['babel-loader', 'source-map-loader'],
-                exclude: /node_modules/,
+                exclude: /node_modules/
             },
             {
                 test: /\.tsx?$/,
                 use: ['ts-loader'],
+                exclude: /node_modules/
             },
             {
                 test: /\.(sa|sc|c)ss$/,
@@ -50,7 +51,7 @@ module.exports = {
                   isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
                   'css-loader',
                   'sass-loader',
-                ],
+                ]
             },
             {
                 test: /\.md$/,
@@ -72,7 +73,7 @@ module.exports = {
             },
             {
                 test: /\.svg$/,
-                exclude: [/node_modules/],
+                exclude: /node_modules/,
                 loaders: ['babel-loader',
                     {
                         loader: 'react-svg-loader',
@@ -84,8 +85,8 @@ module.exports = {
             },
             {
                 test: /\.svg$/,
-                include: [/node_modules/],
-                exclude: [/src/],
+                include: /node_modules/,
+                exclude: /src/,
                 loader: 'file-loader',
                 options: {
                     name: '[name].[ext]',

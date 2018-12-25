@@ -13,17 +13,20 @@ import IconButton from '@material-ui/core/IconButton';
 import DialogContent from '@material-ui/core/DialogContent';
 import FormControl from '@material-ui/core/FormControl';
 
-import CloseIcon from '@material-ui/icons/Close';
+import { Close, Face } from '@material-ui/icons';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 
 import tinymce from 'tinymce/tinymce';
+import 'tinymce/themes/modern/theme';
+import '../../../stylesheets/modern-dark/content.min.css';
+import '../../../stylesheets/modern-dark/skin.min.css';
 import 'tinymce/plugins/autolink';
-import 'tinymce/skins/lightgray/content.min.css';
-import 'tinymce/skins/lightgray/skin.min.css';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/advlist';
 
 import { Dispatch, bindActionCreators } from 'redux';
-import { getFirestore } from '../../../ducks/current';
+import { getFirestore, getFirebaseApp } from '../../../ducks/current';
 import { ApplicationState } from '../../..';
 import { getIsSpeakerEditorOpen, toggleSponsorEditor } from '../../../ducks/admin';
 import { closeConfigDialog } from '../../../ducks/config';
@@ -31,11 +34,16 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
+import { UploadTaskSnapshot } from '@firebase/storage-types';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 const styleSheet: StyleRulesCallback = theme => ({
     appBar: {
         position: 'relative'
+    },
+    fullscreen: {
+        padding: '0 !important',
+        margin: '0 !important'
     },
     dialogForm: {
         display: 'flex',
@@ -45,6 +53,10 @@ const styleSheet: StyleRulesCallback = theme => ({
     flex: {
         flex: 1,
         textAlign: 'center'
+    },
+    headerFields: {
+        width: '50%',
+        margin: 'auto 0'
     },
     formControl: {
         margin: theme.spacing.unit,
@@ -77,7 +89,8 @@ type SpeakerEditorState = {
     facebook?: string,
     medium?: string,
     linkedin?: string,
-    blog?: string
+    blog?: string,
+    errors: string[]
 };
 
 type SpeakerEditorAttrs = {
@@ -95,16 +108,82 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
             name: '',
             company: '',
             file: undefined,
-            featured: false
+            featured: false,
+            errors: []
         };
     }
 
-    componentDidMount() {
+    componentDidUpdate(prevProps: SpeakerEditorProps) {
+        if (!prevProps.isOpen && this.props.isOpen) {
+            /**
+             * Push the initialize to the back of the event queue to ensure that
+             * react has finished adding the dialog to the DOM.
+             */
+            setTimeout(this.initTinyMce, 0);
+        }
+
+        if (prevProps.isOpen && !this.props.isOpen) {
+            tinymce.remove('textarea.bio-editor');
+        }
+    }
+
+    initTinyMce = () => {
         this.editor = tinymce.init({
-            selector: 'div.bio-editor .editor',
-            theme: 'modern',
-            plugins: [ 'autolink' ]
+            selector: 'textarea.bio-editor',
+            skin: 'modern-dark',
+            plugins: [ 'autolink', 'lists', 'advlist' ],
+            menubar: false,
+            statusbar: false,
+            toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
         });
+    }
+
+    isSpeakerValid = () => {
+        let errors = [];
+
+        if (!this.state.name) {
+            errors.push('name');
+        }
+
+        if (!this.state.file) {
+            errors.push('portrait');
+        }
+
+        if (errors.length > 0) {
+            this.setState({ errors });
+        }
+
+        return errors.length == 0;
+    }
+
+    onSaveClicked = () => {
+        if (this.isSpeakerValid()) {
+            let storage = this.props.firebase.storage().ref('speakers');
+
+            storage.child(this.state.name.replace(' ', '_'))
+                .put(this.state.file.contents, {
+                    contentType: this.state.file.metadata.type
+                })
+                .then(this.onImageStored);
+        }
+    }
+
+    onImageStored = async (task: UploadTaskSnapshot) => {
+        this.props.firestore.collection('/speakers').add({
+            name: this.state.name,
+            company: this.state.company,
+            twitter: this.state.twitter,
+            github: this.state.github,
+            facebook: this.state.facebook,
+            medium: this.state.medium,
+            linkedin: this.state.linkedin,
+            portraitUrl: await task.ref.getDownloadURL(),
+            featured: this.state.featured,
+            blog: this.state.blog,
+            bio: tinymce.activeEditor.getContent()
+        });
+
+        this.props.toggleSponsorEditor();
     }
 
     onValueChanged = (name: EditableTypes) =>
@@ -132,11 +211,24 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
     }
 
     dropZoneRender = ({ getRootProps, getInputProps, isDragActive }) => {
+        const { file } = this.state;
+
         return (
-            <div {...getRootProps()} className={classnames('dropzone', 'drag-drop-logo', {'dropzone--isActive': isDragActive})}>
+            <div {...getRootProps()} className={classnames('dropzone', 'editor-portrait', {'dropzone--isActive': isDragActive})}>
                 <input {...getInputProps()} />
-                <p>Drop sponsor logo</p>
+                {file && file.preview ? <img src={file.preview} className="portrait-image" /> : <Face />}
             </div>
+        );
+    }
+
+    buildFieldInput = (id: EditableTypes) => {
+        const { errors } = this.state;
+
+        return (
+            <Input id={id}
+                error={errors.indexOf(id) >= 0}
+                value={this.state[id]}
+                onChange={this.onValueChanged(id)} />
         );
     }
 
@@ -144,16 +236,20 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         const { classes, isOpen, toggleSponsorEditor } = this.props;
 
         return(
-            <Dialog fullScreen open={isOpen} TransitionComponent={Transition}>
+            <Dialog fullScreen
+                open={isOpen}
+                TransitionComponent={Transition}
+                classes={{ paperFullScreen: classes.fullscreen }}>
+
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton color="inherit" aria-label="Close" onClick={toggleSponsorEditor}>
-                            <CloseIcon />
+                            <Close />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.flex}>
                             Speaker Editor
                         </Typography>
-                        <Button color="inherit" >save</Button>
+                        <Button color="inherit" onClick={this.onSaveClicked}>save</Button>
                     </Toolbar>
                 </AppBar>
 
@@ -163,33 +259,48 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
                             {this.dropZoneRender}
                         </Dropzone>
 
-                        <div>
+                        <div className="field-containers">
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="name">Name</InputLabel>
-                                <Input id="name" value={this.state.name} onChange={this.onValueChanged('name')} />
+                                {this.buildFieldInput('name')}
                             </FormControl>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="company">Company</InputLabel>
-                                <Input id="company" value={this.state.company} onChange={this.onValueChanged('company')} />
+                                {this.buildFieldInput('company')}
+                            </FormControl>
+                        </div>
+                        <div className="field-containers">
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="twitter">Twitter Handle</InputLabel>
+                                {this.buildFieldInput('twitter')}
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="github">Github Username</InputLabel>
+                                {this.buildFieldInput('github')}
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="facebook">Facebook Username</InputLabel>
+                                {this.buildFieldInput('facebook')}
+                            </FormControl>
+                        </div>
+                        <div className="field-containers">
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="medium">Medium Username</InputLabel>
+                                {this.buildFieldInput('medium')}
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="linkedin">LinkedIn Username</InputLabel>
+                                {this.buildFieldInput('linkedin')}
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="blog">Blog Url</InputLabel>
+                                {this.buildFieldInput('blog')}
                             </FormControl>
                         </div>
                     </div>
 
-                    <FormControl>
-                        <FormControl>
-                            <InputLabel htmlFor="twitter">Twitter Handle</InputLabel>
-                            <Input id="twitter" value={this.state.twitter} onChange={this.onValueChanged('twitter')} />
-                        </FormControl>
-                        <FormControl>
-                            <InputLabel htmlFor="github">Github Username</InputLabel>
-                            <Input id="github" value={this.state.github} onChange={this.onValueChanged('github')} />
-                        </FormControl>
-                    </FormControl>
-
                     <FormControl className={classes.formControl}>
-                        <div className="bio-editor">
-                            <div className="editor" />
-                        </div>
+                        <textarea className="bio-editor" />
                     </FormControl>
                 </DialogContent>
             </Dialog>
@@ -200,7 +311,8 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
 const mapStateToProps = (state: ApplicationState) => ({
     isOpen: getIsSpeakerEditorOpen(state),
-    firestore: getFirestore(state)
+    firestore: getFirestore(state),
+    firebase: getFirebaseApp(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({

@@ -7,12 +7,12 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Fab from '@material-ui/core/Fab';
-import { Add } from '@material-ui/icons';
+import { Add, PersonAdd, CreditCard } from '@material-ui/icons';
 import CreateSponsor from '../../dialogs/Sponsor/Sponsor';
 
 import { openDialogWindow } from '../../../ducks/dialogs';
 import Button from '@material-ui/core/Button';
-import { getIsEditMode, getIsCreateOpen, toggleCreateMenu, toggleSponsorEditor } from '../../../ducks/admin';
+import { getIsEditMode, getIsCreateOpen, toggleCreateMenu, toggleSponsorEditor, getIsSpeakerEditorOpen } from '../../../ducks/admin';
 
 type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -45,25 +45,30 @@ class EditOverlay extends React.Component<EditOverlayProps> {
                     <Button variant="contained" className="label" onClick={this.onCreateSponsor}>
                         Add Sponsor
                     </Button>
-                    <Fab size="medium" color="primary" onClick={this.onCreateSponsor} />
+                    <Fab size="medium" color="primary" onClick={this.onCreateSponsor}>
+                        <CreditCard />
+                    </Fab>
                 </div>
                 <div className={actionsClass}>
                     <Button variant="contained" className="label" onClick={this.onCreateSpeaker}>
                         Add Speaker
                     </Button>
-                    <Fab size="medium" color="primary" onClick={this.onCreateSpeaker}/>
+                    <Fab size="medium" color="primary" onClick={this.onCreateSpeaker}>
+                        <PersonAdd />
+                    </Fab>
                 </div>
             </React.Fragment>
         );
     }
 
     render() {
-        const { isOpen } = this.props;
+        const { isOpen, isSpeakerEditorOpen } = this.props;
         const overlayClass = classnames('menu-overlay', {
             'hidden': !isOpen
         });
         const menuClass = classnames('fab-button', {
-            'menu-open': isOpen
+            'menu-open': isOpen,
+            'hidden': isSpeakerEditorOpen
         });
 
         return (
@@ -84,8 +89,9 @@ class EditOverlay extends React.Component<EditOverlayProps> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
+    isOpen: getIsCreateOpen(state),
     isEditMode: getIsEditMode(state),
-    isOpen: getIsCreateOpen(state)
+    isSpeakerEditorOpen: getIsSpeakerEditorOpen(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({

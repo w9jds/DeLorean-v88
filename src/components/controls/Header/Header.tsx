@@ -26,7 +26,7 @@ import { getUser, getUserProfile, getFirebaseApp } from '../../../ducks/current'
 import { openConfigDialog } from '../../../ducks/config';
 import { EventbriteConfig } from '../../../config/delorean.config';
 import { DeloreanRoutes } from '../MainLayout';
-import { toggleEditMode } from '../../../ducks/admin';
+import { toggleEditMode, getIsEditMode } from '../../../ducks/admin';
 
 const styleSheet: StyleRulesCallback = theme => ({
     tabs: {
@@ -243,6 +243,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
     }
 
+    buildNavigationItems = () => {
+        const { profile } = this.props;
+        let tabs = [<Tab key="home" label="Home" />];
+
+        if (profile && profile.admin === true) {
+            tabs.push(<Tab key="schedule" label="Schedule" />);
+        }
+
+        if (profile && profile.admin === true) {
+            tabs.push(<Tab key="speakers" label="Speakers" />);
+        }
+
+        return tabs;
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -253,14 +268,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         <Tabs value={this.state.route} onChange={this.onNavigationChanged}
                               classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
 
-                            <Tab label="Home" />
-                            {
-                                /*
-                                    <Tab label="Schedule" />
-                                    <Tab label="Speakers" />
-                                    <Tab label="Team" />
-                                */
-                            }
+                            {this.buildNavigationItems()}
+
                         </Tabs>
                     </nav>
 
@@ -279,7 +288,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 const mapStateToProps = (state: ApplicationState) => ({
     user: getUser(state),
     profile: getUserProfile(state),
-    firebase: getFirebaseApp(state)
+    firebase: getFirebaseApp(state),
+    isEditMode: getIsEditMode(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({

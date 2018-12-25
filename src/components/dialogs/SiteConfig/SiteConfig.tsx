@@ -36,6 +36,10 @@ const stylesheet: StyleRulesCallback = theme => ({
     appBar: {
         position: 'relative'
     },
+    fullscreen: {
+        padding: 0,
+        margin: 0
+    },
     dialogForm: {
         display: 'flex',
         flexFlow: 'column',
@@ -162,6 +166,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
         return (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Dialog fullScreen open={this.props.open}
+                    classes={{ root: classes.fullscreen }}
                     onClose={this.handleClose}
                     TransitionComponent={Transition}>
                     <AppBar className={classes.appBar}>
