@@ -7,10 +7,11 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { SiteTheme } from './config/delorean.config';
-import { CurrentState, ConfigState, DialogsState, AdminState } from './models/states';
+import { CurrentState, ConfigState, DialogsState, AdminState, SpeakerState } from './models/states';
 import current from './ducks/current';
 import config from './ducks/config';
 import dialogs from './ducks/dialogs';
+import speakers from './ducks/speakers';
 import admin from './ducks/admin';
 import sagas from './sagas/sagas';
 import MainLayout from './components/controls/MainLayout';
@@ -22,6 +23,7 @@ export interface ApplicationState {
     readonly config: ConfigState;
     readonly dialogs: DialogsState;
     readonly admin: AdminState;
+    readonly speakers: SpeakerState;
 }
 
 const store = createStore(
@@ -29,7 +31,8 @@ const store = createStore(
         current,
         config,
         dialogs,
-        admin
+        admin,
+        speakers
     }), applyMiddleware(sagaMiddleware)
 );
 

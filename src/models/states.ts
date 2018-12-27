@@ -1,9 +1,10 @@
 import { Profile } from './user';
 import Configuration from './config';
 
+import Sponsor from './sponsor';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
-import Sponsor from './sponsor';
+import { DocumentSnapshot } from '@firebase/firestore-types';
 
 export type CurrentState = {
     readonly user: User;
@@ -28,4 +29,8 @@ export type DialogsState = {
     readonly open: boolean;
     readonly fullscreen: boolean;
     readonly views: React.ReactElement<any> | React.ReactElement<any>[];
+};
+
+export type SpeakerState = {
+    readonly speakers: Record<string, DocumentSnapshot>;
 };

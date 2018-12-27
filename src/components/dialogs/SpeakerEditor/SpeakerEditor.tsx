@@ -171,19 +171,36 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
     onImageStored = async (task: UploadTaskSnapshot) => {
         this.props.firestore.collection('/speakers').add({
             name: this.state.name,
-            company: this.state.company,
-            twitter: this.state.twitter,
-            github: this.state.github,
-            facebook: this.state.facebook,
-            medium: this.state.medium,
-            linkedin: this.state.linkedin,
+            company: this.state.company || null,
+            twitter: this.state.twitter || null,
+            github: this.state.github || null,
+            facebook: this.state.facebook || null,
+            medium: this.state.medium || null,
+            linkedin: this.state.linkedin || null,
             portraitUrl: await task.ref.getDownloadURL(),
             featured: this.state.featured,
-            blog: this.state.blog,
+            blog: this.state.blog || null,
             bio: tinymce.activeEditor.getContent()
         });
 
+        this.clearForm();
         this.props.toggleSponsorEditor();
+    }
+
+    clearForm = () => {
+        this.setState({
+            name: '',
+            company: '',
+            featured: false,
+            file: undefined,
+            twitter: undefined,
+            github: undefined,
+            facebook: undefined,
+            medium: undefined,
+            linkedin: undefined,
+            blog: undefined,
+            errors: []
+        });
     }
 
     onValueChanged = (name: EditableTypes) =>
