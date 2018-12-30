@@ -1,3 +1,5 @@
+import { DocumentReference } from '@firebase/firestore-types';
+
 export type Speaker = {
     name: string;
     company?: string;
@@ -10,6 +12,11 @@ export type Speaker = {
     portraitUrl: string;
     featured: boolean;
     bio: string;
+};
+
+export type SpeakerEditorFullState = SpeakerEditorState & { 
+    bio: string;
+    ref?: DocumentReference;
 };
 
 export type SpeakerEditorState = {

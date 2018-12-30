@@ -12,7 +12,7 @@ import CreateSponsor from '../../dialogs/Sponsor/Sponsor';
 
 import { openDialogWindow } from '../../../ducks/dialogs';
 import Button from '@material-ui/core/Button';
-import { getIsEditMode, getIsCreateOpen, toggleCreateMenu, toggleSponsorEditor, getIsSpeakerEditorOpen } from '../../../ducks/admin';
+import { getIsEditMode, getIsCreateOpen, toggleCreateMenu, toggleSpeakerEditor, getIsSpeakerEditorOpen } from '../../../ducks/admin';
 
 type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -30,7 +30,7 @@ class EditOverlay extends React.Component<EditOverlayProps> {
 
     onCreateSpeaker = () => {
         this.props.toggleCreateMenu();
-        this.props.toggleSponsorEditor();
+        this.props.toggleSpeakerEditor();
     }
 
     buildActions = () => {
@@ -95,7 +95,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    openDialogWindow, toggleCreateMenu, toggleSponsorEditor
+    openDialogWindow, toggleCreateMenu, toggleSpeakerEditor
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditOverlay));

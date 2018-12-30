@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 import { SpeakerState } from '../models/states';
 import { ApplicationState } from '..';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { SpeakerEditorState } from '../models/speaker';
+import { SpeakerEditorFullState } from '../models/speaker';
 
 export const getSpeakers = (state: ApplicationState) => state.speakers.speakers;
 export const getEditorState = (state: ApplicationState) => state.speakers.editor;
@@ -17,7 +17,8 @@ export enum SpeakerTypes {
 
 const initialState: SpeakerState = {
     speakers: {},
-    editor: {            
+    editor: { 
+        bio: '',
         name: '',
         company: '',
         file: undefined,
@@ -38,6 +39,7 @@ const config: Reducer<SpeakerState> = handleActions<any>({
     [SpeakerTypes.CLEAR_EDITOR_STATE]: (state: SpeakerState) => ({
         ...state,
         editor: {
+            bio: '',
             name: '',
             company: '',
             file: undefined,
@@ -49,6 +51,6 @@ const config: Reducer<SpeakerState> = handleActions<any>({
 
 export const setSpeakers = createAction<Record<string, DocumentSnapshot>>(SpeakerTypes.SET_SPEAKERS);
 
-export const setEditorInitialState = createAction<SpeakerEditorState>(SpeakerTypes.SET_EDITOR_STATE);
+export const setEditorInitialState = createAction<SpeakerEditorFullState>(SpeakerTypes.SET_EDITOR_STATE);
 
 export default config;

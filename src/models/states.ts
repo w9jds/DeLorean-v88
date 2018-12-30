@@ -5,7 +5,7 @@ import Sponsor from './sponsor';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { SpeakerEditorState } from './speaker';
+import { SpeakerEditorFullState } from './speaker';
 
 export type CurrentState = {
     readonly user: User;
@@ -33,6 +33,6 @@ export type DialogsState = {
 };
 
 export type SpeakerState = {
-    readonly editor: SpeakerEditorState;
+    readonly editor: SpeakerEditorFullState;
     readonly speakers: Record<string, DocumentSnapshot>;
 };

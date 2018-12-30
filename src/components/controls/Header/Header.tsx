@@ -199,16 +199,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
 
     onScrollEvent = () => {
+        let isVisible = false;
         let intro = document.querySelector(`.intro #get-event-tickets-${EventbriteConfig.eventId}`);
 
         if (intro) {
-            let isVisible = this.isElementInViewport(intro);
+            isVisible = this.isElementInViewport(intro);
+        }
 
-            if (this.state.isTicketsVisible !== isVisible) {
-                this.setState({
-                    isTicketsVisible: isVisible
-                });
-            }
+        if (this.state.isTicketsVisible !== isVisible) {
+            this.setState({ isTicketsVisible: isVisible });
         }
     }
 

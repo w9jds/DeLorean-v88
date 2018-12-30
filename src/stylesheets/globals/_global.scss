@@ -64,6 +64,10 @@ select:focus {
 
 .page-base {
     min-height: calc(100vh - 210px);
+
+    > div {
+        padding-top: 24px;
+    }
 }
 
 .flex-auto {

@@ -11,8 +11,10 @@ import { Delete, Edit } from '@material-ui/icons';
 import { ApplicationState } from '../../..';
 import { getIsEditMode } from '../../../ducks/admin';
 import { DocumentReference } from '@firebase/firestore-types';
+import { Dispatch, bindActionCreators } from 'redux';
+import { editSpeaker } from '../../../sagas/editor';
 
-type SpeakerCardProps = SpeakerCardAttribs & ReturnType<typeof mapStateToProps>;
+type SpeakerCardProps = SpeakerCardAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 type SpeakerCardAttribs = {
     speaker: Speaker;
@@ -44,7 +46,9 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
     }
 
     onEditClicked = e => {
-        const { documentRef } = this.props;
+        const { documentRef, speaker, editSpeaker } = this.props;
+
+        editSpeaker(documentRef, speaker);
     }
 
     render() {
@@ -81,4 +85,8 @@ const mapStateToProps = (state: ApplicationState) => ({
     isEditMode: getIsEditMode(state)
 });
 
-export default connect(mapStateToProps)(SpeakerCard);
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    editSpeaker
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SpeakerCard);

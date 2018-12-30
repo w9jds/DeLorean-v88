@@ -33,9 +33,9 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 
 import { ApplicationState } from '../../..';
-import { SpeakerEditorState } from '../../../models/speaker';
+import { SpeakerEditorState, Speaker } from '../../../models/speaker';
 import { getFirestore, getFirebaseApp } from '../../../ducks/current';
-import { getIsSpeakerEditorOpen, toggleSponsorEditor } from '../../../ducks/admin';
+import { getIsSpeakerEditorOpen, toggleSpeakerEditor } from '../../../ducks/admin';
 import { closeConfigDialog } from '../../../ducks/config';
 import { getEditorState } from '../../../ducks/speaker';
 
@@ -126,6 +126,8 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
             statusbar: false,
             toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
         });
+
+        tinymce.activeEditor.setContent(this.props.initState.bio);
     }
 
     isSpeakerValid = () => {
@@ -151,7 +153,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         const storage = this.props.firebase.storage().ref('speakers');
 
         if (this.isSpeakerValid()) {
-            if (!initState) {
+            if (!initState || !initState.ref) {
                 storage.child(this.state.name.replace(' ', '_'))
                     .put(this.state.file.contents, { contentType: this.state.file.metadata.type })
                     .then(this.createSpeaker);
@@ -169,7 +171,26 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
     updateSpeaker = async (task?: UploadTaskSnapshot) => {
         const { initState } = this.props;
+        let changes: Speaker = {
+            name: this.state.name,
+            company: this.state.company || null,
+            twitter: this.state.twitter || null,
+            github: this.state.github || null,
+            facebook: this.state.facebook || null,
+            medium: this.state.medium || null,
+            linkedin: this.state.linkedin || null,
+            featured: this.state.featured,
+            blog: this.state.blog || null,
+            bio: tinymce.activeEditor.getContent(),
+            portraitUrl: initState.file.preview
+        };
 
+        if (task) {
+            changes.portraitUrl = await task.ref.getDownloadURL();
+        }
+
+        initState.ref.update(changes);
+        this.props.toggleSpeakerEditor();
     }
 
     createSpeaker = async (task: UploadTaskSnapshot) => {
@@ -187,7 +208,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
             bio: tinymce.activeEditor.getContent()
         });
 
-        this.props.toggleSponsorEditor();
+        this.props.toggleSpeakerEditor();
     }
 
     onValueChanged = (name: EditableTypes) =>
@@ -241,7 +262,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
     }
 
     render() {
-        const { classes, isOpen, toggleSponsorEditor } = this.props;
+        const { classes, isOpen, toggleSpeakerEditor } = this.props;
 
         return(
             <Dialog fullScreen
@@ -251,7 +272,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" aria-label="Close" onClick={toggleSponsorEditor}>
+                        <IconButton color="inherit" aria-label="Close" onClick={toggleSpeakerEditor}>
                             <Close />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.flex}>
@@ -325,7 +346,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    closeConfigDialog, toggleSponsorEditor
+    closeConfigDialog, toggleSpeakerEditor
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SpeakerEditor));

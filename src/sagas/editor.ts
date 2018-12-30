@@ -3,6 +3,7 @@ import { createAction } from 'redux-actions';
 import { DocumentReference } from '@firebase/firestore-types';
 import { Speaker } from '../models/speaker';
 import { setEditorInitialState } from '../ducks/speaker';
+import { toggleSpeakerEditor } from '../ducks/admin';
 
 enum EditorSagaTypes {
     EDIT_SPEAKER = 'EDIT_SPEAKER'
@@ -11,16 +12,17 @@ enum EditorSagaTypes {
 function* editInSpeakerEditor(action: ReturnType<typeof editSpeaker>) {
     const speaker = action.payload.speaker;
 
-    yield put(
-        setEditorInitialState({
-            ...speaker,
-            company: speaker.company || '',
-            errors: [],
-            file: {
-                preview: speaker.portraitUrl
-            }
-        })
-    );
+    yield put(setEditorInitialState({
+        ...speaker,
+        ref: action.payload.ref,
+        company: speaker.company || '',
+        errors: [],
+        file: {
+            preview: speaker.portraitUrl
+        }
+    }));
+
+    yield put(toggleSpeakerEditor());
 }
 
 export const editSpeaker = createAction(
