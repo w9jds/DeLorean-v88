@@ -62,13 +62,19 @@ select:focus {
     margin-right: auto;
 }
 
-.pac-container {
-    z-index: 3000;
+.page-base {
+    min-height: calc(100vh - 210px);
 }
 
 .flex-auto {
     flex: 1 1 auto !important;
 }
+
+.hidden {
+    display: none !important;
+}
+
+
 
 .mt-4 {
     margin-top: 24px !important;
@@ -76,8 +82,4 @@ select:focus {
 
 .mb-4 {
     margin-bottom: 24px !important;
-}
-
-.hidden {
-    display: none !important;
 }

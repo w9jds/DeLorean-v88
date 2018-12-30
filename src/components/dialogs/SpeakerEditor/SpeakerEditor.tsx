@@ -1,7 +1,10 @@
 import './SpeakerEditor.scss';
 
 import * as React from 'react';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { Dispatch, bindActionCreators } from 'redux';
+import Dropzone from 'react-dropzone';
 
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,10 +15,14 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import DialogContent from '@material-ui/core/DialogContent';
 import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 
 import { Close, Face } from '@material-ui/icons';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
+
 import { DocumentSnapshot } from '@firebase/firestore-types';
+import { UploadTaskSnapshot } from '@firebase/storage-types';
 
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
@@ -25,16 +32,12 @@ import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 
-import { Dispatch, bindActionCreators } from 'redux';
-import { getFirestore, getFirebaseApp } from '../../../ducks/current';
 import { ApplicationState } from '../../..';
+import { SpeakerEditorState } from '../../../models/speaker';
+import { getFirestore, getFirebaseApp } from '../../../ducks/current';
 import { getIsSpeakerEditorOpen, toggleSponsorEditor } from '../../../ducks/admin';
 import { closeConfigDialog } from '../../../ducks/config';
-import { connect } from 'react-redux';
-import Dropzone from 'react-dropzone';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import { UploadTaskSnapshot } from '@firebase/storage-types';
+import { getEditorState } from '../../../ducks/speaker';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 const styleSheet: StyleRulesCallback = theme => ({
@@ -66,6 +69,11 @@ const styleSheet: StyleRulesCallback = theme => ({
 
 type SpeakerEditorProps = WithStyles<typeof styleSheet> & SpeakerEditorAttrs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
+enum ErrorTypes {
+    PORTRAIT = 'portrait',
+    NAME = 'name'
+}
+
 type EditableTypes = 'medium'
     | 'name'
     | 'company'
@@ -74,24 +82,6 @@ type EditableTypes = 'medium'
     | 'facebook'
     | 'linkedin'
     | 'blog';
-
-type SpeakerEditorState = {
-    name: string,
-    company: string,
-    featured: boolean,
-    file: {
-        metadata: File,
-        contents: ArrayBuffer,
-        preview: string
-    },
-    twitter?: string,
-    github?: string,
-    facebook?: string,
-    medium?: string,
-    linkedin?: string,
-    blog?: string,
-    errors: string[]
-};
 
 type SpeakerEditorAttrs = {
     speaker?: DocumentSnapshot;
@@ -112,7 +102,6 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
             errors: []
         };
     }
-
     componentDidUpdate(prevProps: SpeakerEditorProps) {
         if (!prevProps.isOpen && this.props.isOpen) {
             /**
@@ -120,6 +109,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
              * react has finished adding the dialog to the DOM.
              */
             setTimeout(this.initTinyMce, 0);
+            this.setState(this.props.initState);
         }
 
         if (prevProps.isOpen && !this.props.isOpen) {
@@ -142,11 +132,11 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         let errors = [];
 
         if (!this.state.name) {
-            errors.push('name');
+            errors.push(ErrorTypes.NAME);
         }
 
         if (!this.state.file) {
-            errors.push('portrait');
+            errors.push(ErrorTypes.PORTRAIT);
         }
 
         if (errors.length > 0) {
@@ -157,18 +147,32 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
     }
 
     onSaveClicked = () => {
-        if (this.isSpeakerValid()) {
-            let storage = this.props.firebase.storage().ref('speakers');
+        const { initState } = this.props;
+        const storage = this.props.firebase.storage().ref('speakers');
 
-            storage.child(this.state.name.replace(' ', '_'))
-                .put(this.state.file.contents, {
-                    contentType: this.state.file.metadata.type
-                })
-                .then(this.onImageStored);
+        if (this.isSpeakerValid()) {
+            if (!initState) {
+                storage.child(this.state.name.replace(' ', '_'))
+                    .put(this.state.file.contents, { contentType: this.state.file.metadata.type })
+                    .then(this.createSpeaker);
+            }
+            else if (this.state.file.contents) {
+                storage.child(this.state.name.replace(' ', '_'))
+                    .put(this.state.file.contents, {contentType: this.state.file.metadata.type })
+                    .then(this.updateSpeaker);
+            }
+            else {
+                this.updateSpeaker();
+            }
         }
     }
 
-    onImageStored = async (task: UploadTaskSnapshot) => {
+    updateSpeaker = async (task?: UploadTaskSnapshot) => {
+        const { initState } = this.props;
+
+    }
+
+    createSpeaker = async (task: UploadTaskSnapshot) => {
         this.props.firestore.collection('/speakers').add({
             name: this.state.name,
             company: this.state.company || null,
@@ -183,24 +187,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
             bio: tinymce.activeEditor.getContent()
         });
 
-        this.clearForm();
         this.props.toggleSponsorEditor();
-    }
-
-    clearForm = () => {
-        this.setState({
-            name: '',
-            company: '',
-            featured: false,
-            file: undefined,
-            twitter: undefined,
-            github: undefined,
-            facebook: undefined,
-            medium: undefined,
-            linkedin: undefined,
-            blog: undefined,
-            errors: []
-        });
     }
 
     onValueChanged = (name: EditableTypes) =>
@@ -229,9 +216,13 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
     dropZoneRender = ({ getRootProps, getInputProps, isDragActive }) => {
         const { file } = this.state;
+        const style = classnames('dropzone', 'editor-portrait', {
+            'dropzone--isActive': isDragActive,
+            'portrait-error': this.state.errors.indexOf(ErrorTypes.PORTRAIT) > -1
+        });
 
         return (
-            <div {...getRootProps()} className={classnames('dropzone', 'editor-portrait', {'dropzone--isActive': isDragActive})}>
+            <div {...getRootProps()} className={style}>
                 <input {...getInputProps()} />
                 {file && file.preview ? <img src={file.preview} className="portrait-image" /> : <Face />}
             </div>
@@ -329,7 +320,8 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 const mapStateToProps = (state: ApplicationState) => ({
     isOpen: getIsSpeakerEditorOpen(state),
     firestore: getFirestore(state),
-    firebase: getFirebaseApp(state)
+    firebase: getFirebaseApp(state),
+    initState: getEditorState(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({

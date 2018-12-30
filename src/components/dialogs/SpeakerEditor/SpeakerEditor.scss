@@ -33,6 +33,10 @@
             margin: auto;
         }
 
+        &.portrait-error {
+            border-color: #ff0000;
+        }
+
         &:hover {
             background-color: rgba(150,150,150,0.20);
             cursor: pointer;

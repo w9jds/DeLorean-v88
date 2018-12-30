@@ -6,8 +6,7 @@ import Configuration from '../models/config';
 import { setSiteConfig, setSponsors, getFirestore } from '../ducks/current';
 import { DocumentSnapshot, FirebaseFirestore } from '@firebase/firestore-types';
 import { sync, Payload } from './firestore';
-import { Speaker } from '../models/speaker';
-import { setSpeakers } from '../ducks/speakers';
+import { setSpeakers } from '../ducks/speaker';
 
 enum CurrentSagaTypes {
     LOAD_SITE_DATA = 'LOAD_SITE_DATA'
@@ -53,11 +52,11 @@ const marshallSponsors = (collection: Payload) => {
 };
 
 const marshallSpeakers = (collection: Payload) => {
-    const speakers: Record<string, Speaker> = {};
+    const speakers: Record<string, DocumentSnapshot> = {};
 
     if ('forEach' in collection.snapshot) {
         collection.snapshot.forEach(
-            document => speakers[document.id] = document.data() as Speaker
+            document => speakers[document.id] = document
         );
     }
 

@@ -11,7 +11,7 @@ import { CurrentState, ConfigState, DialogsState, AdminState, SpeakerState } fro
 import current from './ducks/current';
 import config from './ducks/config';
 import dialogs from './ducks/dialogs';
-import speakers from './ducks/speakers';
+import speakers from './ducks/speaker';
 import admin from './ducks/admin';
 import sagas from './sagas/sagas';
 import MainLayout from './components/controls/MainLayout';

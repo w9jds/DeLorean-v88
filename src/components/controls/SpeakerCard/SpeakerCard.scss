@@ -1,0 +1,45 @@
+
+.speaker-card {
+    position: relative;
+    width: 300px;
+
+    .header {
+        display: flex;
+
+        .portrait-avatar {
+            height: 150px;
+            width: 150px;
+            border-radius: 150px;
+            overflow: hidden;
+            outline: none;
+            margin: 16px auto;
+        }
+
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 16px;
+        padding: 0 16px;
+
+
+    }
+
+    .action {
+        position: absolute;
+        min-width: 24px;
+        top: 6px;
+
+        &.edit {
+            left: 6px;
+        }
+    
+        &.delete {
+            right: 6px;
+        }
+    }
+
+}
+
