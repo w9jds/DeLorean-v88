@@ -5,43 +5,35 @@ import { connect } from 'react-redux';
 
 import { RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../../..';
-import { getSpeakers } from '../../../ducks/speaker';
+import { getSpeakersInOrder } from '../../../ducks/speaker';
 import SpeakerCard from '../../controls/SpeakerCard/SpeakerCard';
 import { Speaker } from '../../../models/speaker';
+import { DocumentSnapshot } from '@firebase/firestore-types';
 
 type SpeakerPageProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 
-class SpeakerPage extends React.Component<SpeakerPageProps> {
+const buildSpeakerCard = (speaker: DocumentSnapshot) => {
+    return (
+        <SpeakerCard key={speaker.id} 
+            documentRef={speaker.ref}
+            speaker={speaker.data() as Speaker} /> 
+    );
+};
 
-    buildSpeakerCards = () => {
-        const { speakers } = this.props;
-        let cards = [];
+const SpeakerPage = (props: SpeakerPageProps) => {
+    const {speakers} = props;
 
-        for (let key in speakers) {
-            cards.push(
-                <SpeakerCard key={key} 
-                    documentRef={speakers[key].ref}
-                    speaker={speakers[key].data() as Speaker} />
-            );
-        }
-
-        return cards;
-    }
-
-    render() {
-        return (
-            <main className="speaker page-base">
-                <div className="container">
-                    {this.buildSpeakerCards()}
-                </div>
-            </main>
-        );
-    }
-
-}
+    return (
+        <main className="speaker page-base">
+            <div className="container">
+                {speakers.map(buildSpeakerCard)}
+            </div>
+        </main>
+    );
+};
 
 const mapStateToProps = (state: ApplicationState) => ({
-    speakers: getSpeakers(state)
+    speakers: getSpeakersInOrder(state)
 });
 
 export default connect(mapStateToProps)(SpeakerPage);

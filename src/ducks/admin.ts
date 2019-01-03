@@ -11,7 +11,7 @@ export const getIsSpeakerEditorOpen = (state: ApplicationState) => state.admin.i
 export enum AdminTypes {
     TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE',
     TOGGLE_CREATE_MENU = 'TOGGLE_CREATE_MENU',
-    TOGGLE_SPEAKER_EDITOR = 'TOGGLE_SPEAKER_EDITOR'
+    SET_SPEAKER_EDITOR_OPEN = 'SET_SPEAKER_EDITOR_OPEN'
 }
 
 const initialState: AdminState = {
@@ -31,14 +31,14 @@ const admin: Reducer<AdminState> = handleActions<any>({
         ...state,
         isCreateOpen: !state.isCreateOpen
     }),
-    [AdminTypes.TOGGLE_SPEAKER_EDITOR]: (state: AdminState) => ({
+    [AdminTypes.SET_SPEAKER_EDITOR_OPEN]: (state: AdminState, action: ReturnType<typeof setSpeakerEditorOpen>) => ({
         ...state,
-        isSpeakerEditorOpen: !state.isSpeakerEditorOpen
+        isSpeakerEditorOpen: action.payload
     })
 }, initialState);
 
 export const toggleEditMode = createAction(AdminTypes.TOGGLE_EDIT_MODE);
 export const toggleCreateMenu = createAction(AdminTypes.TOGGLE_CREATE_MENU);
-export const toggleSpeakerEditor = createAction(AdminTypes.TOGGLE_SPEAKER_EDITOR);
+export const setSpeakerEditorOpen = createAction<boolean>(AdminTypes.SET_SPEAKER_EDITOR_OPEN);
 
 export default admin;

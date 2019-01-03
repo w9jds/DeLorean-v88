@@ -89,11 +89,13 @@ class MainLayout extends React.Component<MainLayoutProps> {
                 {this.buildAdminPanels()}
 
                 <Switch>
-                    <Route exact path={DeloreanRoutes.HOME} component={Home} />
                     <Route exact path={DeloreanRoutes.SPEAKERS} render={props => <Speakers {...props} />} />
-                    <Route exact path={DeloreanRoutes.SCHEDULE} component={Schedule} />
-                    <Route exact path={DeloreanRoutes.TEAM} render={props => <Team {...props} />} />
+                    {/* 
+                        <Route exact path={DeloreanRoutes.SCHEDULE} component={Schedule} />
+                        <Route exact path={DeloreanRoutes.TEAM} render={props => <Team {...props} />} /> 
+                    */}
                     <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT} component={Conduct} />
+                    <Route path={DeloreanRoutes.HOME} component={Home} />
                 </Switch>
 
                 {this.props.isEditMode ? <EditOverlay /> : null}

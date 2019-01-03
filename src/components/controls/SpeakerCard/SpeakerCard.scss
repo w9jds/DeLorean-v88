@@ -1,20 +1,29 @@
 
 .speaker-card {
     position: relative;
-    width: 300px;
+    margin: 15px 0;
+    width: 350px;
 
+    -webkit-transition: all 200ms ease-in;
+    -webkit-transform: scale(1); 
+    -ms-transition: all 200ms ease-in;
+    -ms-transform: scale(1); 
+    -moz-transition: all 200ms ease-in;
+    -moz-transform: scale(1);
+    transition: all 200ms ease-in;
+    transform: scale(1);
+    
     .header {
         display: flex;
 
         .portrait-avatar {
-            height: 150px;
-            width: 150px;
+            height: 175px;
+            width: 175px;
             border-radius: 150px;
             overflow: hidden;
             outline: none;
             margin: 16px auto;
         }
-
     }
 
     .content {
@@ -23,8 +32,6 @@
         text-align: center;
         margin-bottom: 16px;
         padding: 0 16px;
-
-
     }
 
     .action {
@@ -41,5 +48,17 @@
         }
     }
 
-}
+    &:hover {
+        box-shadow: 0px 0px 150px #000000;
+        z-index: 2;
+        -webkit-transition: all 200ms ease-in;
+        -webkit-transform: scale(1.2);
+        -ms-transition: all 200ms ease-in;
+        -ms-transform: scale(1.2);   
+        -moz-transition: all 200ms ease-in;
+        -moz-transform: scale(1.2);
+        transition: all 200ms ease-in;
+        transform: scale(1.2);
+    }
 
+}

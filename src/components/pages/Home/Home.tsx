@@ -17,12 +17,18 @@ import { isAfter, format } from 'date-fns';
 
 import Sponsors from '../../sections/Sponsors/Sponsors';
 import { getCurrentConfig } from '../../../ducks/current';
+import { DeloreanRoutes } from '../../controls/MainLayout';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
 class Home extends React.Component<HomeProps> {
 
     componentDidMount() {
+        const {location} = this.props;
+
+        if (location.pathname !== DeloreanRoutes.HOME) {
+            this.props.history.replace(DeloreanRoutes.HOME);
+        }
 
         // tslint:disable-next-line:no-string-literal
         window['EBWidgets'].createWidget({
@@ -31,7 +37,6 @@ class Home extends React.Component<HomeProps> {
             modal: true,
             modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
         });
-
     }
 
     openCalltoAction = () => window.open(this.props.config.event.papercall.url);

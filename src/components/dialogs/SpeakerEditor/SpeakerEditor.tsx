@@ -35,9 +35,9 @@ import 'tinymce/plugins/advlist';
 import { ApplicationState } from '../../..';
 import { SpeakerEditorState, Speaker } from '../../../models/speaker';
 import { getFirestore, getFirebaseApp } from '../../../ducks/current';
-import { getIsSpeakerEditorOpen, toggleSpeakerEditor } from '../../../ducks/admin';
 import { closeConfigDialog } from '../../../ducks/config';
 import { getEditorState } from '../../../ducks/speaker';
+import { getIsSpeakerEditorOpen, setSpeakerEditorOpen } from '../../../ducks/admin';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 const styleSheet: StyleRulesCallback = theme => ({
@@ -169,19 +169,23 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         }
     }
 
+    buildChanges = () => ({
+        name: this.state.name,
+        company: this.state.company || null,
+        twitter: this.state.twitter || null,
+        github: this.state.github || null,
+        facebook: this.state.facebook || null,
+        medium: this.state.medium || null,
+        linkedin: this.state.linkedin || null,
+        featured: this.state.featured,
+        blog: this.state.blog || null,
+        bio: tinymce.activeEditor.getContent(),
+    })
+
     updateSpeaker = async (task?: UploadTaskSnapshot) => {
         const { initState } = this.props;
         let changes: Speaker = {
-            name: this.state.name,
-            company: this.state.company || null,
-            twitter: this.state.twitter || null,
-            github: this.state.github || null,
-            facebook: this.state.facebook || null,
-            medium: this.state.medium || null,
-            linkedin: this.state.linkedin || null,
-            featured: this.state.featured,
-            blog: this.state.blog || null,
-            bio: tinymce.activeEditor.getContent(),
+            ...this.buildChanges(),
             portraitUrl: initState.file.preview
         };
 
@@ -190,26 +194,19 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         }
 
         initState.ref.update(changes);
-        this.props.toggleSpeakerEditor();
+        this.closeSpeakerEditor();
     }
 
     createSpeaker = async (task: UploadTaskSnapshot) => {
         this.props.firestore.collection('/speakers').add({
-            name: this.state.name,
-            company: this.state.company || null,
-            twitter: this.state.twitter || null,
-            github: this.state.github || null,
-            facebook: this.state.facebook || null,
-            medium: this.state.medium || null,
-            linkedin: this.state.linkedin || null,
-            portraitUrl: await task.ref.getDownloadURL(),
-            featured: this.state.featured,
-            blog: this.state.blog || null,
-            bio: tinymce.activeEditor.getContent()
+            ...this.buildChanges(),
+            portraitUrl: await task.ref.getDownloadURL()
         });
 
-        this.props.toggleSpeakerEditor();
+        this.closeSpeakerEditor();
     }
+
+    closeSpeakerEditor = () => this.props.setSpeakerEditorOpen(false);
 
     onValueChanged = (name: EditableTypes) =>
         (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => this.setState({
@@ -262,7 +259,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
     }
 
     render() {
-        const { classes, isOpen, toggleSpeakerEditor } = this.props;
+        const { classes, isOpen } = this.props;
 
         return(
             <Dialog fullScreen
@@ -272,7 +269,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton color="inherit" aria-label="Close" onClick={toggleSpeakerEditor}>
+                        <IconButton color="inherit" aria-label="Close" onClick={this.closeSpeakerEditor}>
                             <Close />
                         </IconButton>
                         <Typography variant="h6" color="inherit" className={classes.flex}>
@@ -346,7 +343,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    closeConfigDialog, toggleSpeakerEditor
+    closeConfigDialog, setSpeakerEditorOpen
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styleSheet)(SpeakerEditor));

@@ -65,7 +65,7 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
 
                     </div>
                     <div className="content">
-                        <Typography variant="subtitle1">{speaker.name}</Typography>
+                        <Typography variant="h6">{speaker.name}</Typography>
 
                         {
                             speaker.company ? 
