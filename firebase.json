@@ -12,6 +12,13 @@
   "hosting": [{
       "target": "dev",
       "public": "build",
+      "headers": [{
+        "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+        "headers": [{
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }]
+      }],
       "rewrites": [{
         "source": "**",
         "destination": "/index.html"
@@ -24,10 +31,10 @@
       "destination": "/index.html"
     }],
     "headers": [{
-      "source": "service-worker.js",
+      "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
       "headers": [{
-        "key": "Cache-Control",
-        "value": "no-store"
+        "key": "Access-Control-Allow-Origin",
+        "value": "*"
       }]
     }]
   }],

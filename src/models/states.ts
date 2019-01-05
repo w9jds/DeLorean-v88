@@ -6,6 +6,7 @@ import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { SpeakerEditorFullState } from './speaker';
+import { SessionEditorFullState } from './session';
 
 export type CurrentState = {
     readonly user: User;
@@ -20,6 +21,7 @@ export type AdminState = {
     readonly isEditMode: boolean;
     readonly isCreateOpen: boolean;
     readonly isSpeakerEditorOpen: boolean;
+    readonly isSessionEditorOpen: boolean;
 };
 
 export type ConfigState = {
@@ -35,4 +37,9 @@ export type DialogsState = {
 export type SpeakerState = {
     readonly editor: SpeakerEditorFullState;
     readonly speakers: Record<string, DocumentSnapshot>;
+};
+
+export type SessionState = {
+    readonly editor: SessionEditorFullState;
+    readonly sessions: Record<string, DocumentSnapshot>;
 };

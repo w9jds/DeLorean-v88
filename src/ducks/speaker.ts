@@ -20,6 +20,7 @@ export const getSpeakersInOrder = createSelector(getSpeakers, documents => {
             if (speakerA.name > speakerB.name) {
                 return 1;
             }
+
             if (speakerB.name > speakerA.name) {
                 return -1;
             }
@@ -53,12 +54,12 @@ const initialState: SpeakerState = {
     speakers: {}
 };
 
-const config: Reducer<SpeakerState> = handleActions<any>({
+const speakers: Reducer<SpeakerState> = handleActions<any>({
     [SpeakerTypes.SET_SPEAKERS]: (state: SpeakerState, action: ReturnType<typeof setSpeakers>) => ({
         ...state,
         speakers: action.payload
     }),
-    [SpeakerTypes.SET_EDITOR_STATE]: (state: SpeakerState, action: ReturnType<typeof setEditorInitialState>) => ({
+    [SpeakerTypes.SET_EDITOR_STATE]: (state: SpeakerState, action: ReturnType<typeof setSpeakerEditorInitialState>) => ({
         ...state,
         editor: action.payload
     }),
@@ -69,7 +70,7 @@ const config: Reducer<SpeakerState> = handleActions<any>({
 }, initialState);
 
 export const setSpeakers = createAction<Record<string, DocumentSnapshot>>(SpeakerTypes.SET_SPEAKERS);
-export const setEditorInitialState = createAction<SpeakerEditorFullState>(SpeakerTypes.SET_EDITOR_STATE);
-export const clearEditorState = createAction(SpeakerTypes.CLEAR_EDITOR_STATE);
+export const setSpeakerEditorInitialState = createAction<SpeakerEditorFullState>(SpeakerTypes.SET_EDITOR_STATE);
+export const clearSpeakerEditorState = createAction(SpeakerTypes.CLEAR_EDITOR_STATE);
 
-export default config;
+export default speakers;

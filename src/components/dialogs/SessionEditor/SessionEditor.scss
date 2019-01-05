@@ -1,0 +1,15 @@
+.description-editor {
+    height: 30rem;
+    width: 100%;
+    resize: none;
+    outline: none;
+}
+
+.editor-session-header {
+    display: flex;
+    padding: 24px 0;
+
+    .field-containers {
+        margin: auto 0;
+    }
+}

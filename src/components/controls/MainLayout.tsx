@@ -21,14 +21,15 @@ import Header from './Header/Header';
 import SiteConfig from '../dialogs/SiteConfig/SiteConfig';
 import { Switch, Route, withRouter, RouteComponentProps } from 'react-router';
 import Footer from './Footer/Footer';
-import Team from '../pages/Team';
 import Home from '../pages/Home/Home';
 import Dialogs from './Dialog/Dialog';
-import Schedule from '../pages/Schedule';
+import Schedule from '../pages/Schedule/Schedule';
 import Speakers from '../pages/Speakers/Speakers';
 import Conduct from '../pages/Conduct/Conduct';
+import Sessions from '../pages/Sessions/Sessions';
 import EditOverlay from './EditOverlay/EditOverlay';
 import SpeakerEditor from '../dialogs/SpeakerEditor/SpeakerEditor';
+import SessionEditor from '../dialogs/SessionEditor/SessionEditor';
 import { getIsEditMode } from '../../ducks/admin';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
@@ -37,7 +38,7 @@ export enum DeloreanRoutes {
     HOME = '/',
     SPEAKERS = '/speakers',
     SCHEDULE = '/schedule',
-    TEAM = '/team',
+    SESSIONS = '/sessions',
     CODE_OF_CONDUCT = '/code-of-conduct'
 }
 
@@ -72,6 +73,7 @@ class MainLayout extends React.Component<MainLayoutProps> {
             return (
                 <React.Fragment>
                     <SpeakerEditor />
+                    <SessionEditor />
                 </React.Fragment>
             );
         }
@@ -90,10 +92,8 @@ class MainLayout extends React.Component<MainLayoutProps> {
 
                 <Switch>
                     <Route exact path={DeloreanRoutes.SPEAKERS} render={props => <Speakers {...props} />} />
-                    {/* 
-                        <Route exact path={DeloreanRoutes.SCHEDULE} component={Schedule} />
-                        <Route exact path={DeloreanRoutes.TEAM} render={props => <Team {...props} />} /> 
-                    */}
+                    <Route exact path={DeloreanRoutes.SCHEDULE} component={props => <Schedule {...props} />} />
+                    <Route exact path={DeloreanRoutes.SESSIONS} component={props => <Sessions {...props} />} />
                     <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT} component={Conduct} />
                     <Route path={DeloreanRoutes.HOME} component={Home} />
                 </Switch>

@@ -13,7 +13,11 @@ service cloud.firestore {
     	allow read;
     }
     match /speakers/{uid} {
-      allow write: if request.auth.token.admin == true;
+    	allow write: if request.auth.token.admin == true;
+      allow read;
+    }
+    match /sessions/{uid} {
+    	allow write: if request.auth.token.admin == true;
       allow read;
     }
   }

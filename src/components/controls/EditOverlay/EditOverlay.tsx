@@ -12,7 +12,10 @@ import CreateSponsor from '../../dialogs/Sponsor/Sponsor';
 
 import { openDialogWindow } from '../../../ducks/dialogs';
 import Button from '@material-ui/core/Button';
-import { getIsEditMode, getIsCreateOpen, toggleCreateMenu, getIsSpeakerEditorOpen, setSpeakerEditorOpen } from '../../../ducks/admin';
+import { 
+    getIsEditMode, getIsCreateOpen, toggleCreateMenu, 
+    getIsSpeakerEditorOpen, setSpeakerEditorOpen, setSessionEditorOpen, getIsSessionEditorOpen 
+} from '../../../ducks/admin';
 
 type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -26,6 +29,11 @@ class EditOverlay extends React.Component<EditOverlayProps> {
     onCreateSpeaker = () => {
         this.props.toggleCreateMenu();
         this.props.setSpeakerEditorOpen(true);
+    }
+
+    onCreateSession = () => {
+        this.props.toggleCreateMenu();
+        this.props.setSessionEditorOpen(true);
     }
 
     buildActions = () => {
@@ -52,18 +60,24 @@ class EditOverlay extends React.Component<EditOverlayProps> {
                         <PersonAdd />
                     </Fab>
                 </div>
+                <div className={actionsClass}>
+                    <Button variant="contained" className="label" onClick={this.onCreateSession}>
+                        Add Session
+                    </Button>
+                    <Fab size="medium" color="primary" onClick={this.onCreateSession} />
+                </div>
             </React.Fragment>
         );
     }
 
     render() {
-        const { isOpen, isSpeakerEditorOpen } = this.props;
+        const { isOpen, isSpeakerEditorOpen, isSessionEditorOpen } = this.props;
         const overlayClass = classnames('menu-overlay', {
             'hidden': !isOpen
         });
         const menuClass = classnames('fab-button', {
             'menu-open': isOpen,
-            'hidden': isSpeakerEditorOpen
+            'hidden': isSpeakerEditorOpen || isSessionEditorOpen
         });
 
         return (
@@ -86,11 +100,12 @@ class EditOverlay extends React.Component<EditOverlayProps> {
 const mapStateToProps = (state: ApplicationState) => ({
     isOpen: getIsCreateOpen(state),
     isEditMode: getIsEditMode(state),
-    isSpeakerEditorOpen: getIsSpeakerEditorOpen(state)
+    isSpeakerEditorOpen: getIsSpeakerEditorOpen(state),
+    isSessionEditorOpen: getIsSessionEditorOpen(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    openDialogWindow, toggleCreateMenu, setSpeakerEditorOpen
+    openDialogWindow, toggleCreateMenu, setSpeakerEditorOpen, setSessionEditorOpen
 }, dispatch);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditOverlay));

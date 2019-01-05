@@ -170,16 +170,16 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
     }
 
     buildChanges = () => ({
-        name: this.state.name,
-        company: this.state.company || null,
-        twitter: this.state.twitter || null,
-        github: this.state.github || null,
-        facebook: this.state.facebook || null,
-        medium: this.state.medium || null,
-        linkedin: this.state.linkedin || null,
+        name: this.state.name.trim(),
+        company: this.state.company ? this.state.company.trim() : null,
+        twitter: this.state.twitter ? this.state.twitter.trim() : null,
+        github: this.state.github ? this.state.github.trim() : null,
+        facebook: this.state.facebook ? this.state.facebook.trim() : null,
+        medium: this.state.medium ? this.state.medium.trim() : null,
+        linkedin: this.state.linkedin ? this.state.linkedin.trim() : null,
         featured: this.state.featured,
-        blog: this.state.blog || null,
-        bio: tinymce.activeEditor.getContent(),
+        blog: this.state.blog ? this.state.blog.trim() : null,
+        bio: tinymce.activeEditor.getContent()
     })
 
     updateSpeaker = async (task?: UploadTaskSnapshot) => {

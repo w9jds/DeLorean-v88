@@ -7,6 +7,8 @@ import { setSiteConfig, setSponsors, getFirestore } from '../ducks/current';
 import { DocumentSnapshot, FirebaseFirestore } from '@firebase/firestore-types';
 import { sync, Payload } from './firestore';
 import { setSpeakers } from '../ducks/speaker';
+import { setSession } from '../ducks/session';
+import { Session } from '../models/session';
 
 enum CurrentSagaTypes {
     LOAD_SITE_DATA = 'LOAD_SITE_DATA'
@@ -39,6 +41,15 @@ function* loadEventSpeakers() {
     });
 }
 
+function* loadEventSessions() {
+    let firestore: FirebaseFirestore = yield select(getFirestore);
+
+    yield fork(sync, firestore.collection('sessions'), {
+        successAction: setSession,
+        transform: marshallSessions
+    });
+}
+
 const marshallSponsors = (collection: Payload) => {
     const sponsors: Record<string, Sponsor> = {};
 
@@ -63,12 +74,25 @@ const marshallSpeakers = (collection: Payload) => {
     return speakers;
 };
 
+const marshallSessions = (collection: Payload) => {
+    const sessions: Record<string, DocumentSnapshot> = {};
+
+    if ('forEach' in collection.snapshot) {
+        collection.snapshot.forEach(
+            document => sessions[document.id] = document
+        );
+    }
+
+    return sessions;
+ };
+
 export const getSiteData = createAction(CurrentSagaTypes.LOAD_SITE_DATA);
 
 export function* sagas() {
     yield all([
         takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadSiteConfig),
         takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadEventSponsors),
-        takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadEventSpeakers)
+        takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadEventSpeakers),
+        takeEvery(CurrentSagaTypes.LOAD_SITE_DATA, loadEventSessions)
     ]);
 }

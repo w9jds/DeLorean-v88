@@ -81,8 +81,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             case DeloreanRoutes.SPEAKERS:
                 update.route = 1;
                 break;
-            case DeloreanRoutes.SCHEDULE:
+            case DeloreanRoutes.SESSIONS:
                 update.route = 2;
+                break;
+            case DeloreanRoutes.SCHEDULE:
+                update.route = 3;
                 break;
             default:
                 update.route = -1;
@@ -232,24 +235,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 this.props.history.push(DeloreanRoutes.SPEAKERS);
                 break;
             case 2:
-                this.props.history.push(DeloreanRoutes.SCHEDULE);
+                this.props.history.push(DeloreanRoutes.SESSIONS);
                 break;
             case 3:
-                this.props.history.push(DeloreanRoutes.TEAM);
+                this.props.history.push(DeloreanRoutes.SCHEDULE);
                 break;
             default:
                 break;
         }
-    }
-
-    buildNavigationItems = () => {
-        const { profile } = this.props;
-        let tabs = [
-            <Tab key="home" label="Home" />,
-            <Tab key="speakers" label="Speakers" />
-        ];
-
-        return tabs;
     }
 
     render() {
@@ -262,7 +255,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         <Tabs value={this.state.route} onChange={this.onNavigationChanged}
                               classes={{ flexContainer: classes.tabs, root: classes.tabs }}>
 
-                            {this.buildNavigationItems()}
+                            <Tab key="home" label="Home" />
+                            <Tab key="speakers" label="Speakers" />
+                            <Tab key="sessions" label="Sessions" />
 
                         </Tabs>
                     </nav>
