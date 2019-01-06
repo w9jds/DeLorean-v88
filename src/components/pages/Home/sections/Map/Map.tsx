@@ -1,8 +1,8 @@
+import './Map.scss';
+
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../..';
 import { Dispatch, bindActionCreators } from 'redux';
-import { closeConfigDialog } from '../../../ducks/config';
 
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -14,7 +14,9 @@ import { Directions } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles } from '@material-ui/core';
 import { StyleRulesCallback, withStyles } from '@material-ui/core/styles';
-import { getCurrentConfig } from '../../../ducks/current';
+import { getCurrentConfig } from '../../../../../ducks/current';
+import { ApplicationState } from '../../../../..';
+import { closeConfigDialog } from '../../../../../ducks/config';
 
 type MapProps = WithStyles<typeof stylesheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 const stylesheet: StyleRulesCallback = theme => ({

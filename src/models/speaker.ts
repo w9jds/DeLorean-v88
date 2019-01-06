@@ -2,6 +2,7 @@ import { DocumentReference } from '@firebase/firestore-types';
 
 export type Speaker = {
     name: string;
+    title?: string;
     company?: string;
     twitter?: string;
     github?: string;
@@ -21,6 +22,7 @@ export type SpeakerEditorFullState = SpeakerEditorState & {
 
 export type SpeakerEditorState = {
     name: string,
+    title?: string,
     company: string,
     featured: boolean,
     file: {

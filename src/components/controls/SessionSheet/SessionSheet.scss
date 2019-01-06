@@ -1,0 +1,43 @@
+
+.session {
+    width: 100%;
+    margin-bottom: 12px;
+
+    &-header {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    &-content {
+        width: 100%;
+
+        >p:first-of-type {
+            margin-top: 0;
+        }
+
+        >p:last-of-type {
+            margin-bottom: 0;
+        }
+    
+        .divider {
+            margin: 16px 0;
+        }
+    
+        .speakers {
+            display: flex;
+            flex-direction: column;
+    
+            .big-avatar {
+                width: 65px;
+                height: 65px;
+            }
+        
+            .header {
+                margin: 0 0 12px;
+            }
+        }
+    }
+
+}
+

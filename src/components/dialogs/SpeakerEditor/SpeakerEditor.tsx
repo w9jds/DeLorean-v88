@@ -76,6 +76,7 @@ enum ErrorTypes {
 
 type EditableTypes = 'medium'
     | 'name'
+    | 'title'
     | 'company'
     | 'twitter'
     | 'github'
@@ -97,6 +98,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         this.state = {
             name: '',
             company: '',
+            title: '',
             file: undefined,
             featured: false,
             errors: []
@@ -124,6 +126,8 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
             plugins: [ 'autolink', 'lists', 'advlist' ],
             menubar: false,
             statusbar: false,
+            extended_valid_elements : 'span[!class]',
+            invalid_styles: 'color font-size font-family background-color',
             toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
         });
 
@@ -171,6 +175,7 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
     buildChanges = () => ({
         name: this.state.name.trim(),
+        title: this.state.title ? this.state.title.trim() : null,
         company: this.state.company ? this.state.company.trim() : null,
         twitter: this.state.twitter ? this.state.twitter.trim() : null,
         github: this.state.github ? this.state.github.trim() : null,
@@ -289,6 +294,10 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="name">Name</InputLabel>
                                 {this.buildFieldInput('name')}
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="title">Title</InputLabel>
+                                {this.buildFieldInput('title')}
                             </FormControl>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="company">Company</InputLabel>

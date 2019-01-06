@@ -2,7 +2,6 @@ import './SessionEditor.scss';
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import { Dispatch, bindActionCreators } from 'redux';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -20,9 +19,6 @@ import Input from '@material-ui/core/Input';
 import { Close } from '@material-ui/icons';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
-import { DocumentSnapshot } from '@firebase/firestore-types';
-import { UploadTaskSnapshot } from '@firebase/storage-types';
-
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
 import '../../../stylesheets/modern-dark/content.min.css';
@@ -37,8 +33,8 @@ import { getFirestore } from '../../../ducks/current';
 import { closeConfigDialog } from '../../../ducks/config';
 import { getSpeakers } from '../../../ducks/speaker';
 import { getIsSessionEditorOpen, setSessionEditorOpen } from '../../../ducks/admin';
-import { Select, MenuItem } from '@material-ui/core';
-import { SessionEditorState } from '../../../models/session';
+import { Select, MenuItem, Chip, Avatar } from '@material-ui/core';
+import { SessionEditorState, SessionTypes } from '../../../models/session';
 import { getSessionEditorState } from '../../../ducks/session';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
@@ -65,6 +61,13 @@ const styleSheet: StyleRulesCallback = theme => ({
     },
     control: {
         minWidth: '200px'
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    chip: {
+        margin: theme.spacing.unit / 4,
     }
 });
 
@@ -87,6 +90,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
 
         this.state = {
             name: '',
+            type: SessionTypes.SESSION,
             speakers: [],
             tracks: [],
             errors: []
@@ -115,6 +119,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
             plugins: [ 'autolink', 'lists', 'advlist' ],
             menubar: false,
             statusbar: false,
+            invalid_styles: 'color font-size font-family background-color',
             toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
         });
 
@@ -168,7 +173,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
             [name]: e.target.value
         } as Pick<SessionEditorState, EditableTypes>)
 
-    onSpeakersChanged = event => this.setState({ 
+    onSelectChanged = event => this.setState({ 
         [event.target.name as EditableTypes]: event.target.value 
     })
 
@@ -183,6 +188,20 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
         );
     }
 
+    buildSessionTypes = () => {
+        let items = [];
+
+        for (let item in SessionTypes) {
+            items.push(
+                <MenuItem key={item} value={SessionTypes[item]}>
+                    {SessionTypes[item]}
+                </MenuItem>
+            );
+        }
+
+        return items;
+    }
+
     buildSpeakerItems = () => {
         const {speakers} = this.props;
 
@@ -195,6 +214,24 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
                 </MenuItem>
             );
         });
+    }
+
+    onRenderSpeakers = selected => {
+        let {speakers, classes} = this.props;
+                                        
+        return (
+            <div className={classes.chips}>
+                {selected.map(key => {
+                    let speaker = speakers[key].data() as Speaker;
+
+                    return (
+                        <Chip key={key} className={classes.chip}
+                            avatar={<Avatar src={speaker.portraitUrl} />}
+                            label={speaker.name} />
+                    );
+                })}
+            </div>
+        );
     }
 
     render() {
@@ -228,19 +265,26 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
                             </FormControl>
 
                             <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="type">Type</InputLabel>
+                                <Select classes={{select: classes.control}}
+                                    value={this.state.type}
+                                    inputProps={{ name: 'type' }}
+                                    onChange={this.onSelectChanged}>
+
+                                    {this.buildSessionTypes()}
+
+                                </Select>
+
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="speakers">Speakers</InputLabel>
                                 <Select multiple displayEmpty
                                     classes={{select: classes.control}}
                                     value={this.state.speakers}
-                                    onChange={this.onSpeakersChanged}
                                     inputProps={{ name: 'speakers' }}
-                                    renderValue={ (selected: any[]) => {
-                                        let {speakers} = this.props;
-                                        
-                                        return selected.map(
-                                            key => speakers[key].data().name
-                                        ).join(', ');
-                                    }}>
+                                    onChange={this.onSelectChanged}
+                                    renderValue={this.onRenderSpeakers}>
                                     
                                     {this.buildSpeakerItems()}
 

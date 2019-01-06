@@ -64,10 +64,10 @@ class Footer extends React.Component<FooterProps> {
         const { config } = this.props;
 
         return (
-            <footer className="footer">
-                {this.buildSocialLinks(config)}
-                <div className="container-wide">
-                    <div>
+            <footer className="footer container-wide">
+
+                <div className="sources">
+                    <div className="sources-left">
                         <a href="https://github.com/w9jds/DeLorean-v88" className="code-by">
                             <Code />
                             <span>By Jeremy Shore</span>
@@ -77,12 +77,12 @@ class Footer extends React.Component<FooterProps> {
                         </span>
                     </div>
 
-                    <ul className="nav flex-auto">
-                        <li>
-                            <Link to="/code-of-conduct">Code of Conduct</Link>
-                        </li>
-                    </ul>
+                    <div className="sources-right">
+                        <a href={config && config.org ? `mailto:${config.org.email}` : ''}>Contact Us</a>
+                        <Link to="/code-of-conduct">Code of Conduct</Link>
+                    </div>
                 </div>
+
             </footer>
         );
     }

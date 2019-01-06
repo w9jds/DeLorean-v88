@@ -4,12 +4,12 @@ import { SessionState } from '../models/states';
 import { createSelector } from 'reselect';
 import { ApplicationState } from '..';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { SessionEditorFullState, SessionEditorState } from '../models/session';
+import { SessionEditorFullState, SessionEditorState, SessionTypes } from '../models/session';
 
 export const getSessions = (state: ApplicationState) => state.sessions.sessions;
 export const getSessionEditorState = (state: ApplicationState) => state.sessions.editor;
 
-export enum SessionTypes {
+export enum SessionActionTypes {
     SET_SESSION = 'SET_SESSION',
     SET_SESSION_STATE = 'SET_SESSION_STATE',
     CLEAR_SESSION_STATE = 'CLEAR_SESSION_STATE'
@@ -17,6 +17,7 @@ export enum SessionTypes {
 
 const clearState: SessionEditorFullState = {
     name: '',
+    type: SessionTypes.SESSION,
     tracks: [],
     errors: [],
     speakers: [],
@@ -29,22 +30,22 @@ const initialState: SessionState = {
 };
 
 const sessions: Reducer<SessionState> = handleActions<any>({
-    [SessionTypes.SET_SESSION]: (state: SessionState, action: ReturnType<typeof setSession>) => ({
+    [SessionActionTypes.SET_SESSION]: (state: SessionState, action: ReturnType<typeof setSession>) => ({
         ...state,
-        speakers: action.payload
+        sessions: action.payload
     }),
-    [SessionTypes.SET_SESSION_STATE]: (state: SessionState, action: ReturnType<typeof setSessionEditorInitialState>) => ({
+    [SessionActionTypes.SET_SESSION_STATE]: (state: SessionState, action: ReturnType<typeof setSessionEditorInitialState>) => ({
         ...state,
         editor: action.payload
     }),
-    [SessionTypes.CLEAR_SESSION_STATE]: (state: SessionState) => ({
+    [SessionActionTypes.CLEAR_SESSION_STATE]: (state: SessionState) => ({
         ...state,
         editor: clearState
     })
 }, initialState);
 
-export const setSession = createAction<Record<string, DocumentSnapshot>>(SessionTypes.SET_SESSION);
-export const setSessionEditorInitialState = createAction<SessionEditorState>(SessionTypes.SET_SESSION_STATE);
-export const clearSessionEditorState = createAction(SessionTypes.CLEAR_SESSION_STATE);
+export const setSession = createAction<Record<string, DocumentSnapshot>>(SessionActionTypes.SET_SESSION);
+export const setSessionEditorInitialState = createAction<SessionEditorFullState>(SessionActionTypes.SET_SESSION_STATE);
+export const clearSessionEditorState = createAction(SessionActionTypes.CLEAR_SESSION_STATE);
 
 export default sessions;

@@ -1,8 +1,10 @@
+import './Sponsors.scss';
+
 import * as React from 'react';
-import { ApplicationState } from '../../..';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getSponsors } from '../../../ducks/current';
+import { ApplicationState } from '../../../../..';
+import { getSponsors } from '../../../../../ducks/current';
 
 type SponsorsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 

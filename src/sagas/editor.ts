@@ -3,7 +3,9 @@ import { createAction } from 'redux-actions';
 import { DocumentReference } from '@firebase/firestore-types';
 import { Speaker } from '../models/speaker';
 import { setSpeakerEditorInitialState, clearSpeakerEditorState } from '../ducks/speaker';
-import { setSpeakerEditorOpen, getIsSpeakerEditorOpen, AdminTypes } from '../ducks/admin';
+import { setSpeakerEditorOpen, AdminTypes, setSessionEditorOpen } from '../ducks/admin';
+import { clearSessionEditorState, setSessionEditorInitialState } from '../ducks/session';
+import { Session } from '../models/session';
 
 enum EditorTypes {
     EDIT_SPEAKER = 'EDIT_SPEAKER',
@@ -26,9 +28,27 @@ function* editInSpeakerEditor(action: ReturnType<typeof editSpeaker>) {
     yield put(setSpeakerEditorOpen(true));
 }
 
+function* editInSessionEditor(action: ReturnType<typeof editSession>) {
+    const session = action.payload.session;
+
+    yield put(setSessionEditorInitialState({
+        ...session,
+        ref: action.payload.ref,
+        errors: []
+    }));
+
+    yield put(setSessionEditorOpen(true));
+}
+
 function* closeSpeakerEditor(action: ReturnType<typeof setSpeakerEditorOpen>) {
     if (action.payload === false) {
         yield put(clearSpeakerEditorState());
+    }
+}
+
+function* closeSessionEditor(action: ReturnType<typeof setSessionEditorOpen>) {
+    if (action.payload === false) {
+        yield put(clearSessionEditorState());
     }
 }
 
@@ -37,9 +57,16 @@ export const editSpeaker = createAction(
     (ref: DocumentReference, speaker: Speaker) => ({ ref, speaker })
 );
 
+export const editSession = createAction(
+    EditorTypes.EDIT_SESSION,
+    (ref: DocumentReference, session: Session) => ({ ref, session})
+);
+
 export function* sagas() {
     yield all([
         takeEvery(EditorTypes.EDIT_SPEAKER, editInSpeakerEditor),
-        takeEvery(AdminTypes.SET_SPEAKER_EDITOR_OPEN, closeSpeakerEditor)
+        takeEvery(EditorTypes.EDIT_SESSION, editInSessionEditor),
+        takeEvery(AdminTypes.SET_SPEAKER_EDITOR_OPEN, closeSpeakerEditor),
+        takeEvery(AdminTypes.SET_SESSION_EDITOR_OPEN, closeSessionEditor)
     ]);
 }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { Speaker } from '../../../models/speaker';
 
-import { Card, Typography, Button } from '@material-ui/core';
+import { Card, Typography, Button, Tooltip } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 
 import { ApplicationState } from '../../..';
@@ -27,12 +27,16 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
         if (this.props.isEditMode) {
             return (
                 <React.Fragment>
-                    <Button variant="text" className="action edit" onClick={this.onEditClicked}>
-                        <Edit />
-                    </Button>
-                    <Button variant="text" className="action delete" onClick={this.onDeleteClicked}>
-                        <Delete />
-                    </Button>
+                    <Tooltip title="Edit" placement="top">
+                        <Button variant="text" className="action edit" onClick={this.onEditClicked}>
+                            <Edit />
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Delete" placement="top">
+                        <Button variant="text" className="action delete" onClick={this.onDeleteClicked}>
+                            <Delete />
+                        </Button>
+                    </Tooltip>
                 </React.Fragment>
             );
         }
@@ -51,6 +55,29 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
         editSpeaker(documentRef, speaker);
     }
 
+    buildSubTitle = () => {
+        const {company, title} = this.props.speaker;
+        let subTitle = '';
+
+        if (company && title) {
+            subTitle = `${title} @ ${company}`;
+        } else if (title) {
+            subTitle = `${title}`;
+        } else if (company) {
+            subTitle = `${company}`;
+        }
+
+        if (subTitle) {
+            return (
+                <Typography variant="subtitle1" >
+                    {subTitle}
+                </Typography>
+            );
+        }
+
+        return null;
+    }
+
     render() {
         const {speaker} = this.props;
 
@@ -58,21 +85,12 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
             <React.Fragment>
                 <Card className="speaker-card">
                     {this.buildActionButtons()}
-
                     <div className="header">
-
                         <img className="portrait-image portrait-avatar" src={speaker.portraitUrl} />
-
                     </div>
                     <div className="content">
                         <Typography variant="h6">{speaker.name}</Typography>
-
-                        {
-                            speaker.company ? 
-                            <Typography variant="subtitle1" >
-                                {speaker.company}
-                            </Typography> : null
-                        }
+                        {this.buildSubTitle()}
                     </div>
                 </Card>
             </React.Fragment>

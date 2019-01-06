@@ -42,6 +42,7 @@ export enum SpeakerTypes {
 
 const clearState = { 
     bio: '',
+    title: '',
     name: '',
     company: '',
     file: undefined,

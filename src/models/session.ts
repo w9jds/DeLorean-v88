@@ -2,10 +2,11 @@ import { DocumentReference } from '@firebase/firestore-types';
 
 export interface Session {
     name: string;
+    type: string;
     location?: string;
     speakers: string[];
     description: string;
-    tags: string[];
+    tracks: string[];
 }
 
 export type SessionEditorFullState = SessionEditorState & { 
@@ -13,8 +14,15 @@ export type SessionEditorFullState = SessionEditorState & {
     ref?: DocumentReference;
 };
 
+export enum SessionTypes {
+    SESSION = 'Session',
+    CODELAB = 'Codelab',
+    WORKSHOP = 'Workshop'
+}
+
 export type SessionEditorState = {
     name: string;
+    type: string;
     speakers: string[];
     tracks: string[];
     errors: string[];
