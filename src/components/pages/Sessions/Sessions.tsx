@@ -25,7 +25,7 @@ const SessionPage = (props: SessionPageProps) => {
                 <SessionSheet
                     key={key}
                     speakers={session.speakers.map(id => speakers[id].data() as Speaker)}
-                    document={sessions[key]}
+                    reference={sessions[key].ref}
                     session={session} />
             );
         });

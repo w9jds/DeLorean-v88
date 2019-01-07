@@ -144,27 +144,27 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
         return errors.length == 0;
     }
 
-    onSaveClicked = () => {
+    onSaveClicked = async () => {
         const { initState } = this.props;
+        const changes = this.buildChanges();
 
         if (this.isSessionValid()) {
-            this.createSession();
+            if (!initState || !initState.ref) {
+                await this.props.firestore.collection('/sessions').add(changes);
+            } else {
+                await this.props.initState.ref.update(changes);
+            }
+
+            this.closeSessionEditor();
         }
     }
 
     buildChanges = () => ({
+        type: this.state.type,
         name: this.state.name.trim(),
         speakers: this.state.speakers,
         description: tinymce.activeEditor.getContent()
     })
-
-    createSession = async () => {
-        await this.props.firestore.collection('/sessions').add({
-            ...this.buildChanges()
-        });
-
-        this.closeSessionEditor();
-    }
 
     closeSessionEditor = () => this.props.setSessionEditorOpen(false);
 
@@ -259,12 +259,12 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
                     <div className="editor-session-header">
 
                         <div className="field-containers">
-                            <FormControl className={classes.formControl}>
+                            <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel htmlFor="name">Name</InputLabel>
                                 {this.buildFieldInput('name')}
                             </FormControl>
 
-                            <FormControl className={classes.formControl}>
+                            <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel htmlFor="type">Type</InputLabel>
                                 <Select classes={{select: classes.control}}
                                     value={this.state.type}
@@ -277,7 +277,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
 
                             </FormControl>
 
-                            <FormControl className={classes.formControl}>
+                            <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel htmlFor="speakers">Speakers</InputLabel>
                                 <Select multiple displayEmpty
                                     classes={{select: classes.control}}

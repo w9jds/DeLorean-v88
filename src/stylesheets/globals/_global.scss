@@ -63,7 +63,7 @@ select:focus {
 }
 
 .page-base {
-    min-height: calc(100vh - 210px);
+    min-height: calc(100vh - 125px);
     background-color: #212121;
 
     > div {
@@ -78,7 +78,6 @@ select:focus {
 .hidden {
     display: none !important;
 }
-
 
 
 .mt-4 {

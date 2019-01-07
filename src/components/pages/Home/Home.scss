@@ -12,15 +12,26 @@
 
     .organizations {
         padding-bottom: 32px;
-        background-color: #fff;
+        background-color: #212121;
         min-height: 250px;
-        color: #000;
 
         .action {
             margin-left: auto;
             margin-right: auto;
             margin-top: 25px;
             text-align: center;
+        }
+
+        a, a:visited {
+            color: #fff;
+        }
+
+        .sponsor-grid {
+            margin-top: 24px;
+
+            .grid-root {
+                overflow: visible;
+            }
         }
     }
 }

@@ -122,16 +122,7 @@ class Home extends React.Component<HomeProps> {
                     </header>
 
                     <div className="organizations">
-                        <div className="action container-thin">
-                            <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, read our `}</span>
-                            <a href="https://docs.google.com/document/d/15Bj6Cw9wZ6a128YijDlbfL8LwpuZ-mKhMgjg1DHrp5w/edit?usp=sharing">Sponsor Prospectus</a>
-                            <span> or </span>
-                            <a href={config && config.org ? `mailto:${config.org.email}` : ''}>email us</a>
-                        </div>
-
-                        <div className="container" style={{ margin: '16px auto' }}>
-                            <Sponsors />
-                        </div>
+                        <Sponsors />
                     </div>
                 </section>
             </main>

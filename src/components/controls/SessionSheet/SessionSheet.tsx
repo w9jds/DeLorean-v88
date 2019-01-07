@@ -11,28 +11,29 @@ import {
     ExpansionPanelDetails, 
     ListItem, ListItemText, 
     ListItemAvatar, Divider,
-    Typography, Avatar
+    Typography, Avatar, Tooltip, Button
 } from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import renderHTML from 'react-render-html';
-import { DocumentSnapshot } from '@firebase/firestore-types';
+import { DocumentSnapshot, DocumentReference } from '@firebase/firestore-types';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../..';
 import { getIsEditMode } from '../../../ducks/admin';
 import { editSession } from '../../../sagas/editor';
+import { Delete, Edit } from '@material-ui/icons';
 
 type SessionSheetProps = SessionSheetAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 type SessionSheetAttribs = {
     speakers: Speaker[];
     session: Session;
-    document: DocumentSnapshot;
+    reference: DocumentReference;
 };
 
 const SessionSheet = (props: SessionSheetProps) => {
-    const {session, speakers} = props;
+    const {session, speakers, isEditMode} = props;
 
     const buildSpeakerChips = () => {
         return speakers.map(speaker => (
@@ -45,15 +46,46 @@ const SessionSheet = (props: SessionSheetProps) => {
         ));
     };
 
-    const buildActions = () => {
-        return null;
+    const onDeleteClicked = () => {
+        props.reference.delete();
+    };
+
+    const onEditClicked = () => {
+        props.editSession(props.reference, props.session);
+    };
+
+    const buildAdminActions = () => (
+        <div className="edit-actions">
+            <Tooltip title="Edit" placement="top">
+                <Button variant="text" className="edit" onClick={onEditClicked}>
+                    <Edit />
+                </Button>
+            </Tooltip>
+            <Tooltip title="Delete" placement="top">
+                <Button variant="text" className="delete" onClick={onDeleteClicked}>
+                    <Delete />
+                </Button>
+            </Tooltip>
+        </div>
+    );
+
+    const formatSessionTitle = () => {
+        let title = '';
+
+        if (session.type) {
+            title += `[${session.type}] `;
+        }
+
+        title += session.name;
+        return title;
     };
 
     return (
         <ExpansionPanel className="session">
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
+                {isEditMode ? buildAdminActions() : null}
                 <div className="session-header">
-                    <Typography variant="h5">{session.name}</Typography>
+                    <Typography variant="h5">{formatSessionTitle()}</Typography>
                 </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
@@ -69,8 +101,6 @@ const SessionSheet = (props: SessionSheetProps) => {
 
                         {buildSpeakerChips()}
                     </div>
-
-                    {buildActions()}
                 </div>
             </ExpansionPanelDetails>
         </ExpansionPanel>
