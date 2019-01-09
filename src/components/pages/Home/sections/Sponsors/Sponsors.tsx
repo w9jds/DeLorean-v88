@@ -4,6 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../../../..';
 import { getSponsors, getCurrentConfig } from '../../../../../ducks/current';
+import { SiteTheme } from '../../../../../config/delorean.config';
 import { DevfestDetails } from '../../../../../config/delorean.details';
 import { GridList, GridListTile } from '@material-ui/core';
 
@@ -31,20 +32,27 @@ const Sponsors = (props: SponsorsProps) => {
     
     return(
         <React.Fragment>
-            <div className="action container-thin">
-                <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, read our `}</span>
-                <a href="https://docs.google.com/document/d/15Bj6Cw9wZ6a128YijDlbfL8LwpuZ-mKhMgjg1DHrp5w/edit?usp=sharing">Sponsor Prospectus</a>
-                <span> or </span>
-                <a href={config && config.org ? `mailto:${config.org.email}` : ''}>email us</a>
-            </div>
+            <header style={SiteTheme.SponsorHeader}>
+                <div className="container">
+                    <h1>Sponsors and Community Partners</h1>
+                </div>
 
-            <div className="sponsor-grid container" >
-                <GridList classes={{ root: 'grid-root' }} cellHeight={90} cols={4}>
-                    {sponsors ? buildSponsorTiles() : null}
-                </GridList>
+                <div className="action container-thin">
+                    <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, read our `}</span>
+                    <a href="https://docs.google.com/document/d/15Bj6Cw9wZ6a128YijDlbfL8LwpuZ-mKhMgjg1DHrp5w/edit?usp=sharing">Sponsor Prospectus</a>
+                    <span> or </span>
+                    <a href={config && config.org ? `mailto:${config.org.email}` : ''}>email us</a>
+                </div>
+            </header>
+
+            <div className="organizations">
+                <div className="sponsor-grid container" >
+                    <GridList classes={{ root: 'grid-root' }} cellHeight={90} cols={4}>
+                        {sponsors ? buildSponsorTiles() : null}
+                    </GridList>
+                </div>
             </div>
         </React.Fragment>
-
     );
 };
 

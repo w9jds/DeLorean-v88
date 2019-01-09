@@ -115,15 +115,7 @@ class Home extends React.Component<HomeProps> {
                 {this.buildVenueSection()}
 
                 <section className="sponsors">
-                    <header style={SiteTheme.SponsorHeader}>
-                        <div className="container">
-                            <h1>Sponsors and Community Partners</h1>
-                        </div>
-                    </header>
-
-                    <div className="organizations">
-                        <Sponsors />
-                    </div>
+                    <Sponsors />
                 </section>
             </main>
         );

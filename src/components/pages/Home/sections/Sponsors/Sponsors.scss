@@ -1,3 +1,40 @@
+.sponsors {
+    display: flex;
+    flex-flow: column;
+
+    header {
+        display: flex;
+        width: 100%;
+        min-height: 200px;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        justify-content: center;
+
+        .action {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        a, a:visited {
+            color: #fff;
+        }
+    }
+
+    .organizations {
+        padding: 38px 0;
+        background-color: #212121;
+
+        .sponsor-grid {
+
+            .grid-root {
+                overflow: visible;
+            }
+        }
+    }
+}
+
 .sponsor-tile {
     cursor: pointer;
 
