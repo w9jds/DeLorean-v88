@@ -1,3 +1,5 @@
+import './Conduct.scss';
+
 import * as React from 'react';
 import Logo from '../../../assets/event-logo.svg';
 
