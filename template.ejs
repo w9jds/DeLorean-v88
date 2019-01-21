@@ -44,15 +44,6 @@
                 release: '<%= htmlWebpackPlugin.options.version %>',
                 environment: '<%= htmlWebpackPlugin.options.environment %>'
             };
-
-            if (navigator.serviceWorker) {
-                navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-                    console.log('ServiceWorker Registeration succeeded');
-                    registration.unregister();
-                }).catch(function(err) {
-                    console.log('SW error', err);
-                });
-            }
         </script>
     </body>
 </html>

@@ -3,10 +3,39 @@
     .container {
         display: flex;
         justify-content: center;
+        flex-direction: column;
         
-        >h1 {
-            margin-top: auto 0;
-        }
-    }
+        .timeslot {
 
+            &-header {
+                height: 80px;
+                display: flex;
+
+                h3 {
+                    margin: auto 0;
+                }
+            }
+
+            .session-item {
+                display: flex;
+                padding: 12px;
+                flex-direction: row;
+                background-color: #212121;
+                -moz-transition: all 0.3s ease-in-out;
+                -webkit-transition: all 0.3s ease-in-out;
+                -o-transition: all 0.3s ease-in-out;
+                transition: all 0.3s ease-in-out;
+
+                div:first-of-type {
+                    flex-grow: 1;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(150, 150, 150, 0.2);
+                }
+            }
+        }
+
+    }
 }

@@ -235,6 +235,7 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
                             </FormControl>
                             <FormControl className={classes.formControl}>
                                 <DatePicker
+                                    label="CFP Close Date"
                                     value={this.state.speakerClose}
                                     onChange={this.onSpeakerCloseDateChange} />
                             </FormControl>

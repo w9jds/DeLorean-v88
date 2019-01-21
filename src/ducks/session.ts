@@ -4,10 +4,29 @@ import { SessionState } from '../models/states';
 import { createSelector } from 'reselect';
 import { ApplicationState } from '..';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { SessionEditorFullState, SessionEditorState, SessionTypes } from '../models/session';
+import { SessionEditorFullState, SessionTypes, Session } from '../models/session';
 
 export const getSessions = (state: ApplicationState) => state.sessions.sessions;
 export const getSessionEditorState = (state: ApplicationState) => state.sessions.editor;
+
+export const getSessionByStartTime = createSelector(
+    [getSessions], sessions => {
+        const slots: Record<number, DocumentSnapshot[]> = {};
+        
+        for (let sessionId in sessions) {
+            const document = sessions[sessionId];
+            const session = document.data() as Session;
+            
+            if (session.startTime) {
+                const time = session.startTime.toDate().getTime();
+
+                slots[time] = slots[time] ? slots[time].concat(document) : [document];
+            }
+        }
+
+        return slots;
+    }
+);
 
 export enum SessionActionTypes {
     SET_SESSION = 'SET_SESSION',

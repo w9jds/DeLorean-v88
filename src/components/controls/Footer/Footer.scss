@@ -37,10 +37,16 @@
             font-size: 16px;
 
             a {
-                margin: auto 0 auto 12px;
+                margin: auto 0;
                 transition: color 0.4s ease-in-out 0s;
                 text-decoration: none;
                 color: #fff;
+            }
+
+            .link-divider {
+                width: 1px;
+                height: 28px;
+                margin: auto 8px;
             }
         }
     }

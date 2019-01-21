@@ -1,4 +1,4 @@
-import { DocumentReference } from '@firebase/firestore-types';
+import { DocumentReference, Timestamp } from '@firebase/firestore-types';
 
 export interface Session {
     name: string;
@@ -6,6 +6,8 @@ export interface Session {
     location?: string;
     speakers: string[];
     description: string;
+    startTime?: Timestamp;
+    endTime?: Timestamp;
     tracks: string[];
 }
 
@@ -17,12 +19,17 @@ export type SessionEditorFullState = SessionEditorState & {
 export enum SessionTypes {
     SESSION = 'Session',
     CODELAB = 'Codelab',
-    WORKSHOP = 'Workshop'
+    WORKSHOP = 'Workshop',
+    BREAK = 'Break',
+    REGISTRATION = 'Registration'
 }
 
 export type SessionEditorState = {
     name: string;
     type: string;
+    location?: string;
+    startTime?: Date;
+    endTime?: Date;
     speakers: string[];
     tracks: string[];
     errors: string[];

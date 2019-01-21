@@ -33,6 +33,8 @@ function* editInSessionEditor(action: ReturnType<typeof editSession>) {
 
     yield put(setSessionEditorInitialState({
         ...session,
+        startTime: session.startTime ? session.startTime.toDate() : new Date(),
+        endTime: session.endTime ? session.endTime.toDate() : new Date(),
         ref: action.payload.ref,
         errors: []
     }));

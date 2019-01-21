@@ -13,6 +13,19 @@
         margin: auto 0;
     }
 
+    .get-ticket-mobile {
+        position: fixed;
+        display: flex;
+        bottom: 18px;
+        right: 18px;
+        z-index: 1500;
+        transform: scale(0);
+
+        &.extended svg {
+            margin: 0 6px 0 0;
+        }
+    }
+
     .login {
         margin: auto 16px;
         height: 42px;

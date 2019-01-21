@@ -16,13 +16,15 @@ import {
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import renderHTML from 'react-render-html';
-import { DocumentSnapshot, DocumentReference } from '@firebase/firestore-types';
+import { DocumentReference } from '@firebase/firestore-types';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../..';
 import { getIsEditMode } from '../../../ducks/admin';
 import { editSession } from '../../../sagas/editor';
 import { Delete, Edit } from '@material-ui/icons';
+import SpeakerDetails from '../../dialogs/SpeakerDetails/SpeakerDetails';
+import { openDialogWindow } from '../../../ducks/dialogs';
 
 type SessionSheetProps = SessionSheetAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
@@ -37,13 +39,17 @@ const SessionSheet = (props: SessionSheetProps) => {
 
     const buildSpeakerChips = () => {
         return speakers.map(speaker => (
-            <ListItem key={speaker.name} button>
+            <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
                 <ListItemAvatar>
                     <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
                 </ListItemAvatar>
                 <ListItemText primary={speaker.name} secondary={speaker.company || null} />
             </ListItem>
         ));
+    };
+
+    const onSpeakerClicked = (speaker) => () => {
+        props.openDialogWindow(<SpeakerDetails key={speaker.id} speaker={speaker} />, false);
     };
 
     const onDeleteClicked = () => {
@@ -80,12 +86,26 @@ const SessionSheet = (props: SessionSheetProps) => {
         return title;
     };
 
+    const formatSessionLocation = () => {
+
+        if (!session.location) {
+            return 'To be determined';
+        }
+
+        if (isNaN(+session.location)) {
+            return session.location;
+        }
+
+        return `Room ${session.location}`;
+    };
+
     return (
         <ExpansionPanel className="session">
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
                 {isEditMode ? buildAdminActions() : null}
                 <div className="session-header">
                     <Typography variant="h5">{formatSessionTitle()}</Typography>
+                    <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
                 </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
@@ -112,7 +132,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    editSession
+    editSession, openDialogWindow
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SessionSheet);

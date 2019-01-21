@@ -5,6 +5,7 @@ const { DevfestDetails } = require('./src/config/delorean.details.js');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
@@ -104,6 +105,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new ManifestPlugin(),
         new MiniCssExtractPlugin({
             filename: isDev ? 'styles/[name].css' : 'styles/[name].[hash].css',
             chunkFilename: isDev ? 'styles/[id].css' : 'styles/[id].[hash].css',

@@ -19,7 +19,7 @@ import { Profile } from '../../models/user';
 import { getSiteData } from '../../sagas/current';
 import Header from './Header/Header';
 import SiteConfig from '../dialogs/SiteConfig/SiteConfig';
-import { Switch, Route, withRouter, RouteComponentProps } from 'react-router';
+import { Switch, Route, withRouter, RouteComponentProps, Redirect } from 'react-router';
 import Footer from './Footer/Footer';
 import Home from '../pages/Home/Home';
 import Dialogs from './Dialog/Dialog';
@@ -50,7 +50,6 @@ class MainLayout extends React.Component<MainLayoutProps> {
         super(props, context);
 
         this.firebase = firebase.initializeApp(FirebaseConfig);
-        this.firebase.firestore().settings({ timestampsInSnapshots: true });
 
         props.setFirebaseApplication(this.firebase);
         firebase.auth().onAuthStateChanged(this.verifyLogin);
@@ -91,10 +90,18 @@ class MainLayout extends React.Component<MainLayoutProps> {
                 {this.buildAdminPanels()}
 
                 <Switch>
-                    <Route exact path={DeloreanRoutes.SPEAKERS} render={props => <Speakers {...props} />} />
-                    <Route exact path={DeloreanRoutes.SCHEDULE} component={props => <Schedule {...props} />} />
-                    <Route exact path={DeloreanRoutes.SESSIONS} component={props => <Sessions {...props} />} />
-                    <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT} component={Conduct} />
+                    <Route exact path={DeloreanRoutes.SPEAKERS} 
+                        component={props => <Speakers {...props} />} 
+                    />
+                    <Route exact path={DeloreanRoutes.SCHEDULE} 
+                        component={props => <Schedule {...props} />} 
+                    />
+                    <Route exact path={DeloreanRoutes.SESSIONS} 
+                        component={() => <Redirect to={DeloreanRoutes.SCHEDULE}/>} 
+                    />
+                    <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT} 
+                        component={Conduct} 
+                    />
                     <Route path={DeloreanRoutes.HOME} component={Home} />
                 </Switch>
 

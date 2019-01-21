@@ -12,6 +12,7 @@ import Github from '../../../assets/github.svg';
 import Meetup from '../../../assets/meetup.svg';
 import Configuration from '../../../models/config';
 import { getCurrentConfig } from '../../../ducks/current';
+import Divider from '@material-ui/core/Divider';
 
 type FooterProps = ReturnType<typeof mapStateToProps>;
 
@@ -81,6 +82,7 @@ class Footer extends React.Component<FooterProps> {
 
                     <div className="sources-right">
                         <a href={config && config.org ? `mailto:${config.org.email}` : ''}>Contact Us</a>
+                        <Divider className="link-divider" />
                         <Link to="/code-of-conduct">Code of Conduct</Link>
                     </div>
                 </div>

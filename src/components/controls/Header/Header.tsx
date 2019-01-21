@@ -1,7 +1,9 @@
 import './Header.scss';
 
+import anime from 'animejs';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Dispatch, bindActionCreators } from 'redux';
 
@@ -10,10 +12,10 @@ import { ApplicationState } from '../../..';
 import firebase from '@firebase/app';
 import '@firebase/auth';
 
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core';
+import { StyleRulesCallback, withStyles, WithStyles, Fab, PropTypes } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
+import Button, { ButtonProps } from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
@@ -27,6 +29,8 @@ import { openConfigDialog } from '../../../ducks/config';
 import { EventbriteConfig } from '../../../config/delorean.config';
 import { DeloreanRoutes } from '../MainLayout';
 import { toggleEditMode, getIsEditMode } from '../../../ducks/admin';
+import { LocalActivity } from '@material-ui/icons';
+import { FabProps } from '@material-ui/core/Fab';
 
 const styleSheet: StyleRulesCallback = theme => ({
     tabs: {
@@ -38,11 +42,14 @@ type HeaderProps = WithStyles<typeof styleSheet> & ReturnType<typeof mapStateToP
 type HeaderState = {
     accountMenuOpen: boolean;
     isTicketsVisible: boolean;
+    isFooterVisible: boolean;
     anchorEl: HTMLElement;
     route: number;
 };
 
 class Header extends React.Component<HeaderProps, HeaderState> {
+
+    private mobileAnim;
 
     constructor(props: HeaderProps) {
         super(props);
@@ -50,14 +57,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.state = {
             accountMenuOpen: false,
             isTicketsVisible: true,
+            isFooterVisible: false,
             anchorEl: null,
             route: 0
         };
-
     }
 
     componentDidMount() {
         window.addEventListener('scroll', this.onScrollEvent);
+
         // tslint:disable-next-line:no-string-literal
         window['EBWidgets'].createWidget({
             widgetType: 'checkout',
@@ -66,9 +74,66 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             modalTriggerElementId: `get-header-event-tickets-${EventbriteConfig.eventId}`
         });
     }
-
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onScrollEvent);
+    }
+
+    componentDidUpdate(prevProps: HeaderProps, prevState: HeaderState) {
+        if (window.innerWidth <= 550) {
+            this.handleMobileTicketsButton(prevState);
+        }
+    }
+
+    handleMobileTicketsButton = (prevState: HeaderState) => {
+        let animationBase = {
+            targets: '.get-ticket-mobile',
+            duration: 725
+        };
+
+        if (prevState.isTicketsVisible !== this.state.isTicketsVisible) {
+            if (this.state.isTicketsVisible === false) {
+                this.mobileAnim = anime({
+                    targets: '.get-ticket-mobile',
+                    duration: 725,
+                    scale: [0, 1]
+                });
+            }
+            if (this.state.isTicketsVisible === true) {
+                this.mobileAnim.reverse();
+                this.mobileAnim.play();
+            }
+        }
+
+        if (!this.state.isTicketsVisible && prevState.isFooterVisible !== this.state.isFooterVisible) {
+            if (this.state.isFooterVisible === true) {
+                this.expandTickets();
+            }
+            if (this.state.isFooterVisible === false) {
+                anime({
+                    ...animationBase,
+                    translateY: 0,
+                    translateX: 0
+                });
+            }
+        }
+    }
+
+    expandTickets = () => {
+        const targets = document.querySelector('.get-ticket-mobile');
+        const footer = document.querySelector('.footer.container-wide');
+
+        const targetBounds = targets.getBoundingClientRect();
+        const footerHeight = footer.getBoundingClientRect().height;
+        
+        anime({
+            targets: targets,
+            translateY: [0, -(footerHeight - 10)],
+            translateX: () => {
+                let left = (window.innerWidth / 2) - (targetBounds.width / 2);
+                return [0, left - targetBounds.left];
+            },
+            duration: 725
+        });
     }
 
     static getDerivedStateFromProps(props: HeaderProps, state: HeaderState) {
@@ -81,11 +146,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             case DeloreanRoutes.SPEAKERS:
                 update.route = 1;
                 break;
-            case DeloreanRoutes.SESSIONS:
-                update.route = 2;
-                break;
             case DeloreanRoutes.SCHEDULE:
-                update.route = 3;
+                update.route = 2;
                 break;
             default:
                 update.route = -1;
@@ -111,19 +173,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         handler();
     }
 
-    handleClose = () => {
-        this.setState({
-            accountMenuOpen: false,
-            anchorEl: null
-        });
-    }
+    handleClose = () => this.setState({
+        accountMenuOpen: false,
+        anchorEl: null
+    })
 
-    openAccountMenu = (e: React.MouseEvent<HTMLImageElement>) => {
-        this.setState({
-            anchorEl: e.currentTarget,
-            accountMenuOpen: true
-        });
-    }
+    openAccountMenu = (e: React.MouseEvent<HTMLImageElement>) => this.setState({
+        anchorEl: e.currentTarget,
+        accountMenuOpen: true
+    })
 
     buildMenuItems = () => {
         let items = [];
@@ -196,34 +254,75 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         return (
             rect.top >= 0 &&
             rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + (rect.height / 2) &&
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
 
     onScrollEvent = () => {
-        let isVisible = false;
-        let intro = document.querySelector(`.intro #get-event-tickets-${EventbriteConfig.eventId}`);
+        const intro = document.querySelector(`.intro #get-event-tickets-${EventbriteConfig.eventId}`);
+        const footer = document.querySelector('.footer.container-wide');
+
+        let isTicketsVisible = intro ? true : false;
+        let isFooterVisible = false;
 
         if (intro) {
-            isVisible = this.isElementInViewport(intro);
+            isTicketsVisible = this.isElementInViewport(intro);
         }
 
-        if (this.state.isTicketsVisible !== isVisible) {
-            this.setState({ isTicketsVisible: isVisible });
+        if (footer) {
+            isFooterVisible = this.isElementInViewport(footer);
+        }
+
+        if (this.state.isTicketsVisible !== isTicketsVisible || this.state.isFooterVisible !== isFooterVisible) {
+            this.setState({ 
+                isTicketsVisible,
+                isFooterVisible
+            });
         }
     }
 
-    displayTicketButton = () => {
-        let display: string = this.state.isTicketsVisible ? 'none' : 'block';
+    buildMobileTicketsButton = () => {
+        const classes = classnames('get-ticket-mobile', {
+            'extended': this.state.isFooterVisible && window.innerWidth <= 550
+        });
+
+        const props = {
+            id: `get-header-event-tickets-${EventbriteConfig.eventId}`,
+            color: 'secondary',
+            variant: this.state.isFooterVisible ? 'extended' : null
+        };
 
         return (
-            <div className="get-tickets-header" style={{ display }}>
-                <Button id={`get-header-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
-                    Get Tickets
-                </Button>
+            <div className={classes}>
+                <Fab {...props as FabProps}>
+                    <LocalActivity />
+                    {this.state.isFooterVisible ? 'Get Tickets' : null}
+                </Fab>
             </div>
         );
+    }
+
+    buildHeaderTicketsButton = () => {
+        let classes = classnames('get-tickets-header', {
+            'hidden': this.state.isTicketsVisible
+        });
+
+        if (window.innerWidth > 550) {
+            let props = {
+                id: `get-header-event-tickets-${EventbriteConfig.eventId}`,
+                color: 'secondary',
+                variant: 'contained'
+            };
+
+            return (
+                <div className={classes}>
+                    <Button {...props as ButtonProps}>
+                        Get Tickets
+                    </Button>
+                </div>
+            );
+        }
     }
 
     onNavigationChanged = (event, value) => {
@@ -235,9 +334,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 this.props.history.push(DeloreanRoutes.SPEAKERS);
                 break;
             case 2:
-                this.props.history.push(DeloreanRoutes.SESSIONS);
-                break;
-            case 3:
                 this.props.history.push(DeloreanRoutes.SCHEDULE);
                 break;
             default:
@@ -257,12 +353,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
                             <Tab key="home" label="Home" />
                             <Tab key="speakers" label="Speakers" />
-                            <Tab key="sessions" label="Sessions" />
+                            <Tab key="schedule" label="Schedule" />
 
                         </Tabs>
                     </nav>
 
-                    {this.displayTicketButton()}
+                    {this.buildHeaderTicketsButton()}
+                    {this.buildMobileTicketsButton()}
 
                     <div className="login">
                         {this.buildLoginItems()}

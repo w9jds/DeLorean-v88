@@ -9,14 +9,18 @@ import { getSpeakersInOrder } from '../../../ducks/speaker';
 import SpeakerCard from '../../controls/SpeakerCard/SpeakerCard';
 import { Speaker } from '../../../models/speaker';
 import { DocumentSnapshot } from '@firebase/firestore-types';
+import { TransitionGroup, Transition } from 'react-transition-group';
 
 type SpeakerPageProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 
-const buildSpeakerCard = (speaker: DocumentSnapshot) => {
+const buildSpeakerCard = (speaker: DocumentSnapshot, index: number) => {
     return (
-        <SpeakerCard key={speaker.id} 
-            documentRef={speaker.ref}
-            speaker={speaker.data() as Speaker} /> 
+        <Transition key={speaker.id} timeout={300} mountOnEnter unmountOnExit>
+            <SpeakerCard key={speaker.id} 
+                index={index} documentRef={speaker.ref} 
+                speaker={speaker.data() as Speaker} /> 
+            
+        </Transition>
     );
 };
 
@@ -25,9 +29,9 @@ const SpeakerPage = (props: SpeakerPageProps) => {
 
     return (
         <main className="speaker page-base">
-            <div className="container">
+            <TransitionGroup component="div" className="container">
                 {speakers.map(buildSpeakerCard)}
-            </div>
+            </TransitionGroup>
         </main>
     );
 };

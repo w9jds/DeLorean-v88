@@ -14,7 +14,11 @@ import IconButton from '@material-ui/core/IconButton';
 import DialogContent from '@material-ui/core/DialogContent';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
+import Input, { InputProps } from '@material-ui/core/Input';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 
 import { Close } from '@material-ui/icons';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
@@ -27,13 +31,16 @@ import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, DateTimePicker, TimePicker } from 'material-ui-pickers';
+
 import { ApplicationState } from '../../..';
 import { Speaker } from '../../../models/speaker';
 import { getFirestore } from '../../../ducks/current';
 import { closeConfigDialog } from '../../../ducks/config';
 import { getSpeakers } from '../../../ducks/speaker';
 import { getIsSessionEditorOpen, setSessionEditorOpen } from '../../../ducks/admin';
-import { Select, MenuItem, Chip, Avatar } from '@material-ui/core';
+
 import { SessionEditorState, SessionTypes } from '../../../models/session';
 import { getSessionEditorState } from '../../../ducks/session';
 
@@ -59,9 +66,6 @@ const styleSheet: StyleRulesCallback = theme => ({
         margin: theme.spacing.unit,
         display: 'block'
     },
-    control: {
-        minWidth: '200px'
-    },
     chips: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -79,7 +83,8 @@ enum ErrorTypes {
     DESCRIPTION = 'description'
 }
 
-type EditableTypes = 'name';
+type InputEditableTypes = 'name' | 'location';
+type DateTimeTypes = 'startTime' | 'endTime';
 
 class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEditorState> {
 
@@ -91,6 +96,8 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
         this.state = {
             name: '',
             type: SessionTypes.SESSION,
+            startTime: new Date(),
+            endTime: new Date(),
             speakers: [],
             tracks: [],
             errors: []
@@ -163,25 +170,37 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
         type: this.state.type,
         name: this.state.name.trim(),
         speakers: this.state.speakers,
+        location: this.state.location,
+        startTime: this.state.startTime,
+        endTime: this.state.endTime,
         description: tinymce.activeEditor.getContent()
     })
 
     closeSessionEditor = () => this.props.setSessionEditorOpen(false);
 
-    onValueChanged = (name: EditableTypes) =>
+    onValueChanged = (name: InputEditableTypes) =>
         (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => this.setState({
             [name]: e.target.value
-        } as Pick<SessionEditorState, EditableTypes>)
+        } as Pick<SessionEditorState, InputEditableTypes>)
 
-    onSelectChanged = event => this.setState({ 
-        [event.target.name as EditableTypes]: event.target.value 
-    })
+    onDateTimeChanged = (field: DateTimeTypes) => 
+        (date: Date) => this.setState({
+            [field]: date
+        } as Pick<SessionEditorState, DateTimeTypes>)
 
-    buildFieldInput = (id: EditableTypes) => {
+    onSelectChanged = event => {
+        let update = { 
+            [event.target.name]: event.target.value
+        };
+
+        this.setState(update as SessionEditorState);
+    }
+
+    buildFieldInput = (id: InputEditableTypes, props: InputProps) => {
         const { errors } = this.state;
 
         return (
-            <Input id={id}
+            <Input id={id} {...props}
                 error={errors.indexOf(id) >= 0}
                 value={this.state[id]}
                 onChange={this.onValueChanged(id)} />
@@ -238,67 +257,86 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
         const { classes, isOpen } = this.props;
 
         return(
-            <Dialog fullScreen
-                open={isOpen}
-                TransitionComponent={Transition}
-                classes={{ paperFullScreen: classes.fullscreen }}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Dialog fullScreen
+                    open={isOpen}
+                    TransitionComponent={Transition}
+                    classes={{ paperFullScreen: classes.fullscreen }}>
 
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton color="inherit" aria-label="Close" onClick={this.closeSessionEditor}>
-                            <Close />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.flex}>
-                            Session Editor
-                        </Typography>
-                        <Button color="inherit" onClick={this.onSaveClicked}>save</Button>
-                    </Toolbar>
-                </AppBar>
+                    <AppBar className={classes.appBar}>
+                        <Toolbar>
+                            <IconButton color="inherit" aria-label="Close" onClick={this.closeSessionEditor}>
+                                <Close />
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" className={classes.flex}>
+                                Session Editor
+                            </Typography>
+                            <Button color="inherit" onClick={this.onSaveClicked}>save</Button>
+                        </Toolbar>
+                    </AppBar>
 
-                <DialogContent>
-                    <div className="editor-session-header">
+                    <DialogContent>
 
-                        <div className="field-containers">
-                            <FormControl fullWidth className={classes.formControl}>
+                        <div className="editor-session-title">
+                            <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="name">Name</InputLabel>
-                                {this.buildFieldInput('name')}
+                                {this.buildFieldInput('name', { className: 'session-title' })}
                             </FormControl>
 
-                            <FormControl fullWidth className={classes.formControl}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="location">Location</InputLabel>
+                                {this.buildFieldInput('location', { className: 'session-location' })}
+                            </FormControl>
+
+                            <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="type">Type</InputLabel>
-                                <Select classes={{select: classes.control}}
+                                <Select classes={{ select: 'type-selector' }}
                                     value={this.state.type}
                                     inputProps={{ name: 'type' }}
                                     onChange={this.onSelectChanged}>
 
                                     {this.buildSessionTypes()}
-
                                 </Select>
-
                             </FormControl>
+                        </div>
 
+                        <div className="editor-session-header">
                             <FormControl fullWidth className={classes.formControl}>
                                 <InputLabel htmlFor="speakers">Speakers</InputLabel>
                                 <Select multiple displayEmpty
-                                    classes={{select: classes.control}}
+                                    classes={{select: 'speaker-selector'}}
                                     value={this.state.speakers}
                                     inputProps={{ name: 'speakers' }}
                                     onChange={this.onSelectChanged}
                                     renderValue={this.onRenderSpeakers}>
                                     
                                     {this.buildSpeakerItems()}
-
                                 </Select>
                             </FormControl>
+
+                            <div className="session-schedule">
+                                <FormControl className={classes.formControl}>
+                                    <DateTimePicker 
+                                        label="Start Time"
+                                        value={this.state.startTime} 
+                                        onChange={this.onDateTimeChanged('startTime')} />
+                                </FormControl>
+
+                                <FormControl className={classes.formControl}>
+                                    <DateTimePicker
+                                        label="End Time"
+                                        value={this.state.endTime}
+                                        onChange={this.onDateTimeChanged('endTime')} />
+                                </FormControl>
+                            </div>
                         </div>
 
-                    </div>
-
-                    <FormControl className={classes.formControl}>
-                        <textarea className="description-editor" />
-                    </FormControl>
-                </DialogContent>
-            </Dialog>
+                        <FormControl className={classes.formControl}>
+                            <textarea className="description-editor" />
+                        </FormControl>
+                    </DialogContent>
+                </Dialog>
+            </MuiPickersUtilsProvider>
         );
     }
 

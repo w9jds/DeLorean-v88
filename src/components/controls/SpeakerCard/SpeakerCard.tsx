@@ -1,47 +1,52 @@
 import './SpeakerCard.scss';
 
+import anime from 'animejs';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import { Speaker } from '../../../models/speaker';
 
-import { Card, Typography, Button, Tooltip } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { Card, Typography, Button, Tooltip, IconButton, Fab } from '@material-ui/core';
+import { Delete, Edit, Link, Clear } from '@material-ui/icons';
 
 import { ApplicationState } from '../../..';
 import { getIsEditMode } from '../../../ducks/admin';
 import { DocumentReference } from '@firebase/firestore-types';
 import { Dispatch, bindActionCreators } from 'redux';
 import { editSpeaker } from '../../../sagas/editor';
+import { openDialogWindow } from '../../../ducks/dialogs';
+import SpeakerDetails from '../../dialogs/SpeakerDetails/SpeakerDetails';
 
 type SpeakerCardProps = SpeakerCardAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 type SpeakerCardAttribs = {
     speaker: Speaker;
     documentRef: DocumentReference;
+    index: number;
 };
 
 class SpeakerCard extends React.Component<SpeakerCardProps> {
 
-    buildActionButtons = () => {
-        if (this.props.isEditMode) {
-            return (
-                <React.Fragment>
-                    <Tooltip title="Edit" placement="top">
-                        <Button variant="text" className="action edit" onClick={this.onEditClicked}>
-                            <Edit />
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="Delete" placement="top">
-                        <Button variant="text" className="action delete" onClick={this.onDeleteClicked}>
-                            <Delete />
-                        </Button>
-                    </Tooltip>
-                </React.Fragment>
-            );
-        }
+    componentDidMount() {
+        window.setTimeout(() => {
+            /**
+             * Push the animation to the back of the event queue to ensure that
+             * react has finished adding the DOMNode.
+             */
+            anime({
+                targets: ReactDOM.findDOMNode(this),
+                translateY: [200, 0],
+                opacity: [0, 1],
+                delay: 100 * (this.props.index + 1),
+                duration: 750
+            });
+        }, 0);
+    }
 
-        return null;
+    onSpeakerClicked = () => {
+        this.props.openDialogWindow(<SpeakerDetails speaker={this.props.speaker} />, false);
     }
 
     onDeleteClicked = e => {
@@ -78,12 +83,34 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
         return null;
     }
 
+    buildActionButtons = () => {
+        if (this.props.isEditMode) {
+            return (
+                <React.Fragment>
+                    <Tooltip title="Edit" placement="top">
+                        <Button variant="text" className="action edit" onClick={this.onEditClicked}>
+                            <Edit />
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Delete" placement="top">
+                        <Button variant="text" className="action delete" onClick={this.onDeleteClicked}>
+                            <Delete />
+                        </Button>
+                    </Tooltip>
+                </React.Fragment>
+            );
+        }
+
+        return null;
+    }
+
     render() {
         const {speaker} = this.props;
+        const classes = classnames('speaker-card');
 
         return (
             <React.Fragment>
-                <Card className="speaker-card">
+                <Card className={classes} onClick={this.onSpeakerClicked}>
                     {this.buildActionButtons()}
                     <div className="header">
                         <img className="portrait-image portrait-avatar" src={speaker.portraitUrl} />
@@ -104,7 +131,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    editSpeaker
+    editSpeaker, openDialogWindow
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpeakerCard);

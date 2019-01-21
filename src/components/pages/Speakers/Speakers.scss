@@ -8,3 +8,13 @@
         flex-wrap: wrap;
     }
 }
+
+@media(max-width: 760px) {
+    .speaker {
+
+        .container {
+            justify-content: center;
+        }
+        
+    }
+}
