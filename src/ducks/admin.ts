@@ -1,8 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 
 import { Reducer } from 'redux';
-import { AdminState } from '../models/states';
-import { ApplicationState } from '..';
+import { AdminState, ApplicationState } from '../../models/states';
 
 export const getIsEditMode = (state: ApplicationState) => state.admin.isEditMode;
 export const getIsCreateOpen = (state: ApplicationState) => state.admin.isCreateOpen;

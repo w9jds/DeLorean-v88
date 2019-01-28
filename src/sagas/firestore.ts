@@ -1,10 +1,10 @@
 import { eventChannel, buffers, Channel } from 'redux-saga';
 import { put, take, call, fork, cancelled } from 'redux-saga/effects';
-import { DocumentSnapshot, DocumentReference, QuerySnapshot, CollectionReference, FirestoreError } from '@firebase/firestore-types';
+import { DocumentSnapshot, DocumentReference, QuerySnapshot, CollectionReference } from '@firebase/firestore-types';
 import { ActionCreator } from 'redux';
 
 export type Payload = {
-    snapshot: DocumentSnapshot | QuerySnapshot
+    snapshot: DocumentSnapshot | QuerySnapshot;
 };
 
 export type SyncOptions = {
@@ -13,16 +13,16 @@ export type SyncOptions = {
     transform?: (data: Payload) => any;
 };
 
-function createChannel(ref: DocumentReference) {
+const createChannel = ref => {
     const channel = eventChannel(emit => {
         return ref.onSnapshot(
             dataSnapshot => emit({ snapshot: dataSnapshot }),
-            (error: FirestoreError) => { throw error; }
+            error => { throw error; }
         );
     }, buffers.expanding(1));
 
     return channel;
-}
+};
 
 const defaultTransform = (data: Payload) => data.snapshot;
 

@@ -10,7 +10,6 @@ import RightArrow from '@material-ui/icons/KeyboardArrowRight';
 
 import { EventbriteConfig, SiteTheme } from '../../../config/delorean.config';
 import { DevfestDetails } from '../../../config/delorean.details';
-import { ApplicationState } from '../../..';
 
 import Logo from '../../../assets/event-logo.svg';
 import * as background from '../../../assets/intro-background.jpg';
@@ -20,6 +19,7 @@ import { isAfter, format } from 'date-fns';
 import Sponsors from './sections/Sponsors/Sponsors';
 import { getCurrentConfig } from '../../../ducks/current';
 import { DeloreanRoutes } from '../../controls/MainLayout';
+import { ApplicationState } from '../../../../models/states';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 

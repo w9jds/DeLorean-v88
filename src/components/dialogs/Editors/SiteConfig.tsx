@@ -5,7 +5,6 @@ import { bindActionCreators, Dispatch } from 'redux';
 import firebase from '@firebase/app';
 import '@firebase/firestore';
 
-import { ApplicationState } from '../../..';
 import { closeConfigDialog, isConfigDialogOpen } from '../../../ducks/config';
 
 import makeAsyncScriptLoader from 'react-async-script';
@@ -14,7 +13,7 @@ import { MapsConfig } from '../../../config/delorean.config';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
 
-import Configuration from '../../../models/config';
+import Configuration from '../../../../models/config';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -30,6 +29,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { withStyles, WithStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
 import { getFirestore, getCurrentConfig } from '../../../ducks/current';
+import { ApplicationState } from '../../../../models/states';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 const stylesheet: StyleRulesCallback = theme => ({

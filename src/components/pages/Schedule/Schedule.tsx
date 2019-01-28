@@ -4,15 +4,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { getSessionByStartTime } from '../../../ducks/session';
 
-import { ApplicationState } from '../../..';
 import { RouteComponentProps } from 'react-router';
 import { Typography } from '@material-ui/core';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { Session } from '../../../models/session';
+import { Session } from '../../../../models/session';
 import { format } from 'date-fns';
 import SessionSheet from '../../controls/SessionSheet/SessionSheet';
-import { Speaker } from '../../../models/speaker';
+import { Speaker } from '../../../../models/speaker';
 import { getSpeakers } from '../../../ducks/speaker';
+import { ApplicationState } from '../../../../models/states';
 
 type ScheduleProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 

@@ -1,13 +1,12 @@
 import { createAction, handleActions } from 'redux-actions';
 
 import { Reducer } from 'redux';
-import { CurrentState } from '../models/states';
-import { Profile } from '../models/user';
-import Configuration from '../models/config';
+import { CurrentState, ApplicationState } from '../../models/states';
+import { Profile } from '../../models/user';
+import Configuration from '../../models/config';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
-import Sponsor from '../models/sponsor';
-import { ApplicationState } from '..';
+import Sponsor from '../../models/sponsor';
 import { createSelector } from 'reselect';
 
 export const getFirebaseApp = (state: ApplicationState): FirebaseApp => state.current.firebase;

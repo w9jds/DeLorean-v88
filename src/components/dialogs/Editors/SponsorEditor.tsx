@@ -1,4 +1,4 @@
-import './Sponsor.scss';
+import './SponsorEditor.scss';
 
 import * as React from 'react';
 import classnames from 'classnames';
@@ -15,11 +15,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { UploadTaskSnapshot } from '@firebase/storage-types';
 
-import { ApplicationState } from '../../..';
 import { getFirestore, getFirebaseApp } from '../../../ducks/current';
 import { closeDialogWindow } from '../../../ducks/dialogs';
 
 import Dropzone from 'react-dropzone';
+import { ApplicationState } from '../../../../models/states';
 
 const stylesheet: StyleRulesCallback = theme => ({
     formControl: {

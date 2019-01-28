@@ -1,7 +1,6 @@
 import { createAction, handleActions } from 'redux-actions';
 import { Reducer } from 'redux';
-import { ConfigState } from '../models/states';
-import { ApplicationState } from '..';
+import { ConfigState, ApplicationState } from '../../models/states';
 
 export const isConfigDialogOpen = (state: ApplicationState) => state.config.isOpen;
 

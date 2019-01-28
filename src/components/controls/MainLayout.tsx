@@ -4,7 +4,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
-import { ApplicationState } from '../..';
 import { FirebaseConfig } from '../../config/delorean.config';
 
 import firebase from '@firebase/app';
@@ -14,23 +13,23 @@ import '@firebase/storage';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 
+import { Switch, Route, withRouter, RouteComponentProps, Redirect } from 'react-router';
 import { setFirebaseApplication, setUser, setUserProfile, getUser, getUserProfile } from '../../ducks/current';
-import { Profile } from '../../models/user';
+import { Profile } from '../../../models/user';
 import { getSiteData } from '../../sagas/current';
 import Header from './Header/Header';
-import SiteConfig from '../dialogs/SiteConfig/SiteConfig';
-import { Switch, Route, withRouter, RouteComponentProps, Redirect } from 'react-router';
+import SiteConfig from '../dialogs/Editors/SiteConfig';
 import Footer from './Footer/Footer';
 import Home from '../pages/Home/Home';
-import Dialogs from './Dialog/Dialog';
+import Dialogs from './Dialog';
 import Schedule from '../pages/Schedule/Schedule';
 import Speakers from '../pages/Speakers/Speakers';
 import Conduct from '../pages/Conduct/Conduct';
-import Sessions from '../pages/Sessions/Sessions';
 import EditOverlay from './EditOverlay/EditOverlay';
-import SpeakerEditor from '../dialogs/SpeakerEditor/SpeakerEditor';
-import SessionEditor from '../dialogs/SessionEditor/SessionEditor';
+import SpeakerEditor from '../dialogs/Editors/SpeakerEditor';
+import SessionEditor from '../dialogs/Editors/SessionEditor';
 import { getIsEditMode } from '../../ducks/admin';
+import { ApplicationState } from '../../../models/states';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 
@@ -87,6 +86,7 @@ class MainLayout extends React.Component<MainLayoutProps> {
 
                 <Dialogs />
                 <SiteConfig />
+                
                 {this.buildAdminPanels()}
 
                 <Switch>

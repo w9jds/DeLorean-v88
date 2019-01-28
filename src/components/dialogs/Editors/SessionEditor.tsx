@@ -32,17 +32,17 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DateTimePicker, TimePicker } from 'material-ui-pickers';
+import { MuiPickersUtilsProvider, DateTimePicker } from 'material-ui-pickers';
 
-import { ApplicationState } from '../../..';
-import { Speaker } from '../../../models/speaker';
+import { Speaker } from '../../../../models/speaker';
 import { getFirestore } from '../../../ducks/current';
 import { closeConfigDialog } from '../../../ducks/config';
 import { getSpeakers } from '../../../ducks/speaker';
 import { getIsSessionEditorOpen, setSessionEditorOpen } from '../../../ducks/admin';
 
-import { SessionEditorState, SessionTypes } from '../../../models/session';
+import { SessionEditorState, SessionTypes } from '../../../../models/session';
 import { getSessionEditorState } from '../../../ducks/session';
+import { ApplicationState } from '../../../../models/states';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 const styleSheet: StyleRulesCallback = theme => ({
@@ -140,8 +140,10 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
             errors.push(ErrorTypes.NAME);
         }
 
-        if (this.state.speakers.length === 0) {
-            errors.push(ErrorTypes.SPEAKER);
+        if (this.state.type === SessionTypes.SESSION || this.state.type === SessionTypes.WORKSHOP) {
+            if (this.state.speakers.length === 0) {
+                errors.push(ErrorTypes.SPEAKER);
+            }
         }
 
         if (errors.length > 0) {
@@ -219,6 +221,30 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
         }
 
         return items;
+    }
+
+    buildSpeakerSelect = () => {
+        const { classes } = this.props;
+        const { type } = this.state;
+
+        if (type !== SessionTypes.SESSION && type !== SessionTypes.WORKSHOP) {
+            return null;
+        }
+
+        return (
+            <FormControl fullWidth className={classes.formControl}>
+                <InputLabel htmlFor="speakers">Speakers</InputLabel>
+                <Select multiple displayEmpty
+                    classes={{select: 'speaker-selector'}}
+                    value={this.state.speakers}
+                    inputProps={{ name: 'speakers' }}
+                    onChange={this.onSelectChanged}
+                    renderValue={this.onRenderSpeakers}>
+                    
+                    {this.buildSpeakerItems()}
+                </Select>
+            </FormControl>
+        );
     }
 
     buildSpeakerItems = () => {
@@ -301,18 +327,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
                         </div>
 
                         <div className="editor-session-header">
-                            <FormControl fullWidth className={classes.formControl}>
-                                <InputLabel htmlFor="speakers">Speakers</InputLabel>
-                                <Select multiple displayEmpty
-                                    classes={{select: 'speaker-selector'}}
-                                    value={this.state.speakers}
-                                    inputProps={{ name: 'speakers' }}
-                                    onChange={this.onSelectChanged}
-                                    renderValue={this.onRenderSpeakers}>
-                                    
-                                    {this.buildSpeakerItems()}
-                                </Select>
-                            </FormControl>
+                            {this.buildSpeakerSelect()}
 
                             <div className="session-schedule">
                                 <FormControl className={classes.formControl}>

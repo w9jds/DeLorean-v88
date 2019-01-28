@@ -1,11 +1,11 @@
-import { takeEvery, all, put, select } from 'redux-saga/effects';
+import { takeEvery, all, put } from 'redux-saga/effects';
 import { createAction } from 'redux-actions';
 import { DocumentReference } from '@firebase/firestore-types';
-import { Speaker } from '../models/speaker';
+import { Speaker } from '../../models/speaker';
 import { setSpeakerEditorInitialState, clearSpeakerEditorState } from '../ducks/speaker';
 import { setSpeakerEditorOpen, AdminTypes, setSessionEditorOpen } from '../ducks/admin';
 import { clearSessionEditorState, setSessionEditorInitialState } from '../ducks/session';
-import { Session } from '../models/session';
+import { Session } from '../../models/session';
 
 enum EditorTypes {
     EDIT_SPEAKER = 'EDIT_SPEAKER',

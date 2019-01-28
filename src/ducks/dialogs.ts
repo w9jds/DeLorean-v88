@@ -1,7 +1,6 @@
 import { Reducer } from 'redux';
-import { DialogsState } from '../models/states';
+import { DialogsState, ApplicationState } from '../../models/states';
 import { createAction, handleActions } from 'redux-actions';
-import { ApplicationState } from '..';
 
 export const getDialogViews = (state: ApplicationState) => state.dialogs.views;
 export const isDialogVisible = (state: ApplicationState) => state.dialogs.open;

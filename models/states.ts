@@ -8,13 +8,21 @@ import { DocumentSnapshot } from '@firebase/firestore-types';
 import { SpeakerEditorFullState } from './speaker';
 import { SessionEditorFullState } from './session';
 
+export interface ApplicationState {
+    readonly current: CurrentState;
+    readonly config?: ConfigState;
+    readonly dialogs?: DialogsState;
+    readonly admin?: AdminState;
+    readonly speakers: SpeakerState;
+    readonly sessions: SessionState;
+}
+
 export type CurrentState = {
-    readonly user: User;
-    readonly profile: Profile;
-    readonly firebase: FirebaseApp;
+    readonly user?: User;
+    readonly profile?: Profile;
+    readonly firebase?: FirebaseApp;
     readonly config: Configuration;
     readonly sponsors: Record<string, Sponsor>
-
 };
 
 export type AdminState = {
@@ -34,12 +42,17 @@ export type DialogsState = {
     readonly views: React.ReactElement<any> | React.ReactElement<any>[];
 };
 
+export type SponsorState = {
+    // readonly editor;
+    // readonly sponsors: Record<string, DocumentSnapshot>;
+};
+
 export type SpeakerState = {
-    readonly editor: SpeakerEditorFullState;
+    readonly editor?: SpeakerEditorFullState;
     readonly speakers: Record<string, DocumentSnapshot>;
 };
 
 export type SessionState = {
-    readonly editor: SessionEditorFullState;
+    readonly editor?: SessionEditorFullState;
     readonly sessions: Record<string, DocumentSnapshot>;
 };

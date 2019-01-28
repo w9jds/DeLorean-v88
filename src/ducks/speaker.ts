@@ -1,9 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 import { Reducer } from 'redux';
-import { SpeakerState } from '../models/states';
-import { ApplicationState } from '..';
+import { SpeakerState, ApplicationState } from '../../models/states';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { SpeakerEditorFullState, Speaker } from '../models/speaker';
+import { SpeakerEditorFullState, Speaker } from '../../models/speaker';
 import { createSelector } from 'reselect';
 
 export const getSpeakers = (state: ApplicationState) => state.speakers.speakers;

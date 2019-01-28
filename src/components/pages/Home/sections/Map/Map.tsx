@@ -15,8 +15,8 @@ import Typography from '@material-ui/core/Typography';
 import { WithStyles } from '@material-ui/core';
 import { StyleRulesCallback, withStyles } from '@material-ui/core/styles';
 import { getCurrentConfig } from '../../../../../ducks/current';
-import { ApplicationState } from '../../../../..';
 import { closeConfigDialog } from '../../../../../ducks/config';
+import { ApplicationState } from '../../../../../../models/states';
 
 type MapProps = WithStyles<typeof stylesheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 const stylesheet: StyleRulesCallback = theme => ({

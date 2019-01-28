@@ -1,14 +1,13 @@
 import { takeEvery, all, select, fork } from 'redux-saga/effects';
 import { createAction } from 'redux-actions';
 
-import Sponsor from '../models/sponsor';
-import Configuration from '../models/config';
+import Sponsor from '../../models/sponsor';
+import Configuration from '../../models/config';
 import { setSiteConfig, setSponsors, getFirestore } from '../ducks/current';
 import { DocumentSnapshot, FirebaseFirestore } from '@firebase/firestore-types';
 import { sync, Payload } from './firestore';
 import { setSpeakers } from '../ducks/speaker';
 import { setSession } from '../ducks/session';
-import { Session } from '../models/session';
 
 enum CurrentSagaTypes {
     LOAD_SITE_DATA = 'LOAD_SITE_DATA'

@@ -1,10 +1,9 @@
 import { createAction, handleActions } from 'redux-actions';
 import { Reducer } from 'redux';
-import { SessionState } from '../models/states';
+import { SessionState, ApplicationState } from '../../models/states';
 import { createSelector } from 'reselect';
-import { ApplicationState } from '..';
 import { DocumentSnapshot } from '@firebase/firestore-types';
-import { SessionEditorFullState, SessionTypes, Session } from '../models/session';
+import { SessionEditorFullState, SessionTypes, Session } from '../../models/session';
 
 export const getSessions = (state: ApplicationState) => state.sessions.sessions;
 export const getSessionEditorState = (state: ApplicationState) => state.sessions.editor;

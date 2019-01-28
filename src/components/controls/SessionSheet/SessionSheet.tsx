@@ -2,8 +2,8 @@ import './SessionSheet.scss';
 
 import * as React from 'react';
 
-import { Session } from '../../../models/session';
-import { Speaker } from '../../../models/speaker';
+import { Session, SessionTypes } from '../../../../models/session';
+import { Speaker } from '../../../../models/speaker';
 
 import { 
     ExpansionPanel, 
@@ -11,7 +11,7 @@ import {
     ExpansionPanelDetails, 
     ListItem, ListItemText, 
     ListItemAvatar, Divider,
-    Typography, Avatar, Tooltip, Button
+    Typography, Avatar, Tooltip, Button, Paper
 } from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -19,12 +19,12 @@ import renderHTML from 'react-render-html';
 import { DocumentReference } from '@firebase/firestore-types';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../..';
 import { getIsEditMode } from '../../../ducks/admin';
 import { editSession } from '../../../sagas/editor';
 import { Delete, Edit } from '@material-ui/icons';
 import SpeakerDetails from '../../dialogs/SpeakerDetails/SpeakerDetails';
 import { openDialogWindow } from '../../../ducks/dialogs';
+import { ApplicationState } from '../../../../models/states';
 
 type SessionSheetProps = SessionSheetAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
@@ -99,32 +99,45 @@ const SessionSheet = (props: SessionSheetProps) => {
         return `Room ${session.location}`;
     };
 
-    return (
-        <ExpansionPanel className="session">
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
+    if (session.type === SessionTypes.BREAK || session.type === SessionTypes.REGISTRATION) {
+        return (
+            <Paper square className="session-card">
                 {isEditMode ? buildAdminActions() : null}
                 <div className="session-header">
-                    <Typography variant="h5">{formatSessionTitle()}</Typography>
+                    <Typography variant="h5">{session.name}</Typography>
                     <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
                 </div>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <div className="session-content">
-                    {renderHTML(session.description)}
-                    
-                    <Divider className="divider" />
-
-                    <div className="speakers">
-                        <Typography variant="h6" className="header">
-                            Speakers
-                        </Typography>
-
-                        {buildSpeakerChips()}
+            </Paper>
+        );
+    } else {
+        return (
+            <ExpansionPanel className="session">
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
+                    {isEditMode ? buildAdminActions() : null}
+                    <div className="session-header">
+                        <Typography variant="h5">{formatSessionTitle()}</Typography>
+                        <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
                     </div>
-                </div>
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
-    );
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <div className="session-content">
+                        {renderHTML(session.description)}
+                        
+                        <Divider className="divider" />
+    
+                        <div className="speakers">
+                            <Typography variant="h6" className="header">
+                                Speakers
+                            </Typography>
+    
+                            {buildSpeakerChips()}
+                        </div>
+                    </div>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        );
+    }
+
 };
 
 const mapStateToProps = (state: ApplicationState) => ({

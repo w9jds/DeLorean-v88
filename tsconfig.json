@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "../build/dist",
+    "outDir": "./build",
     "module": "ESNext",
     "moduleResolution": "node",
     "target": "es6",
@@ -11,6 +11,13 @@
     "importHelpers": true,
     "removeComments": true,
     "strictNullChecks": false,
+    "baseUrl": "./",
+    "paths": {
+      "@models": ["./models"],
+      "@assets": ["./src/assets"],
+      "@ducks": ["./src/ducks"],
+      "@sagas": ["./src/sagas"]
+    }
   },
   "exclude": [
     "node_modules",

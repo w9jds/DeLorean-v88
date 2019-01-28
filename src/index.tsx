@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { render } from 'react-dom';
+import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { BrowserRouter } from 'react-router-dom';
-import { applyMiddleware, createStore, combineReducers } from 'redux';
+import { applyMiddleware, createStore, combineReducers, DeepPartial } from 'redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { SiteTheme } from './config/delorean.config';
-import { CurrentState, ConfigState, DialogsState, AdminState, SpeakerState, SessionState } from './models/states';
+import { ApplicationState } from '../models/states';
 import current from './ducks/current';
 import config from './ducks/config';
 import dialogs from './ducks/dialogs';
@@ -19,14 +19,17 @@ import MainLayout from './components/controls/MainLayout';
 
 const sagaMiddleware = createSagaMiddleware();
 
-export interface ApplicationState {
-    readonly current: CurrentState;
-    readonly config: ConfigState;
-    readonly dialogs: DialogsState;
-    readonly admin: AdminState;
-    readonly speakers: SpeakerState;
-    readonly sessions: SessionState;
+declare global {
+    interface Window {
+        __PRELOADED_STATE__: DeepPartial<ApplicationState>;
+    }
 }
+
+// Grab the state from a global variable injected into the server-generated HTML
+// const preloadedState = window.__PRELOADED_STATE__;
+
+// Allow the passed state to be garbage-collected
+// delete window.__PRELOADED_STATE__;
 
 const store = createStore(
     combineReducers<ApplicationState>({
@@ -68,7 +71,7 @@ const theme = createMuiTheme({
 
 sagaMiddleware.run(sagas);
 
-render(
+hydrate(
     <MuiThemeProvider theme={theme}>
         <Provider store={store}>
             <BrowserRouter>

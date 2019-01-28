@@ -7,12 +7,10 @@ import classnames from 'classnames';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Dispatch, bindActionCreators } from 'redux';
 
-import { ApplicationState } from '../../..';
-
 import firebase from '@firebase/app';
 import '@firebase/auth';
 
-import { StyleRulesCallback, withStyles, WithStyles, Fab, PropTypes } from '@material-ui/core';
+import { withStyles, WithStyles, Fab } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import AppBar from '@material-ui/core/AppBar';
 import Button, { ButtonProps } from '@material-ui/core/Button';
@@ -31,12 +29,14 @@ import { DeloreanRoutes } from '../MainLayout';
 import { toggleEditMode, getIsEditMode } from '../../../ducks/admin';
 import { LocalActivity } from '@material-ui/icons';
 import { FabProps } from '@material-ui/core/Fab';
+import { StyleRules } from '@material-ui/core/styles';
+import { ApplicationState } from '../../../../models/states';
 
-const styleSheet: StyleRulesCallback = theme => ({
+const styleSheet: StyleRules = {
     tabs: {
         height: '100%'
     }
-});
+};
 
 type HeaderProps = WithStyles<typeof styleSheet> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 type HeaderState = {
@@ -49,7 +49,7 @@ type HeaderState = {
 
 class Header extends React.Component<HeaderProps, HeaderState> {
 
-    private mobileAnim;
+    private mobileAnim: any;
 
     constructor(props: HeaderProps) {
         super(props);
@@ -78,7 +78,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         window.removeEventListener('scroll', this.onScrollEvent);
     }
 
-    componentDidUpdate(prevProps: HeaderProps, prevState: HeaderState) {
+    componentDidUpdate(_: HeaderProps, prevState: HeaderState) {
         if (window.innerWidth <= 550) {
             this.handleMobileTicketsButton(prevState);
         }
@@ -124,7 +124,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         const targetBounds = targets.getBoundingClientRect();
         const footerHeight = footer.getBoundingClientRect().height;
-        
+
         anime({
             targets: targets,
             translateY: [0, -(footerHeight - 10)],
@@ -275,7 +275,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
 
         if (this.state.isTicketsVisible !== isTicketsVisible || this.state.isFooterVisible !== isFooterVisible) {
-            this.setState({ 
+            this.setState({
                 isTicketsVisible,
                 isFooterVisible
             });

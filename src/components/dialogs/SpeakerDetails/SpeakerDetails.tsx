@@ -3,8 +3,8 @@ import './SpeakerDetails.scss';
 import * as React from 'react';
 import renderHTML from 'react-render-html';
 import { connect } from 'react-redux';
-import { Speaker } from '../../../models/speaker';
-import { Typography, DialogContent, Divider, Button, Fab } from '@material-ui/core';
+import { Speaker } from '../../../../models/speaker';
+import { Typography, DialogContent, Divider, Button } from '@material-ui/core';
 
 import Github from '../../../assets/github.svg';
 import Medium from '../../../assets/medium.svg';
@@ -12,9 +12,9 @@ import Twitter from '../../../assets/twitter.svg';
 import Facebook from '../../../assets/facebook.svg';
 import Linkedin from '../../../assets/linkedin.svg';
 import { Link, Clear } from '@material-ui/icons';
-import { ApplicationState } from '../../..';
 import { Dispatch, bindActionCreators } from 'redux';
 import { closeDialogWindow } from '../../../ducks/dialogs';
+import { ApplicationState } from '../../../../models/states';
 type SpeakerDetailsProps = SpeakerDetailsAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 type SpeakerDetailsAttribs = {

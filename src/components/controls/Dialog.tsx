@@ -4,8 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 
 import { connect } from 'react-redux';
 import { withStyles, WithStyles, StyleRules } from '@material-ui/core/styles';
-import { ApplicationState } from '../../..';
-import { isDialogVisible, getDialogViews, isDialogFullscreen } from '../../../ducks/dialogs';
+import { isDialogVisible, getDialogViews, isDialogFullscreen } from '../../ducks/dialogs';
+import { ApplicationState } from '../../../models/states';
 
 const styleSheet: StyleRules = {
     paper: {

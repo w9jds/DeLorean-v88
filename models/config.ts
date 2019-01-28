@@ -28,11 +28,12 @@ interface Venue {
 }
 
 interface Event {
-    multiDay?: boolean;
-    startDate?: any;
-    endDate?: any;
     papercall?: PaperCall;
-    sponsors?: any;
+    name?: string;
+    city?: string;
+    description?: string;
+    year?: number;
+    url?: string;
 }
 
 interface PaperCall {

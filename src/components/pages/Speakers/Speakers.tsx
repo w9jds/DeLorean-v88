@@ -4,12 +4,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { RouteComponentProps } from 'react-router';
-import { ApplicationState } from '../../..';
 import { getSpeakersInOrder } from '../../../ducks/speaker';
 import SpeakerCard from '../../controls/SpeakerCard/SpeakerCard';
-import { Speaker } from '../../../models/speaker';
+import { Speaker } from '../../../../models/speaker';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { TransitionGroup, Transition } from 'react-transition-group';
+import { ApplicationState } from '../../../../models/states';
 
 type SpeakerPageProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 

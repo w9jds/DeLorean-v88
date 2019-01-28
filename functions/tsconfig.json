@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
     "lib": ["es6"],
+    "baseUrl": "./",
     "module": "commonjs",
     "noImplicitReturns": true,
     "outDir": "lib",
     "sourceMap": true,
-    "target": "es6"
+    "target": "es6",
+    "paths": {
+      "@models": ["../models"]
+    }
   },
   "compileOnSave": true,
   "include": [

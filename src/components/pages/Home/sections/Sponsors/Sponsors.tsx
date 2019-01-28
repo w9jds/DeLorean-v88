@@ -2,11 +2,11 @@ import './Sponsors.scss';
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../../../../..';
 import { getSponsors, getCurrentConfig } from '../../../../../ducks/current';
 import { SiteTheme } from '../../../../../config/delorean.config';
 import { DevfestDetails } from '../../../../../config/delorean.details';
 import { GridList, GridListTile } from '@material-ui/core';
+import { ApplicationState } from '../../../../../../models/states';
 
 type SponsorsProps = ReturnType<typeof mapStateToProps>;
 
