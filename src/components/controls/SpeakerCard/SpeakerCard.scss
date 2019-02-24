@@ -48,4 +48,19 @@
             right: 6px;
         }
     }
+
+    .edit-actions {
+        display: flex;
+        flex-direction: column;
+        margin-left: -12px;
+        margin-right: 24px;
+
+        .edit, .delete {
+            min-width: 24px;
+        }
+
+        .edit {
+            margin-bottom: 8px;
+        }
+    }
 }

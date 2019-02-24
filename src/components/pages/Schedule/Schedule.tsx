@@ -8,11 +8,11 @@ import { RouteComponentProps } from 'react-router';
 import { Typography } from '@material-ui/core';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { Session } from '../../../../models/session';
-import { format } from 'date-fns';
 import SessionSheet from '../../controls/SessionSheet/SessionSheet';
 import { Speaker } from '../../../../models/speaker';
 import { getSpeakers } from '../../../ducks/speaker';
 import { ApplicationState } from '../../../../models/states';
+import { formatToTimeZone } from 'date-fns-timezone';
 
 type ScheduleProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 
@@ -24,7 +24,7 @@ class SchedulePage extends React.Component<ScheduleProps> {
         const slots = [];
 
         for (let time of times) {
-            let dateTime = format(Number(time), 'p');
+            let dateTime = formatToTimeZone(Number(time), 'h:mm A', { timeZone: 'America/Chicago' });
 
             slots.push(
                 <div key={time} className="timeslot">

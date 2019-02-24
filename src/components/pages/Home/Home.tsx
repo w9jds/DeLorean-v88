@@ -32,13 +32,14 @@ class Home extends React.Component<HomeProps> {
             this.props.history.replace(DeloreanRoutes.HOME);
         }
 
-        // tslint:disable-next-line:no-string-literal
-        window['EBWidgets'].createWidget({
-            widgetType: 'checkout',
-            eventId: EventbriteConfig.eventId,
-            modal: true,
-            modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
-        });
+        if ('EBWidgets' in window) {
+            window.EBWidgets.createWidget({
+                widgetType: 'checkout',
+                eventId: EventbriteConfig.eventId,
+                modal: true,
+                modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
+            });
+        }
     }
 
     openCalltoAction = () => window.open(this.props.config.event.papercall.url);

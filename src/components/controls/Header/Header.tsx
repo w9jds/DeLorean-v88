@@ -66,13 +66,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     componentDidMount() {
         window.addEventListener('scroll', this.onScrollEvent);
 
-        // tslint:disable-next-line:no-string-literal
-        window['EBWidgets'].createWidget({
-            widgetType: 'checkout',
-            eventId: EventbriteConfig.eventId,
-            modal: true,
-            modalTriggerElementId: `get-header-event-tickets-${EventbriteConfig.eventId}`
-        });
+        if ('EBWidgets' in window) {
+            window.EBWidgets.createWidget({
+                widgetType: 'checkout',
+                eventId: EventbriteConfig.eventId,
+                modal: true,
+                modalTriggerElementId: `get-header-event-tickets-${EventbriteConfig.eventId}`
+            });
+        }
     }
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onScrollEvent);

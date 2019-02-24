@@ -22,6 +22,7 @@ const sagaMiddleware = createSagaMiddleware();
 declare global {
     interface Window {
         __PRELOADED_STATE__: DeepPartial<ApplicationState>;
+        EBWidgets: any;
     }
 }
 
