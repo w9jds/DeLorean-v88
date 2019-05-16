@@ -16,15 +16,16 @@ export const SiteTheme = {
 };
 
 export const FirebaseConfig = {
-    apiKey: process.env.DELOREAN_API_KEY,
-    authDomain: 'devfest-v88.firebaseapp.com',
-    databaseURL: 'https://devfest-v88.firebaseio.com',
-    projectId: 'devfest-v88',
-    storageBucket: 'devfest-v88.appspot.com'
+    apiKey: process.env.KOTLIN_EVERYWHERE_API_KEY,
+    authDomain: "kotlin-everywhere.firebaseapp.com",
+    databaseURL: "https://kotlin-everywhere.firebaseio.com",
+    projectId: "kotlin-everywhere",
+    storageBucket: "kotlin-everywhere.appspot.com",
+    appId: "1:843997422116:web:c8081f47c1a11f59"
 };
 
 export const EventbriteConfig = {
-    eventId: process.env.WINDY_CITY_EVENT_ID
+    eventId: process.env.EB_EVENT_ID
 };
 
 export const MapsConfig = {

@@ -11,7 +11,11 @@ import { ApplicationState } from '../../../../../../models/states';
 type SponsorsProps = ReturnType<typeof mapStateToProps>;
 
 const Sponsors = (props: SponsorsProps) => {
-    const {config, sponsors} = props;
+    const { config, sponsors } = props;
+
+    if (Object.keys(sponsors).length == 0) {
+        return null;
+    }
 
     const buildSponsorTiles = () => Object.keys(sponsors).map(key => {
         let sponsor = sponsors[key];
@@ -29,8 +33,8 @@ const Sponsors = (props: SponsorsProps) => {
             </GridListTile>
         );
     });
-    
-    return(
+
+    return (
         <React.Fragment>
             <header style={SiteTheme.SponsorHeader}>
                 <div className="container">

@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const renderer = require('marked').Renderer();
-const { DevfestDetails } = require('./src/config/delorean.details.js');
+const { KotlinDetails } = require('./src/config/delorean.details.js');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -114,18 +114,18 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(NODE_ENV),
-                DELOREAN_API_KEY: JSON.stringify(process.env.DELOREAN_API_KEY),
+                KOTLIN_EVERYWHERE_API_KEY: JSON.stringify(process.env.KOTLIN_EVERYWHERE_API_KEY),
                 DELOREAN_MAP_API: JSON.stringify(process.env.DELOREAN_MAP_API),
-                WINDY_CITY_EVENT_ID: JSON.stringify(process.env.WINDY_CITY_EVENT_ID),
+                EB_EVENT_ID: JSON.stringify(process.env.EB_EVENT_ID),
             }
         }),
         new webpack.EnvironmentPlugin([
             'NODE_ENV'
         ]),
         new HtmlWebpackPlugin({
-            eventName: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
-            description: DevfestDetails.description,
-            url: DevfestDetails.url,
+            eventName: `${KotlinDetails.name} ${KotlinDetails.location}`,
+            description: KotlinDetails.description,
+            url: KotlinDetails.url,
             filename: 'index.html',
             environment: NODE_ENV,
             template: path.join(__dirname, './template.ejs'),

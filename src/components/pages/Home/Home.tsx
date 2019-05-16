@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import RightArrow from '@material-ui/icons/KeyboardArrowRight';
 
 import { EventbriteConfig, SiteTheme } from '../../../config/delorean.config';
-import { DevfestDetails } from '../../../config/delorean.details';
+import { KotlinDetails } from '../../../config/delorean.details';
 
 import Logo from '../../../assets/event-logo.svg';
 import * as background from '../../../assets/intro-background.jpg';
@@ -73,7 +73,7 @@ class Home extends React.Component<HomeProps> {
             <section className="call-to-action" style={SiteTheme.CallToAction}>
                 <div className="container">
                     <h1 className="container-thin">
-                        {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
+                        {`Interested in speaking at ${KotlinDetails.name} ${KotlinDetails.location}?`}
                     </h1>
 
                     <p>{`Consider submitting your talk by ${format(config.event.papercall.closing.toDate(), 'MMMM d, YYYY', { awareOfUnicodeTokens: true })}`}</p>
@@ -98,7 +98,7 @@ class Home extends React.Component<HomeProps> {
                         <Logo className="event-logo mb-4"/>
 
                         <h1 className="container-thin">
-                            {DevfestDetails.description}
+                            {KotlinDetails.description}
                         </h1>
 
                         <h3>Feb 01, 2019</h3>

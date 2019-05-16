@@ -24,9 +24,7 @@ import { Close } from '@material-ui/icons';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
 import tinymce from 'tinymce/tinymce';
-import 'tinymce/themes/modern/theme';
-import '../../../stylesheets/modern-dark/content.min.css';
-import '../../../stylesheets/modern-dark/skin.min.css';
+import 'tinymce/themes/silver';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';

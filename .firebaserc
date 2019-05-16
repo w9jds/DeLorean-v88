@@ -1,15 +1,15 @@
 {
   "projects": {
-    "default": "devfest-v88"
+    "default": "kotlin-everywhere"
   },
   "targets": {
-    "devfest-v88": {
+    "kotlin-everywhere": {
       "hosting": {
         "dev": [
           "windycity-dev"
         ],
         "prod": [
-          "devfest-v88"
+          "kotlin-everywhere"
         ]
       }
     }
