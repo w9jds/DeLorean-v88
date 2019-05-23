@@ -65,8 +65,8 @@
 
 @media (min-width: 1004px) {
     .intro {
-        min-height: 90vh;
-        background-size: 100vw 90vh;
+        min-height: calc(100vh - 125px);
+        background-size: 100vw calc(100vh - 125px);
     }
 
     .map-container {

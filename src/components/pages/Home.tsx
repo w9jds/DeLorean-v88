@@ -101,7 +101,7 @@ class Home extends React.Component<HomeProps> {
                             {KotlinDetails.description}
                         </h1>
 
-                        <h3>Feb 01, 2019</h3>
+                        <h3>Aug 23, 2019</h3>
                         <h3>{config && config.venue ? config.venue.name : ''}</h3>
 
                         <div className="mt-4">
