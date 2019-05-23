@@ -116,7 +116,7 @@ module.exports = {
                 NODE_ENV: JSON.stringify(NODE_ENV),
                 KOTLIN_EVERYWHERE_API_KEY: JSON.stringify(process.env.KOTLIN_EVERYWHERE_API_KEY),
                 DELOREAN_MAP_API: JSON.stringify(process.env.DELOREAN_MAP_API),
-                EB_EVENT_ID: JSON.stringify(process.env.EB_EVENT_ID),
+                EB_EVENT_ID: 62068376184,
             }
         }),
         new webpack.EnvironmentPlugin([

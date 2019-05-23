@@ -22,15 +22,15 @@ import MenuList from '@material-ui/core/MenuList';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { getUser, getUserProfile, getFirebaseApp } from '../../../ducks/current';
-import { openConfigDialog } from '../../../ducks/config';
-import { EventbriteConfig } from '../../../config/delorean.config';
-import { DeloreanRoutes } from '../MainLayout';
-import { toggleEditMode, getIsEditMode } from '../../../ducks/admin';
+import { getUser, getUserProfile, getFirebaseApp } from '../../ducks/current';
+import { openConfigDialog } from '../../ducks/config';
+import { EventbriteConfig } from '../../config/delorean.config';
+import { DeloreanRoutes } from './MainLayout';
+import { toggleEditMode, getIsEditMode } from '../../ducks/admin';
 import { LocalActivity } from '@material-ui/icons';
 import { FabProps } from '@material-ui/core/Fab';
 import { StyleRules } from '@material-ui/core/styles';
-import { ApplicationState } from '../../../../models/states';
+import { ApplicationState } from '../../../models/states';
 
 const styleSheet: StyleRules = {
     tabs: {

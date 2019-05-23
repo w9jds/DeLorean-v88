@@ -2,18 +2,18 @@ import './Sponsors.scss';
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getSponsors, getCurrentConfig } from '../../../../../ducks/current';
-import { SiteTheme } from '../../../../../config/delorean.config';
-import { DevfestDetails } from '../../../../../config/delorean.details';
 import { GridList, GridListTile } from '@material-ui/core';
-import { ApplicationState } from '../../../../../../models/states';
+import { SiteTheme } from '../../../config/delorean.config';
+import { ApplicationState } from '../../../../models/states';
+import { DevfestDetails } from '../../../config/delorean.details';
+import { getSponsors, getCurrentConfig } from '../../../ducks/current';
 
 type SponsorsProps = ReturnType<typeof mapStateToProps>;
 
 const Sponsors = (props: SponsorsProps) => {
     const { config, sponsors } = props;
 
-    if (Object.keys(sponsors).length == 0) {
+    if (!sponsors || Object.keys(sponsors).length == 0) {
         return null;
     }
 

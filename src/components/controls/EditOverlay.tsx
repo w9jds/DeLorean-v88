@@ -9,15 +9,15 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Fab from '@material-ui/core/Fab';
 import { Add, PersonAdd, CreditCard } from '@material-ui/icons';
-import CreateSponsor from '../../dialogs/Editors/SponsorEditor';
+import CreateSponsor from '../dialogs/SponsorEditor';
 
 import Button from '@material-ui/core/Button';
 import { 
     getIsEditMode, getIsCreateOpen, toggleCreateMenu, 
     getIsSpeakerEditorOpen, setSpeakerEditorOpen, setSessionEditorOpen, getIsSessionEditorOpen 
-} from '../../../ducks/admin';
-import { openDialogWindow } from '../../../ducks/dialogs';
-import { ApplicationState } from '../../../../models/states';
+} from '../../ducks/admin';
+import { openDialogWindow } from '../../ducks/dialogs';
+import { ApplicationState } from '../../../models/states';
 
 type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 

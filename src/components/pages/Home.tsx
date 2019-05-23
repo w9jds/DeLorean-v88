@@ -1,25 +1,25 @@
 import './Home.scss';
 
+import Logo from '../../assets/event-logo.svg';
+import * as background from '../../assets/intro-background.jpg';
+
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { isAfter, format } from 'date-fns';
+import { RouteComponentProps } from 'react-router';
+
+import Map from './sections/Map';
+import Sponsors from './sections/Sponsors';
 
 import Fab from '@material-ui/core/Fab';
-import Map from './sections/Map/Map';
 import Button from '@material-ui/core/Button';
 import RightArrow from '@material-ui/icons/KeyboardArrowRight';
+import { DeloreanRoutes } from '../controls/MainLayout';
 
-import { EventbriteConfig, SiteTheme } from '../../../config/delorean.config';
-import { KotlinDetails } from '../../../config/delorean.details';
-
-import Logo from '../../../assets/event-logo.svg';
-import * as background from '../../../assets/intro-background.jpg';
-import { RouteComponentProps } from 'react-router';
-import { isAfter, format } from 'date-fns';
-
-import Sponsors from './sections/Sponsors/Sponsors';
-import { getCurrentConfig } from '../../../ducks/current';
-import { DeloreanRoutes } from '../../controls/MainLayout';
-import { ApplicationState } from '../../../../models/states';
+import { EventbriteConfig, SiteTheme } from '../../config/delorean.config';
+import { KotlinDetails } from '../../config/delorean.details';
+import { getCurrentConfig } from '../../ducks/current';
+import { ApplicationState } from '../../../models/states';
 
 type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 

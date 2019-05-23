@@ -3,8 +3,8 @@ import '../../stylesheets/main.scss';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
+import { Switch, Route, withRouter, RouteComponentProps, Redirect } from 'react-router';
 
-import { FirebaseConfig } from '../../config/delorean.config';
 
 import firebase from '@firebase/app';
 import '@firebase/firestore';
@@ -13,23 +13,25 @@ import '@firebase/storage';
 import { FirebaseApp } from '@firebase/app-types';
 import { User } from '@firebase/auth-types';
 
-import { Switch, Route, withRouter, RouteComponentProps, Redirect } from 'react-router';
+import { getIsEditMode } from '../../ducks/admin';
 import { setFirebaseApplication, setUser, setUserProfile, getUser, getUserProfile } from '../../ducks/current';
+
 import { Profile } from '../../../models/user';
 import { getSiteData } from '../../sagas/current';
-import Header from './Header/Header';
-import SiteConfig from '../dialogs/Editors/SiteConfig';
-import Footer from './Footer/Footer';
-import Home from '../pages/Home/Home';
-import Dialogs from './Dialog';
-import Schedule from '../pages/Schedule/Schedule';
-import Speakers from '../pages/Speakers/Speakers';
-import Conduct from '../pages/Conduct/Conduct';
-import EditOverlay from './EditOverlay/EditOverlay';
-import SpeakerEditor from '../dialogs/Editors/SpeakerEditor';
-import SessionEditor from '../dialogs/Editors/SessionEditor';
-import { getIsEditMode } from '../../ducks/admin';
 import { ApplicationState } from '../../../models/states';
+import { FirebaseConfig } from '../../config/delorean.config';
+
+import Header from './Header';
+import Footer from './Footer';
+import Dialogs from './Dialog';
+import Home from '../pages/Home';
+import Schedule from '../pages/Schedule';
+import Speakers from '../pages/Speakers';
+import Conduct from '../pages/Conduct';
+import EditOverlay from './EditOverlay';
+import SiteConfig from '../dialogs/SiteConfig';
+import SpeakerEditor from '../dialogs/SpeakerEditor';
+import SessionEditor from '../dialogs/SessionEditor';
 
 type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 

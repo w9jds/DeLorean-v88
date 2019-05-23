@@ -30,12 +30,13 @@ import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 
-import { SpeakerEditorState, Speaker } from '../../../../models/speaker';
-import { getFirestore, getFirebaseApp } from '../../../ducks/current';
-import { closeConfigDialog } from '../../../ducks/config';
-import { getEditorState } from '../../../ducks/speaker';
-import { getIsSpeakerEditorOpen, setSpeakerEditorOpen } from '../../../ducks/admin';
-import { ApplicationState } from '../../../../models/states';
+import { ApplicationState } from '../../../models/states';
+import { SpeakerEditorState, Speaker } from '../../../models/speaker';
+
+import { getEditorState } from '../../ducks/speaker';
+import { closeConfigDialog } from '../../ducks/config';
+import { getFirestore, getFirebaseApp } from '../../ducks/current';
+import { getIsSpeakerEditorOpen, setSpeakerEditorOpen } from '../../ducks/admin';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 const styleSheet: StyleRulesCallback = theme => ({

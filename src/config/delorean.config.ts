@@ -1,5 +1,5 @@
 export const SiteTheme = {
-    Secondary: '#03dac4',
+    Secondary: '#fff582',
     Primary: '#1565c0',
     AppBar: {
         Primary: '#13191e',

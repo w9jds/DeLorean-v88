@@ -15,11 +15,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { UploadTaskSnapshot } from '@firebase/storage-types';
 
-import { getFirestore, getFirebaseApp } from '../../../ducks/current';
-import { closeDialogWindow } from '../../../ducks/dialogs';
+import { getFirestore, getFirebaseApp } from '../../ducks/current';
+import { closeDialogWindow } from '../../ducks/dialogs';
 
 import Dropzone from 'react-dropzone';
-import { ApplicationState } from '../../../../models/states';
+import { ApplicationState } from '../../../models/states';
 
 const stylesheet: StyleRulesCallback = theme => ({
     formControl: {

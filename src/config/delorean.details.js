@@ -7,9 +7,9 @@ const DevfestDetails = {
 };
 
 const KotlinDetails = {
-    name: 'Kotlin/Everywhere',
+    name: 'KOTLIN/Everywhere',
     location: 'Chicago',
-    description: 'Kotlin/Everywhere is a series of community-led events, in collaboration with JetBrains and Google, where you can learn the essentials and best practices of Kotlin in Android, Google Cloud Platform, and multi-platform development.',
+    description: 'KOTLIN/Everywhere is a series of community-led events, in collaboration with JetBrains and Google, where you can learn the essentials and best practices of Kotlin in Android, Google Cloud Platform, and multi-platform development.',
     year: 2019,
     url: ''
 };

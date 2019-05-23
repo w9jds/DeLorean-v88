@@ -2,17 +2,18 @@ import './Schedule.scss';
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getSessionByStartTime } from '../../../ducks/session';
-
 import { RouteComponentProps } from 'react-router';
-import { Typography } from '@material-ui/core';
-import { DocumentSnapshot } from '@firebase/firestore-types';
-import { Session } from '../../../../models/session';
-import SessionSheet from '../../controls/SessionSheet/SessionSheet';
-import { Speaker } from '../../../../models/speaker';
-import { getSpeakers } from '../../../ducks/speaker';
-import { ApplicationState } from '../../../../models/states';
 import { formatToTimeZone } from 'date-fns-timezone';
+import { DocumentSnapshot } from '@firebase/firestore-types';
+
+import { Typography } from '@material-ui/core';
+import SessionSheet from '../controls/SessionSheet';
+
+import { getSpeakers } from '../../ducks/speaker';
+import { getSessionByStartTime } from '../../ducks/session';
+import { Session } from '../../../models/session';
+import { Speaker } from '../../../models/speaker';
+import { ApplicationState } from '../../../models/states';
 
 type ScheduleProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 

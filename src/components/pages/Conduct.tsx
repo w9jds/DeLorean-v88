@@ -1,7 +1,7 @@
 import './Conduct.scss';
 
 import * as React from 'react';
-import Logo from '../../../assets/event-logo.svg';
+import Logo from '../../assets/event-logo.svg';
 
 export default class CodeOfConduct extends React.PureComponent {
 
@@ -10,7 +10,7 @@ export default class CodeOfConduct extends React.PureComponent {
     constructor(props: any) {
         super(props);
 
-        this.conduct = require('../../../assets/code_of_conduct.md');
+        this.conduct = require('../../assets/code_of_conduct.md');
     }
 
     render() {

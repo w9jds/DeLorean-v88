@@ -2,14 +2,15 @@ import './Speakers.scss';
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-
 import { RouteComponentProps } from 'react-router';
-import { getSpeakersInOrder } from '../../../ducks/speaker';
-import SpeakerCard from '../../controls/SpeakerCard/SpeakerCard';
-import { Speaker } from '../../../../models/speaker';
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { TransitionGroup, Transition } from 'react-transition-group';
-import { ApplicationState } from '../../../../models/states';
+
+import SpeakerCard from '../controls/SpeakerCard';
+
+import { Speaker } from '../../../models/speaker';
+import { ApplicationState } from '../../../models/states';
+import { getSpeakersInOrder } from '../../ducks/speaker';
 
 type SpeakerPageProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 
