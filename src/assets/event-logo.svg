@@ -1,15 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="216" height="216" viewBox="0 0 216 216">
-    <defs>
-        <clipPath id="b">
-            <rect width="216" height="216"/>
-        </clipPath>
-    </defs>
-    <g id="a" clip-path="url(#b)">
-        <rect width="216" height="216" fill="transparent"/>
-        <path d="M171,45H27V189H171L99,117Z" fill="#fff582"/>
-        <path d="M180,36l-72,72H36l72-72Z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <path d="M108,36H36v72Z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <path d="M36,108v72h72Z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
-        <path d="M36,108l72,72h72l-72-72Z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="97.386" height="153.362" viewBox="0 0 97.386 153.362">
+  <defs>
+    <clipPath id="clip-Artboard_1">
+      <rect width="97.386" height="153.362"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_1" data-name="Artboard 1" clip-path="url(#clip-Artboard_1)">
+    <g id="Label" transform="translate(2 93.088)">
+      <text id="KOTLIN_Everywhere_Chicago" data-name="KOTLIN 
+Everywhere
+Chicago" transform="translate(-1 3)" fill="#fff" font-size="16" font-family="Gotham-Medium, Gotham" font-weight="500"><tspan x="0" y="15">KOTLIN </tspan><tspan x="0" y="32.717">Everywhere</tspan><tspan font-size="13" font-family="Gotham-Book, Gotham" font-weight="400"><tspan x="0" y="50.433">Chicago</tspan></tspan></text>
+      <path id="Path_1" data-name="Path 1" d="M78.936,12.424l3.771-5.682H85L80.67,13,76.9,18.685H74.6Z" transform="translate(-8.676 -0.088)" fill="#fff"/>
     </g>
+    <g id="Icon_White_" data-name="Icon (White)" transform="translate(-24 -33)">
+      <path id="Path_2" data-name="Path 2" d="M112.647,45H27v85.647h85.647L69.824,87.824Z" transform="translate(0 -3.647)" fill="#fff"/>
+      <g id="Group_9" data-name="Group 9" transform="translate(32.353 36)">
+        <g id="Group_8" data-name="Group 8">
+          <g id="Group_7" data-name="Group 7">
+            <g id="Group_6" data-name="Group 6">
+              <g id="Group_4" data-name="Group 4">
+                <path id="Path_3" data-name="Path 3" d="M121.647,36,78.824,78.824H36L78.824,36Z" transform="translate(-36 -36)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+              </g>
+              <path id="Path_4" data-name="Path 4" d="M78.824,36H36V78.824Z" transform="translate(-36 -36)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+              <path id="Path_5" data-name="Path 5" d="M36,108v42.824H78.824Z" transform="translate(-36 -65.176)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+              <g id="Group_5" data-name="Group 5" transform="translate(0 42.824)">
+                <path id="Path_6" data-name="Path 6" d="M36,108l42.824,42.824h42.824L78.824,108Z" transform="translate(-36 -108)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
 </svg>

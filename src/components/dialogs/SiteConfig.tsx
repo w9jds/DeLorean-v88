@@ -45,7 +45,7 @@ const stylesheet: StyleRulesCallback = theme => ({
         padding: '20px'
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1.6),
         minWidth: '120px',
         width: '30%'
     },
@@ -73,12 +73,17 @@ class SiteConfig extends React.Component<SiteConfigProps, SiteConfigState> {
     }
 
     componentDidUpdate(prevProps: SiteConfigProps) {
-        let element = document.getElementById('venue-address');
-
         if (!prevProps.config && this.props.config) {
             this.setState(this.buildStateFromProps(this.props));
         }
+        
+        // push to the back of the queue to ensure that the field is rendered before attaching the autocomplete
+        setTimeout(this.attachAutocomplete, 0);
+    }
 
+    attachAutocomplete = () => {
+        let element = document.getElementById('venue-address');
+        
         if (this.props.open && !this.autocomplete && element && google) {
             this.autocomplete = new google.maps.places.Autocomplete(element as HTMLInputElement, {
                 fields: ['photos', 'geometry', 'formatted_address', 'place_id', 'url']

@@ -29,5 +29,5 @@ export const EventbriteConfig = {
 };
 
 export const MapsConfig = {
-    apiKey: process.env.DELOREAN_MAP_API
+    apiKey: process.env.KOTLIN_MAP_API
 };

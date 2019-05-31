@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const renderer = require('marked').Renderer();
 const { KotlinDetails } = require('./src/config/delorean.details.js');
 
-const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -15,24 +14,15 @@ module.exports = {
     context: __dirname,
     mode: NODE_ENV,
     entry: {
-        'DeLorean-v88': ['isomorphic-fetch', './src/index.tsx']
+        'DeLorean-v88': ['./src/index.tsx']
     },
     optimization: {
-        minimize: !isDev,
-        minimizer: [
-            new TerserPlugin({
-                terserOptions: {
-                    output: {
-                        comments: false,
-                    },
-                },
-            }),
-        ]
+        minimize: !isDev ? true : false,
     },
-    devtool: isDev ? 'sourcemap' : false,
+    devtool: 'sourcemap',
     output: {
         path: path.resolve(__dirname, './build'),
-        filename: '[name].[hash].js',
+        filename: isDev ? '[name].js' : '[name].[hash].js',
     },
     module: {
         rules: [
@@ -52,7 +42,7 @@ module.exports = {
                   isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
                   'css-loader',
                   'sass-loader',
-                ]
+                ],
             },
             {
                 test: /\.md$/,
@@ -107,15 +97,15 @@ module.exports = {
     plugins: [
         new ManifestPlugin(),
         new MiniCssExtractPlugin({
-            filename: isDev ? 'styles/[name].css' : 'styles/[name].[hash].css',
-            chunkFilename: isDev ? 'styles/[id].css' : 'styles/[id].[hash].css',
+            filename: '[name].[hash].css',
+            chunkFilename: '[id].css',
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(NODE_ENV),
                 KOTLIN_EVERYWHERE_API_KEY: JSON.stringify(process.env.KOTLIN_EVERYWHERE_API_KEY),
-                DELOREAN_MAP_API: JSON.stringify(process.env.DELOREAN_MAP_API),
+                KOTLIN_MAP_API: JSON.stringify(process.env.KOTLIN_MAP_API),
                 EB_EVENT_ID: 62068376184,
             }
         }),
@@ -132,7 +122,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['.ts', '.tsx', '.js']
+        extensions: ['.ts', '*.scss', '.tsx', '.js']
     }
 };
 

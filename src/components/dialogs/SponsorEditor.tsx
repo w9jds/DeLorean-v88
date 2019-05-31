@@ -23,7 +23,7 @@ import { ApplicationState } from '../../../models/states';
 
 const stylesheet: StyleRulesCallback = theme => ({
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1.6),
         width: '75%',
         minWidth: '120px'
     },

@@ -41,19 +41,24 @@
         z-index: 5;
     }
 
+    .event {
+        .description {
+            display: flex;
+
+            h2 {
+                margin: auto;
+            }
+        }
+    
+        .event-logo {
+            max-height: 350px;
+        }
+    }
+
     h3 {
         margin-bottom: 6px;
         margin-top: 0;
         font-weight: 400;
-    }
-
-    .description {
-        max-width: 80%;
-    }
-
-    .event-logo {
-        // max-height: 170px;
-        // max-width: 300px;
     }
 }
 

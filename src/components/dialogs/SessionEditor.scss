@@ -1,8 +1,13 @@
-.description-editor {
-    height: 30rem;
-    width: 100%;
-    resize: none;
-    outline: none;
+.tinymce {
+    display: flex !important;
+    @import '../../../node_modules/tinymce/skins/ui/oxide-dark/skin.min.css';
+
+    .description-editor {
+        height: 30rem;
+        width: 100%;
+        resize: none;
+        outline: none;
+    }
 }
 
 .editor {

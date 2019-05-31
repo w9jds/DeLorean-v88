@@ -54,8 +54,7 @@ const theme = createMuiTheme({
         }
     },
     typography: {
-        htmlFontSize: 16,
-        useNextVariants: true
+        htmlFontSize: 16
     },
     overrides: {
         MuiAppBar: {

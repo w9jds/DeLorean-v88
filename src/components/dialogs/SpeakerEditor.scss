@@ -1,8 +1,13 @@
-.bio-editor {
-    height: 30rem;
-    width: 100%;
-    resize: none;
-    outline: none;
+.editor {
+    display: flex !important;
+    @import '../../../node_modules/tinymce/skins/ui/oxide-dark/skin.min.css';
+
+    .bio {
+        height: 30rem;
+        width: 100%;
+        resize: none;
+        outline: none;
+    }
 }
 
 .portrait-image {
@@ -45,6 +50,9 @@
 
     .field-containers {
         margin: auto 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 }
 

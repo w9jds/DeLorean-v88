@@ -1,6 +1,7 @@
 import './Home.scss';
 
-import Logo from '../../assets/event-logo.svg';
+// import Logo from '../../assets/event-logo.svg';
+import * as logo from '../../assets/event-logo.png';
 import * as background from '../../assets/intro-background.jpg';
 
 import * as React from 'react';
@@ -94,15 +95,16 @@ class Home extends React.Component<HomeProps> {
         return(
             <main>
                 <section className="intro" style={{ backgroundImage: `url(${background})` }}>
-                    <div className="container">
-                        <Logo className="event-logo mb-4"/>
+                    <div className="event">
+                        <div className="description">
+                            <img className="event-logo" src={logo} />
+                            <h2>{KotlinDetails.description}</h2>
+                        </div>
 
-                        <h1 className="container-thin">
-                            {KotlinDetails.description}
-                        </h1>
-
-                        <h3>Aug 23, 2019</h3>
-                        <h3>{config && config.venue ? config.venue.name : ''}</h3>
+                        <div className="details">
+                            <h2>Venue: {config && config.venue ? config.venue.name : ''}</h2>
+                            <h3>Aug 23, 2019</h3>
+                        </div>
 
                         <div className="mt-4">
                             <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">

@@ -24,7 +24,7 @@ import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/st
 import { DocumentSnapshot } from '@firebase/firestore-types';
 import { UploadTaskSnapshot } from '@firebase/storage-types';
 
-import tinymce from 'tinymce/tinymce';
+import tinymce from 'tinymce/tinymce'
 import 'tinymce/themes/silver';
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
@@ -43,10 +43,6 @@ const styleSheet: StyleRulesCallback = theme => ({
     appBar: {
         position: 'relative'
     },
-    fullscreen: {
-        padding: '0 !important',
-        margin: '0 !important'
-    },
     dialogForm: {
         display: 'flex',
         flexFlow: 'column',
@@ -61,8 +57,7 @@ const styleSheet: StyleRulesCallback = theme => ({
         margin: 'auto 0'
     },
     formControl: {
-        margin: theme.spacing.unit,
-        display: 'block'
+        margin: theme.spacing(1.6),
     }
 });
 
@@ -114,18 +109,19 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
         }
 
         if (prevProps.isOpen && !this.props.isOpen) {
-            tinymce.remove('textarea.bio-editor');
+            tinymce.remove('textarea.bio');
         }
     }
 
     initTinyMce = () => {
         this.editor = tinymce.init({
-            selector: 'textarea.bio-editor',
-            skin: 'modern-dark',
+            selector: 'textarea.bio',
             plugins: [ 'autolink', 'lists', 'advlist' ],
+            skin: 'dark',
+            resize: false,
             menubar: false,
             statusbar: false,
-            extended_valid_elements : 'span[!class]',
+            browser_spellcheck: true,
             invalid_styles: 'color font-size font-family background-color',
             toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
         });
@@ -264,12 +260,12 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
 
     render() {
         const { classes, isOpen } = this.props;
+        const editor = classnames('editor', classes.formControl)
 
         return(
             <Dialog fullScreen
                 open={isOpen}
-                TransitionComponent={Transition}
-                classes={{ paperFullScreen: classes.fullscreen }}>
+                TransitionComponent={Transition} >
 
                 <AppBar className={classes.appBar}>
                     <Toolbar>
@@ -333,8 +329,8 @@ class SpeakerEditor extends React.PureComponent<SpeakerEditorProps, SpeakerEdito
                         </div>
                     </div>
 
-                    <FormControl className={classes.formControl}>
-                        <textarea className="bio-editor" />
+                    <FormControl className={editor}>
+                        <textarea className="bio" />
                     </FormControl>
                 </DialogContent>
             </Dialog>

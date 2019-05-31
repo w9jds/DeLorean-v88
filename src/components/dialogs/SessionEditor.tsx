@@ -1,25 +1,17 @@
 import './SessionEditor.scss';
 
 import * as React from 'react';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
-import Slide from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import DialogContent from '@material-ui/core/DialogContent';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input, { InputProps } from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
+import {
+    Dialog, AppBar, Toolbar, Button, Slide, Typography,
+    IconButton, DialogContent, FormControl, InputLabel, Input,
+    Select, MenuItem, Chip, Avatar
+} from '@material-ui/core';
 
+import { InputProps } from '@material-ui/core/Input';
 import { Close } from '@material-ui/icons';
 import { WithStyles, withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 
@@ -61,7 +53,7 @@ const styleSheet: StyleRulesCallback = theme => ({
         margin: 'auto 0'
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1.6),
         display: 'block'
     },
     chips: {
@@ -69,7 +61,7 @@ const styleSheet: StyleRulesCallback = theme => ({
         flexWrap: 'wrap',
     },
     chip: {
-        margin: theme.spacing.unit / 4,
+        margin: theme.spacing(1.6) / 4,
     }
 });
 
@@ -120,10 +112,12 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
     initTinyMce = () => {
         this.editor = tinymce.init({
             selector: 'textarea.description-editor',
-            skin: 'modern-dark',
             plugins: [ 'autolink', 'lists', 'advlist' ],
+            skin: 'dark',
+            resize: false,
             menubar: false,
             statusbar: false,
+            browser_spellcheck: true,
             invalid_styles: 'color font-size font-family background-color',
             toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
         });
@@ -279,6 +273,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
 
     render() {
         const { classes, isOpen } = this.props;
+        const editor = classnames(classes.formControl, 'tinymce')
 
         return(
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -300,7 +295,6 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
                     </AppBar>
 
                     <DialogContent>
-
                         <div className="editor-session-title">
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="name">Name</InputLabel>
@@ -344,7 +338,7 @@ class SessionEditor extends React.PureComponent<SessionEditorProps, SessionEdito
                             </div>
                         </div>
 
-                        <FormControl className={classes.formControl}>
+                        <FormControl className={editor}>
                             <textarea className="description-editor" />
                         </FormControl>
                     </DialogContent>
