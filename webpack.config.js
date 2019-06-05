@@ -19,7 +19,7 @@ module.exports = {
     optimization: {
         minimize: !isDev ? true : false,
     },
-    devtool: 'sourcemap',
+    devtool: isDev ? 'sourcemap' : false,
     output: {
         path: path.resolve(__dirname, './build'),
         filename: isDev ? '[name].js' : '[name].[hash].js',

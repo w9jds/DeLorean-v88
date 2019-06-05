@@ -42,16 +42,37 @@
     }
 
     .event {
+        width: 94%;
+        max-width: 1152px;
+        display: flex;
+        flex-direction: column;
+        margin: 16px auto;
+        
         .description {
             display: flex;
+            flex-wrap: nowrap;
+            
+            .event-logo {
+                max-height: 350px;
+            }
 
             h2 {
                 margin: auto;
             }
         }
+        
+        .details {
+            display:flex;
+            flex-direction: column;
+            margin: 0 0 0 auto;
+            text-align: right;
+            font-weight: 400;
+            font-size: 20px;
+        }
     
-        .event-logo {
-            max-height: 350px;
+
+        .ticket-button {
+            margin: 0 0 0 auto;
         }
     }
 
@@ -68,7 +89,7 @@
     align-items: center;
 }
 
-@media (min-width: 1004px) {
+@media screen and (min-width: 1004px) {
     .intro {
         min-height: calc(100vh - 125px);
         background-size: 100vw calc(100vh - 125px);
@@ -77,4 +98,31 @@
     .map-container {
         min-height: 90vh
     }
+}
+
+@media screen and (max-width: 768px) {
+
+    .intro {
+        background-size: auto;
+
+        .description {
+            justify-content: center;
+            flex-wrap: wrap !important;
+
+            h2 {
+                text-align: center
+            }
+        }
+    
+        .details {
+            margin: 16px auto !important;
+            text-align: center !important;
+        }
+    
+        .ticket-button {
+            margin: 0 auto !important;
+            // display: none;
+        }
+    }
+
 }

@@ -102,11 +102,11 @@ class Home extends React.Component<HomeProps> {
                         </div>
 
                         <div className="details">
-                            <h2>Venue: {config && config.venue ? config.venue.name : ''}</h2>
-                            <h3>Aug 23, 2019</h3>
+                            <span>Venue: {config && config.venue ? config.venue.name : ''}</span>
+                            <span>Aug 23, 2019</span>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="mt-4 ticket-button">
                             <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
                                 Get Tickets
                             </Button>
