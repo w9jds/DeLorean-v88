@@ -35,7 +35,7 @@
     "redux-actions": "^2.6.4",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0",
-    "tinymce": "^4.9.2"
+    "tinymce": "^4.9.11"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
