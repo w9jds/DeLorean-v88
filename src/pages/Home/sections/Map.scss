@@ -1,0 +1,43 @@
+.venue {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+
+  .card {
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    right: 50%;
+    max-width: 400px;
+    transform: translate3d(50%, -50%, 0);
+    -webkit-transform: translate3d(50%, -50%, 0);
+
+    .media {
+      height: 200px;
+      width: 400px;
+    }
+
+    .actions {
+
+      .directions {
+
+        .icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
+    .card {
+      right: 30%;
+    }
+  }
+
+  @media screen and (min-width: 900px) {
+    .card {
+      right: 25%;
+    }
+  }
+}

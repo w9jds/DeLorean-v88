@@ -1,16 +1,19 @@
-import * as functions from 'firebase-functions';
-import { initializeApp } from 'firebase-admin';
-import AuthHandlers from './handlers/Auth';
+import { auth, firestore } from 'firebase-functions';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
-const firebase = initializeApp();
+import AuthHandlers from './handlers/auth';
 
-firebase.firestore().settings({
-    timestampsInSnapshots: true
+const app = initializeApp();
+
+getFirestore(app).settings({
+  timestampsInSnapshots: true
 });
 
-const loginHandlers = new AuthHandlers(firebase);
+const loginHandlers = new AuthHandlers(app);
 
-export const createProfile = functions.auth.user()
-    .onCreate(loginHandlers.exportNewUser);
-export const updateClaims = functions.firestore.document('/users/{uid}')
-    .onUpdate(loginHandlers.onClaimsChange);
+export const createProfile = auth.user()
+  .onCreate(loginHandlers.exportNewUser);
+
+export const updateClaims = firestore.document('/users/{uid}')
+  .onUpdate(loginHandlers.onClaimsChange);

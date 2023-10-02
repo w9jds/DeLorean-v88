@@ -1,0 +1,16 @@
+
+
+%dialog-header {
+  position: relative;
+
+  h6 {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+%dialog-form {
+  display: flex;
+  flex-flow: column;
+  padding: 20px;
+}

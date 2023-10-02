@@ -60,6 +60,7 @@ typings/
 # Build, Config, and Compile files
 .vscode/
 build/
+dist/
 out/
 
 # Docker build

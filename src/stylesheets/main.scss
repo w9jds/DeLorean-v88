@@ -1,17 +1,93 @@
-@import './globals/variables';
-@import './globals/mixins';
-@import './globals/keyframes';
-@import './globals/placeholders';
-@import './globals/media';
-@import './globals/global';
-@import './globals/tickets';
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  color: #fff !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  font-weight: normal !important;
+  background-color: #13191e !important;
+  font-family: 'Roboto', sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
+button,
+select,
+button:focus,
+select:focus {
+  outline: none;
+}
 
-@import '../components/controls/Footer/Footer.scss';
-@import '../components/controls/EditOverlay/EditOverlay.scss';
+@media (min-width: 768px) {
+  .footer .container-wide {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
 
-@import '../components/pages/Home/Home.scss';
-@import '../components/sections/Sponsors/Sponsors.scss';
-@import '../components/sections/Map/Map.scss';
-@import '../components/pages/Conduct/Conduct.scss';
-@import '../components/pages/Speakers/Speakers.scss';
+.h2 {
+  display: block;
+  font-size: 28px;
+  line-height: 1.16;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-bottom: 24px;
+}
+
+.logo a {
+  display: block;
+  width: 100%;
+  max-width: 50px;
+  transition: width 0.4s ease-in-out;
+  position: relative;
+}
+
+.container {
+  width: 94%;
+  max-width: 1152px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-thin {
+  max-width: 780px;
+}
+
+.container-wide {
+  width: 94%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pac-container {
+  z-index: 3000;
+}
+
+.page-base {
+  min-height: calc(100vh - 125px);
+  background-color: #212121;
+
+  > div {
+    padding: 24px 0;
+  }
+}
+
+.flex-auto {
+  flex: 1 1 auto !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.mt-4 {
+  margin-top: 24px !important;
+}
+
+.mb-4 {
+  margin-bottom: 24px !important;
+}

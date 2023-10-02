@@ -1,0 +1,80 @@
+.sponsors {
+  display: flex;
+  flex-flow: column;
+
+  header {
+      display: flex;
+      width: 100%;
+      min-height: 200px;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      justify-content: center;
+
+      .action {
+          margin-left: auto;
+          margin-right: auto;
+          text-align: center;
+      }
+
+      a, a:visited {
+          color: #fff;
+      }
+  }
+
+  .organizations {
+      padding: 38px 0;
+      background-color: #212121;
+
+      .sponsor-grid {
+
+          .grid-root {
+              overflow: visible;
+          }
+      }
+  }
+}
+
+.sponsor-tile {
+  cursor: pointer;
+
+  -webkit-transition: all 200ms ease-in;
+  -webkit-transform: scale(1);
+  -ms-transition: all 200ms ease-in;
+  -ms-transform: scale(1);
+  -moz-transition: all 200ms ease-in;
+  -moz-transform: scale(1);
+  transition: all 200ms ease-in;
+  transform: scale(1);
+
+
+  &:hover {
+      box-shadow: 0px 0px 50px #000000;
+      z-index: 2;
+
+      -webkit-transition: all 200ms ease-in;
+      -webkit-transform: scale(1.1);
+      -ms-transition: all 200ms ease-in;
+      -ms-transform: scale(1.1);
+      -moz-transition: all 200ms ease-in;
+      -moz-transform: scale(1.1);
+      transition: all 200ms ease-in;
+      transform: scale(1.1);
+  }
+
+  .tile-override {
+      display: flex;
+  }
+
+  .image-override {
+      position: unset;
+      transform: none;
+  }
+}
+
+.sponsor-image {
+  display: block;
+  margin: auto;
+  max-width: 80%;
+  max-height: 90px;
+}

@@ -1,8 +1,22 @@
 {
   "presets": [
-    "@babel/typescript", "@babel/react", ["@babel/env", { "modules": false }]
+    "@babel/typescript",
+    "@babel/react",
+    "@babel/env"
   ],
   "plugins": [
-    "@babel/proposal-class-properties"
-  ]
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-syntax-dyanmic-import",
+    "@babel/proposal-class-properties",
+    "add-react-displayname"
+  ],
+  "env": {
+    "production": {
+      "only": ["src"],
+      "plugins": [
+        "@babel/plugin-transform-react-constant-elements",
+        "@babel/plugin-transform-react-inline-elements"
+      ]
+    }
+  }
 }

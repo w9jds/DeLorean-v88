@@ -1,19 +1,28 @@
 {
   "compilerOptions": {
-    "outDir": "../build/dist",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "target": "es6",
-    "lib": ["es6", "es5", "dom"],
-    "sourceMap": true,
     "jsx": "react",
+    "target": "es2017",
+    "module": "ESNext",
+    "sourceMap": true,
     "declaration": false,
     "importHelpers": true,
     "removeComments": true,
+    "resolveJsonModule": true,
     "strictNullChecks": false,
+    "moduleResolution": "node",
+    "outDir": "./build/dist",
+    "lib": ["es2017", "es5", "dom"],
+    "allowSyntheticDefaultImports": true,
+    "types": ["react", "node"],
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "*"
+      ]
+    }
   },
-  "exclude": [
-    "node_modules",
-    "functions"
+  "include": [
+    "../node_modules/@types/google.maps/index.d.ts",
+    "**/*"
   ]
 }

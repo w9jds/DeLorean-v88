@@ -1,0 +1,17 @@
+
+.speaker {
+  .container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+@media(max-width: 760px) {
+  .speaker {
+    .container {
+      justify-content: center;
+    }
+  }
+}

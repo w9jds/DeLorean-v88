@@ -1,0 +1,77 @@
+.speaker-details {
+
+  .header {
+      display: flex;
+
+      .portrait-avatar {
+          height: 175px;
+          width: 175px;
+          border-radius: 150px;
+          overflow: hidden;
+          outline: none;
+          margin: 16px auto;
+          object-fit: cover;
+      }
+  }
+
+  hr {
+      margin: 12px 0;
+  }
+
+  .content {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .social {
+      display: flex;
+      justify-content: space-around;
+      height: 50px;
+
+      svg {
+          height: 42px;
+          width: 42px;
+          fill: #fff;
+          margin: auto 0;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+              cursor: pointer;
+
+              &.twitter {
+                  fill: #1DA1F2;
+              }
+
+              &.facebook {
+                  fill: #3B5998;
+              }
+
+              &.linkedin {
+                  fill: #0077B5;
+              }
+
+              &.github {
+                  fill: #181717;
+              }
+
+              &.medium {
+                  fill: #12100E;
+              }
+          }
+      }
+  }
+
+  .action.close {
+      position: absolute;
+      min-width: 24px;
+      top: 6px;
+      right: 6px;
+  }
+
+  .bio {
+      a, a:visited {
+          color: #fff;
+      }
+  }
+}

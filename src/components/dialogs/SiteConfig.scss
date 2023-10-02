@@ -1,0 +1,18 @@
+@import '../../stylesheets/placeholders.scss';
+
+.site-config {
+
+  & .header {
+    @extend %dialog-header;
+  }
+
+  & .dialog-form {
+    @extend %dialog-form;
+
+    .form-control {
+      margin: 5px;
+      min-width: 120px;
+      width: 30%;
+    }
+  }
+}

@@ -3,34 +3,36 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "functions": {
-    "predeploy": [
-      "npm --prefix ./functions run lint",
-      "npm --prefix ./functions run build"
-    ]
-  },
-  "hosting": [{
-      "target": "dev",
-      "public": "build",
-      "rewrites": [{
+  "functions": [
+    {
+      "runtime": "nodejs18",
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ],
+      "source": "functions",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
         "source": "**",
         "destination": "/index.html"
-      }]
-  }, {
-    "target": "prod",
-    "public": "build",
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }],
-    "headers": [{
-      "source": "service-worker.js",
-      "headers": [{
-        "key": "Cache-Control",
-        "value": "no-store"
-      }]
-    }]
-  }],
+      }
+    ]
+  },
   "storage": {
     "rules": "storage.rules"
   }

@@ -1,74 +1,78 @@
-import * as React from 'react';
-import { render } from 'react-dom';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { BrowserRouter } from 'react-router-dom';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { SiteTheme } from './config/delorean.config';
-import { CurrentState, ConfigState, DialogsState, AdminState } from './models/states';
-import current from './ducks/current';
-import config from './ducks/config';
-import dialogs from './ducks/dialogs';
-import admin from './ducks/admin';
-import sagas from './sagas/sagas';
-import MainLayout from './components/controls/MainLayout';
+import { ApplicationState } from './models/states';
 
-const sagaMiddleware = createSagaMiddleware();
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-export interface ApplicationState {
-    readonly current: CurrentState;
-    readonly config: ConfigState;
-    readonly dialogs: DialogsState;
-    readonly admin: AdminState;
-}
+import sagas from 'store/sagas';
+import current from 'store/current/reducer';
+import config from 'store/config/reducer';
+import dialogs from 'store/dialogs/reducer';
+import admin from 'store/admin/reducer';
+import sessions from 'store/sessions/reducer';
+import speakers from 'store/speakers/reducer';
+
+import MainLayout from 'components/MainLayout';
+
+const middleware = [
+  createSagaMiddleware()
+];
 
 const store = createStore(
-    combineReducers<ApplicationState>({
-        current,
-        config,
-        dialogs,
-        admin
-    }), applyMiddleware(sagaMiddleware)
+  combineReducers<ApplicationState>({
+    current,
+    config,
+    dialogs,
+    admin,
+    sessions,
+    speakers,
+  }),
+  applyMiddleware(...middleware)
 );
 
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: SiteTheme.Primary,
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: SiteTheme.Primary,
+    },
+    secondary: {
+      main: SiteTheme.Secondary,
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        colorPrimary: {
+          backgroundColor: SiteTheme.AppBar.Primary,
+          color: SiteTheme.AppBar.Color,
         },
-        secondary: {
-            main: SiteTheme.Secondary
+        root: {
+          boxShadow: 'none',
         }
-    },
-    typography: {
-        htmlFontSize: 16,
-        useNextVariants: true
-    },
-    overrides: {
-        MuiAppBar: {
-            colorPrimary: {
-                backgroundColor: SiteTheme.AppBar.Primary,
-                color: SiteTheme.AppBar.Color
-            },
-            root: {
-                boxShadow: 'none'
-            }
-        }
+      },
     }
-});
+  },
+  typography: {
+    htmlFontSize: 16,
+  },
+})
 
-sagaMiddleware.run(sagas);
+middleware[0].run(sagas);
 
-render(
-    <MuiThemeProvider theme={theme}>
-        <Provider store={store}>
-            <BrowserRouter>
-                <MainLayout />
-            </BrowserRouter>
-        </Provider>
-    </MuiThemeProvider>,
-    document.getElementById('root')
-);
+createRoot(document.getElementById('root'))
+  .render(
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <MainLayout />
+        </BrowserRouter>
+      </Provider>
+    </ThemeProvider>
+  );
