@@ -73,7 +73,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         ENV_DEST: JSON.stringify(ENV_DEST),
-        DELOREAN_API_KEY: JSON.stringify(process.env.WINDY_CITY_API_KEY),
+        DELOREAN_API_KEY: JSON.stringify(process.env.DELOREAN_API_KEY),
         DELOREAN_MAP_API: JSON.stringify(process.env.DELOREAN_MAP_API),
         WINDY_CITY_EVENT_ID: JSON.stringify(process.env.WINDY_CITY_EVENT_ID),
       },
