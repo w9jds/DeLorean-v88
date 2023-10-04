@@ -80,7 +80,7 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new HtmlWebpackPlugin({
-      eventName: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
+      eventName: `${DevfestDetails.name} ${DevfestDetails.location} ${DevfestDetails.year}`,
       description: DevfestDetails.description,
       url: DevfestDetails.url,
       filename: 'index.html',
