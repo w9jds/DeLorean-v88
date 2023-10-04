@@ -1,13 +1,12 @@
 {
   "projects": {
-    "default": "devfest-e4f7e",
-    "prod": "devfest-e4f7e"
+    "default": "devfest-kc-2023"
   },
   "targets": {
-    "devfest-v88": {
+    "devfest-kc-2023": {
       "hosting": {
         "prod": [
-          "devfest-v88"
+          "devfest-kc-2023"
         ]
       }
     }

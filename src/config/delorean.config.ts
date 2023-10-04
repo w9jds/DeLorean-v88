@@ -17,9 +17,9 @@ export const SiteTheme = {
 
 export const FirebaseConfig = {
   apiKey: process.env.DELOREAN_API_KEY,
-  authDomain: "devfest-e4f7e.firebaseapp.com",
-  projectId: "devfest-e4f7e",
-  storageBucket: "devfest-e4f7e.appspot.com",
+  authDomain: "devfest-kc-2023.firebaseapp.com",
+  projectId: "devfest-kc-2023",
+  storageBucket: "devfest-kc-2023.appspot.com",
 };
 
 export const EventbriteConfig = {
