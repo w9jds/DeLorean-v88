@@ -29,9 +29,19 @@
     }
   }
 
+  .map-container {
+    display: flex;
+    min-height: 600px;
+    align-items: center;
+  }
+
   @media screen and (min-width: 1000px) {
     .card {
       right: 30%;
+    }
+
+    .map-container {
+      min-height: 90vh;
     }
   }
 

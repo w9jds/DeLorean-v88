@@ -1,16 +1,16 @@
 import React, { FC, useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import makeAsyncScriptLoader from 'react-async-script';
 import { doc, updateDoc } from 'firebase/firestore';
+
+import { Loader } from '@googlemaps/js-api-loader';
 
 import Configuration from 'models/config';
 import { ApplicationState } from 'models/states';
+import { MapsConfig } from 'config/delorean.config';
 import { closeConfigDialog } from 'store/config/actions';
 import { isConfigDialogOpen } from 'store/config/selectors';
 import { getDatabase, getCurrentConfig } from 'store/current/selectors';
-
-import { MapsConfig } from 'config/delorean.config';
 
 import { Close } from '@mui/icons-material';
 import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -46,6 +46,11 @@ const SiteConfig: FC<SiteConfigProps> = ({
   const [autocomplete, setAutoComplete] = useState<google.maps.places.Autocomplete>();
   const [fields, setFields] = useState<Record<string, any>>(initialState);
 
+  const loader = new Loader({
+    apiKey: MapsConfig.apiKey,
+    version: "weekly",
+  });
+
   useEffect(() => {
     setFields({
       name: config?.org?.name,
@@ -65,9 +70,11 @@ const SiteConfig: FC<SiteConfigProps> = ({
 
   useEffect(() => {
     if (open) {
-      setAutoComplete(new google.maps.places.Autocomplete(ref.current, {
-        fields: ['photos', 'geometry', 'formatted_address', 'place_id', 'url']
-      }));
+      loader.importLibrary('places').then(lib => {
+        setAutoComplete(new lib.Autocomplete(ref.current, {
+          fields: ['photos', 'geometry', 'formatted_address', 'place_id', 'url']
+        }));
+      });
     }
   }, [open, ref.current]);
 
@@ -219,8 +226,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
   closeConfigDialog
 }, dispatch);
 
-const ConfigDialog = connect(mapStateToProps, mapDispatchToProps)(SiteConfig);
-
-export default makeAsyncScriptLoader(`https://maps.googleapis.com/maps/api/js?key=${MapsConfig.apiKey}&libraries=places`, {
-  globalName: 'google'
-})(ConfigDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(SiteConfig);

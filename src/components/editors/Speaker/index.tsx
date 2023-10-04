@@ -219,7 +219,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
     closeSpeakerEditor();
   }
 
-  return(
+  return (
     // classes={{ paperFullScreen: classes.fullscreen }}
     <Dialog fullScreen
       open={isOpen}

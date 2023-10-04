@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const renderer = require('marked').Renderer();
 const { DevfestDetails } = require('../../src/config/delorean.details.js');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -36,10 +35,7 @@ module.exports = {
         test: /\.md$/,
         use: [
           { loader: 'html-loader' },
-          {
-            loader: 'markdown-loader',
-            options: { pedantic: true, renderer },
-          },
+          { loader: 'markdown-loader' },
         ],
       },
       {

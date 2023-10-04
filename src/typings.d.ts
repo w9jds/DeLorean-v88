@@ -5,3 +5,8 @@ declare module '*.svg' {
   const content: any;
   export default content;
 }
+
+declare module 'window' {
+  const EBWidgets: any;
+  export default EBWidgets;
+}

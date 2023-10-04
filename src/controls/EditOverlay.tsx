@@ -8,7 +8,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { ApplicationState } from 'models/states';
 
 import { Fab, Button } from '@mui/material';
-import { Add, PersonAdd, CreditCard } from '@mui/icons-material';
+import { Add, PersonAdd, CreditCard, CalendarMonth } from '@mui/icons-material';
 
 import CreateSponsor from 'components/editors/Sponsor';
 
@@ -85,7 +85,7 @@ const EditOverlay: FC<EditOverlayProps> = ({
             Add Session
           </Button>
           <Fab size="medium" color="primary" onClick={onCreateSession} >
-
+            <CalendarMonth />
           </Fab>
         </div>
 

@@ -53,9 +53,10 @@ const SponsorDialog: FC<SponsorDialogProps> = ({
   });
 
   const onSaveSponsor = async () => {
+    debugger;
     const sponsor = await getDoc(doc(db, `/sponsors/${fields.name}`));
 
-    if (!sponsor.exists && fields.name && fields.site && file) {
+    if (!sponsor.exists() && fields.name && fields.site && file) {
       uploadBytes(
         ref(storage, `sponsors/${fields.name}`),
         file.contents, { contentType: file.metadata.type}

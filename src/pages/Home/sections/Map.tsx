@@ -1,64 +1,77 @@
-import React, { FC, Fragment, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useMemo, useState, useRef, useLayoutEffect, createRef } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
+import { Loader } from '@googlemaps/js-api-loader';
+
 import { ApplicationState } from 'models/states';
 import { closeConfigDialog } from 'store/config/actions';
-import { getCurrentConfig } from 'store/current/selectors';
+import { getCurrentConfig } from 'store/current/selectors'
+import { MapsConfig } from 'config/delorean.config';;
 
 import { Directions } from '@mui/icons-material';
 
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
-
-import './Map.scss';
 
 type MapProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 const Map: FC<MapProps> = ({
   config
 }) => {
-  const mapRef = useRef<HTMLDivElement>();
+  const mapRef = createRef<HTMLDivElement>();
   const [map, setMap] = useState<google.maps.Map>();
-  const [marker, setMarker] = useState<google.maps.Marker>();
+
+  const loaderConfig = useMemo(() => ({
+    apiKey: MapsConfig.apiKey,
+    version: "weekly",
+  }), [MapsConfig]);
 
   useEffect(() => {
-    if (mapRef.current) {
-      setMap(new google.maps.Map(mapRef.current, {
-        zoom: 16,
-        zoomControl: false,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false,
-        draggable: false,
-        draggableCursor: 'default',
-        draggingCursor: 'default',
-        scrollwheel: false,
-        disableDoubleClickZoom: true,
-        keyboardShortcuts: false,
-        panControl: false,
-        clickableIcons: false
-      }));
+    if (mapRef?.current) {
+      new Loader(loaderConfig)
+        .importLibrary('maps')
+        .then(lib => {
+          setMap(new lib.Map(mapRef.current, {
+            zoom: 17,
+            zoomControl: false,
+            mapTypeControl: false,
+            scaleControl: false,
+            streetViewControl: false,
+            rotateControl: false,
+            fullscreenControl: false,
+            draggable: false,
+            draggableCursor: 'default',
+            draggingCursor: 'default',
+            scrollwheel: false,
+            disableDoubleClickZoom: true,
+            keyboardShortcuts: false,
+            panControl: false,
+            clickableIcons: false
+          }));
+        });
     }
-  }, [mapRef.current]);
+  }, [config, mapRef.current]);
 
   useEffect(() => {
     if (map && config?.venue?.coordinates) {
-      const position = {
-        lat: config.venue.coordinates.lat,
-        lng: config.venue.coordinates.lng
-      };
+      new Loader(loaderConfig)
+        .importLibrary('marker')
+        .then(lib => {
+          const position = {
+            lat: config.venue.coordinates.lat,
+            lng: config.venue.coordinates.lng
+          };
 
-      map.setCenter(position);
+          map.setCenter(position);
 
-      setMarker(new google.maps.Marker({
-        map: map,
-        clickable: false,
-        draggable: false,
-        visible: true,
-        position
-      }));
+          new lib.Marker({
+            map: map,
+            clickable: false,
+            draggable: false,
+            visible: true,
+            position
+          })
+        });
     }
   }, [map, config]);
 
@@ -68,8 +81,8 @@ const Map: FC<MapProps> = ({
     }
   }
 
-  return (
-    <Fragment>
+  return config?.venue && (
+    <section className="venue">
       <Card className="card">
         <CardActionArea>
           {
@@ -97,7 +110,7 @@ const Map: FC<MapProps> = ({
       </Card>
 
       <div ref={mapRef} className="map-container" />
-    </Fragment>
+    </section>
   );
 
 }
