@@ -23,13 +23,15 @@ type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
 
 class Home extends React.Component<HomeProps> {
   componentDidMount() {
-    // tslint:disable-next-line:no-string-literal
-    window['EBWidgets'].createWidget({
-      widgetType: 'checkout',
-      eventId: EventbriteConfig.eventId,
-      modal: true,
-      modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
-    });
+    if (window['EBWidgets']) {
+      // tslint:disable-next-line:no-string-literal
+      window['EBWidgets'].createWidget({
+        widgetType: 'checkout',
+        eventId: EventbriteConfig.eventId,
+        modal: true,
+        modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
+      });
+    }
   }
 
   openCalltoAction = () => window.open(this.props.config.event.papercall.url);
@@ -77,6 +79,7 @@ class Home extends React.Component<HomeProps> {
 
   render() {
     let { config } = this.props;
+    const startDate = config?.event?.startDate?.toDate();
 
     return(
       <main>
@@ -88,8 +91,8 @@ class Home extends React.Component<HomeProps> {
               {DevfestDetails.description}
             </h1>
 
-            <h3>Feb 01, 2019</h3>
-            <h3>{config && config.venue ? config.venue.name : ''}</h3>
+            <h3>{startDate && format(startDate, 'MMMM d, yyyy')}</h3>
+            <h3>{config?.venue?.name}</h3>
 
             <div className="mt-4">
               <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">

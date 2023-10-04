@@ -13,7 +13,7 @@ import { getDatabase, getCurrentConfig } from 'store/current/selectors';
 import { MapsConfig } from 'config/delorean.config';
 
 import { Close } from '@mui/icons-material';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Button, TextField, Dialog, AppBar, Toolbar, IconButton, Typography, Slide, FormControl } from '@mui/material';
 
@@ -58,6 +58,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
       address: config?.venue?.address,
       picture: config?.venue?.pictureUrl,
       papercall: config?.event?.papercall?.url,
+      startDate: config?.event?.startDate?.toDate(),
       speakerClose: config?.event?.papercall?.closing?.toDate()
     });
   }, [config]);
@@ -74,8 +75,8 @@ const SiteConfig: FC<SiteConfigProps> = ({
     setFields({ ...fields, [name]: e.target.value });
   };
 
-  const onSpeakerCloseDateChange = (date) => {
-    setFields({ ...fields, speakerClose: date });
+  const onDateChange = (date, name: string) => {
+    setFields({ ...fields, [name]: date });
   };
 
   const handleClose = () => {
@@ -101,6 +102,8 @@ const SiteConfig: FC<SiteConfigProps> = ({
         pictureUrl: fields.picture || null,
       },
       event: {
+        ...config.event,
+        startDate: fields.startDate || null,
         papercall: {
           ...config.event.papercall,
           url: fields.papercall || null,
@@ -194,7 +197,10 @@ const SiteConfig: FC<SiteConfigProps> = ({
               <TextField label="Submit Talk Uri" value={fields.papercall} onChange={e => onSettingChange(e, 'papercall')} />
             </FormControl>
             <FormControl className="form-control">
-              <DateTimePicker label="Speaker Close Date" value={fields.speakerClose} onChange={onSpeakerCloseDateChange} />
+              <DateTimePicker label="Speaker Close Date" value={fields.speakerClose} onChange={e => onDateChange(e, 'speakerClose')} />
+            </FormControl>
+            <FormControl className="form-control">
+              <DatePicker label="Event Date" value={fields.startDate} onChange={e => onDateChange(e, 'startDate')} />
             </FormControl>
           </div>
         </div>

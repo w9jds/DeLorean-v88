@@ -58,6 +58,7 @@ typings/
 .next
 
 # Build, Config, and Compile files
+.firebase/
 .vscode/
 build/
 dist/
