@@ -74,6 +74,9 @@ class Footer extends React.Component<FooterProps> {
             <span className="copyright">
               © {new Date().getFullYear()} {config ? config.org.name : ''} | All Rights Reserved
             </span>
+            <span className="copyright">
+              Background photo by <a href="https://unsplash.com/@joeydmedia?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Joey Dixon</a> on <a href="https://unsplash.com/photos/cUH1zduQOCY?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+            </span>
           </div>
 
           <div className="sources-right">
