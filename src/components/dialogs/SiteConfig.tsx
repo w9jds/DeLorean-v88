@@ -95,7 +95,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
     const place = autocomplete?.getPlace();
     const update: Configuration = {
       org: {
-        ...config.org,
+        ...config?.org,
         name: fields.name || null,
         email: fields.email || null,
         facebook: fields.facebook || null,
@@ -104,15 +104,15 @@ const SiteConfig: FC<SiteConfigProps> = ({
         github: fields.github || null,
       },
       venue: {
-        ...config.venue,
+        ...config?.venue,
         name: fields.venueName || null,
         pictureUrl: fields.picture || null,
       },
       event: {
-        ...config.event,
+        ...config?.event,
         startDate: fields.startDate || null,
         papercall: {
-          ...config.event.papercall,
+          ...config?.event.papercall,
           url: fields.papercall || null,
           closing: fields.speakerClose || null,
         }
