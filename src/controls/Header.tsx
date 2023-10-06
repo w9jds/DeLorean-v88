@@ -281,7 +281,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <div className={classes}>
         <Fab {...props as FabProps}>
           <LocalActivity />
-          {this.state.isFooterVisible ? 'Get Tickets' : null}
+          {this.state.isFooterVisible ? 'Tickets On Sale Soon' : null}
         </Fab>
       </div>
     );
@@ -302,7 +302,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return (
         <div className={classes}>
           <Button {...props as ButtonProps}>
-            Get Tickets
+            Tickets On Sale Soon
           </Button>
         </div>
       );
