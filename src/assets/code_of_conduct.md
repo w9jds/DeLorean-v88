@@ -5,11 +5,11 @@
 Purpose
 -------
 
-A primary goal of [GDG Chicago](https://www.meetup.com/Google-Developers-Group-GDG-Chicago/) is to be inclusive to the largest number of contributors, with the most varied and diverse backgrounds possible. We are committed to providing a friendly, safe, and welcoming environment for all, regardless of gender, sexual orientation, ability, ethnicity, socioeconomic status, and religion (or lack thereof). GDG Chicago prides itself on being an open, respectful, and inclusive community. That means [jerky behavior](https://meta.wikimedia.org/wiki/Don%27t_be_a_jerk) isn’t allowed.
+A primary goal of [GDG Kansas City](https://gdgkc.org) is to be inclusive to the largest number of contributors, with the most varied and diverse backgrounds possible. We are committed to providing a friendly, safe, and welcoming environment for all, regardless of gender, sexual orientation, ability, ethnicity, socioeconomic status, and religion (or lack thereof). GDG Chicago prides itself on being an open, respectful, and inclusive community. That means [jerky behavior](https://meta.wikimedia.org/wiki/Don%27t_be_a_jerk) isn’t allowed.
 
-This goal and policy is applied to any and all events ran by GDG Chicago, including Windy City DevFest 2019. All attendees are expected to comply in full to this policy.
+This goal and policy is applied to any and all events ran by GDG Kansas City, including DevFest KC. All attendees are expected to comply in full to this policy.
 
-This Code of Conduct outlines our expectations for all those who participate in our community, as well as the consequences for unacceptable behavior. We invite all those who participate in Google Developers Group to help us create safe and positive experiences for everyone. We also include ways for DevFest attendees to report any violations. Together we can make Windy City DevFest a fun harassment-free conference experience for everyone, regardless of gender, gender identity, sexual orientation, disability, physical appearance, body size, race, or religion.
+This Code of Conduct outlines our expectations for all those who participate in our community, as well as the consequences for unacceptable behavior. We invite all those who participate in Google Developers Group to help us create safe and positive experiences for everyone. We also include ways for DevFest attendees to report any violations. Together we can make DevFest KC a fun harassment-free conference experience for everyone, regardless of gender, gender identity, sexual orientation, disability, physical appearance, body size, race, or religion.
 
 Open [Source/Culture/Tech] Citizenship
 --------------------------------------
@@ -55,17 +55,14 @@ You can make a report either personally or anonymously.
 
 Anonymous Report
 ----------------
-You can make an anonymous report [here](https://bit.ly/2RstTJ8). We can't follow up on an anonymous report with you directly, but we will fully investigate it and take whatever action is necessary to prevent a recurrence.
+You can make an anonymous report [here](https://forms.gle/RF4Pw64byLa2fuRu5). Your contact information is not collected, unless explicitly provided. If you choose to provide your information, we will follow up. In either case, we will fully investigate it and take whatever action is necessary to prevent a recurrence.
 
 Personal Report
 ---------------
 You can make a personal report by getting in contact with any of the event organizers. Event Organizers can be identified by special lanyards and/or special badges. If you wish, you can also use the anonymous form but provide your contact information at the end. In the event organizers are not able to be reached, please reach out to us directly by phone/email at:
 
-- General GDG/DevFest Organizer: [GDG Chicago](mailto:chicagogdg@gmail.com)
-- GDG Co-Organizer: [Joel Vasallo](mailto:joelvasallo@gmail.com) | [(773) 318-8144](tel:7733188144)
-- Lead Organizer/GDG Mentor: [Dan Baran](mailto:danbaran@gmail.com) | [(630) 212-1540](tel:6302121540)
-- Women Techmakers Lead/GDG Co-Organizer: [Deana Greenfield](mailto:deanagreenfield@gmail.com)
-- GDG North America Program Manager: [Kyle Paul](kylepaul@google.com)
+- Organizer Email: [GDG Kansas City](mailto:info@devfestkc.com)
+- Event Organizers: Jay Whitsitt, Roger O'Dell, Keerti Bajaj
 - Emergency: [911](tel:911)
 - ICASA Hotline (24/7): [(888) 293-2080](tel:8882932080)
 
