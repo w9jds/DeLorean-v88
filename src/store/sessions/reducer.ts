@@ -13,7 +13,8 @@ const clearState: SessionEditorFullState = {
   tracks: [],
   errors: [],
   speakers: [],
-  description: ''
+  description: '',
+  location: '',
 };
 
 const initialState: SessionState = {

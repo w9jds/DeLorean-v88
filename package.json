@@ -33,6 +33,7 @@
     "redux-actions": "^3.0.0",
     "redux-saga": "^1.2.3",
     "reselect": "^4.1.8",
+    "timezone-support": "^3.1.0",
     "tinymce": "^6.7.0"
   },
   "devDependencies": {

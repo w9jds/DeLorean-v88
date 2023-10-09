@@ -8,8 +8,6 @@
   .description-editor {
     height: 30rem;
     width: 100%;
-    resize: none;
-    outline: none;
   }
 
   .speaker-chips {
@@ -21,33 +19,22 @@
     }
   }
 
+  .dialog-form {
+    display: flex;
+    flex-flow: column;
+    padding: 20px;
+
+    .form-control {
+      display: block;
+      margin: 8px;
+    }
+  }
+
   .editor {
     &-session {
-      &-header {
-        display: flex;
-        padding: 0 0 24px 0;
-        flex-direction: column;
-
-        .field-containers {
-          margin: auto 0;
-        }
-
-        .speaker-selector {
-          min-width: 400px;
-        }
-
-        .session-schedule {
-          display: flex;
-
-          .session-duration {
-            min-width: 100px;
-          }
-        }
-      }
 
       &-title {
         display: flex;
-        padding: 24px 0 0 0;
 
         .type-selector {
           min-width: 100px;
@@ -61,6 +48,39 @@
           width: 150px;
         }
       }
+
+      &-header {
+        display: flex;
+        padding: 12px 0 24px 0;
+        flex-direction: column;
+
+        .field-containers {
+          margin: auto 0;
+        }
+
+        .speaker-selector {
+          min-width: 400px;
+        }
+
+        .session-schedule {
+          display: flex;
+          margin-top: 12px;
+
+          .session-duration {
+            min-width: 100px;
+          }
+
+          .divider {
+            margin: auto 8px;
+            font-size: 32px;
+          }
+
+          .scheduled-switch {
+            margin-left: 12px;
+          }
+        }
+      }
+
     }
   }
 }

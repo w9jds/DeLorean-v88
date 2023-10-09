@@ -11,7 +11,7 @@ function* loadEventSessions() {
 
   yield fork(sync, collection(db, 'sessions'), {
     successAction: setSession,
-    transform: marshallSessions
+    transform: marshallSessions,
   });
 }
 
@@ -19,16 +19,14 @@ const marshallSessions = (collection: Payload) => {
   const sessions: Record<string, DocumentSnapshot> = {};
 
   if ('forEach' in collection.snapshot) {
-      collection.snapshot.forEach(
-          document => sessions[document.id] = document
-      );
+    collection.snapshot.forEach(
+      (document) => (sessions[document.id] = document)
+    );
   }
 
   return sessions;
 };
 
 export function* sagas() {
-  yield all([
-    takeEvery(CurrentEvents.LOAD_SITE_DATA, loadEventSessions)
-  ]);
+  yield all([takeEvery(CurrentEvents.LOAD_SITE_DATA, loadEventSessions)]);
 }

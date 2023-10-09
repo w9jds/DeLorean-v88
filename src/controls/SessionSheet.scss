@@ -1,62 +1,63 @@
-
 .session {
   width: 100%;
   margin-bottom: 12px;
 
   &-header {
-      display: flex;
-      flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
 
   &-content {
-      width: 100%;
+    width: 100%;
 
-      >p:first-of-type {
-          margin-top: 0;
+    > p:first-of-type {
+      margin-top: 0;
+    }
+
+    > p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .divider {
+      margin: 16px 0;
+    }
+
+    .speakers {
+      display: flex;
+      flex-direction: column;
+
+      .big-avatar {
+        width: 65px;
+        height: 65px;
+        margin-right: 12px;
       }
 
-      >p:last-of-type {
-          margin-bottom: 0;
+      .header {
+        margin: 0 0 12px;
       }
+    }
 
-      .divider {
-          margin: 16px 0;
-      }
-
-      .speakers {
-          display: flex;
-          flex-direction: column;
-
-          .big-avatar {
-              width: 65px;
-              height: 65px;
-          }
-
-          .header {
-              margin: 0 0 12px;
-          }
-      }
-
-      a, a:visited {
-          color: #fff;
-      }
+    a,
+    a:visited {
+      color: #fff;
+    }
   }
 
   .edit-actions {
-      display: flex;
-      flex-direction: column;
-      margin-left: -12px;
-      margin-right: 24px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -12px;
+    margin-right: 24px;
 
-      .edit, .delete {
-          min-width: 24px;
-      }
+    .edit,
+    .delete {
+      min-width: 24px;
+    }
 
-      .edit {
-          margin-bottom: 8px;
-      }
+    .edit {
+      margin-bottom: 8px;
+    }
   }
-
 }
 
 .session-card {
@@ -65,6 +66,6 @@
   border-radius: 0;
 
   .session-header {
-      padding: 12px 24px;
+    padding: 12px 24px;
   }
 }

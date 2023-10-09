@@ -33,6 +33,7 @@ interface Event {
   endDate?: any;
   papercall?: PaperCall;
   sponsors?: any;
+  timezone?: string;
 }
 
 interface PaperCall {

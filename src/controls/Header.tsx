@@ -47,13 +47,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   componentDidMount() {
     window.addEventListener('scroll', this.onScrollEvent);
 
-    // tslint:disable-next-line:no-string-literal
-    window['EBWidgets'].createWidget({
-      widgetType: 'checkout',
-      eventId: EventbriteConfig.eventId,
-      modal: true,
-      modalTriggerElementId: `get-header-event-tickets-${EventbriteConfig.eventId}`
-    });
+    if (location.pathname !== DeloreanRoutes.HOME) {
+      this.props.history.replace(DeloreanRoutes.HOME);
+    }
+
+    if ('EBWidgets' in window) {
+      // tslint:disable-next-line:no-string-literal
+      (window['EBWidgets'] as any).createWidget({
+        widgetType: 'checkout',
+        eventId: EventbriteConfig.eventId,
+        modal: true,
+        modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -75,9 +81,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (prevState.isTicketsVisible !== this.state.isTicketsVisible) {
       if (this.state.isTicketsVisible === false) {
         this.mobileAnim = anime({
-            targets: '.get-ticket-mobile',
-            duration: 725,
-            scale: [0, 1]
+          targets: '.get-ticket-mobile',
+          duration: 725,
+          scale: [0, 1]
         });
       }
       if (this.state.isTicketsVisible === true) {
