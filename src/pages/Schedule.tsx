@@ -4,14 +4,15 @@ import { RouteComponentProps } from 'react-router';
 import { DocumentSnapshot } from 'firebase/firestore';
 import { formatToTimeZone } from 'date-fns-timezone';
 
+import SessionSheet from 'controls/SessionSheet';
 import { ApplicationState } from 'models/states';
 import { Session } from 'models/session';
 import { Speaker } from 'models/speaker';
-import { getSessionByStartTime } from 'store/sessions/selectors';
+import { getSessionByStartTime, getUnscheduledSessions } from 'store/sessions/selectors';
+import { getEventTimezone } from 'store/current/selectors';
 import { getSpeakers } from 'store/speakers/selectors';
 
 import { Typography } from '@mui/material';
-import SessionSheet from 'controls/SessionSheet';
 
 import './Schedule.scss';
 
@@ -20,12 +21,24 @@ type ScheduleProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
 class SchedulePage extends React.Component<ScheduleProps> {
 
   buildTimeSlot = () => {
-    const {sessions} = this.props;
-    const times = Object.keys(sessions).sort();
+    const { scheduled, unscheduled } = this.props;
+    const times = Object.keys(scheduled).sort();
     const slots = [];
 
+    if (unscheduled?.length > 0) {
+      slots.push(
+        <div key="unscheduled" className="timeslot">
+          <div className="timeslot-header">
+            <Typography variant="h3">To Be Announced</Typography>
+          </div>
+
+          {unscheduled.map(this.buildSessionSheet)}
+        </div>
+      );
+    }
+
     for (let time of times) {
-      let dateTime = formatToTimeZone(Number(time), 'h:mm A', { timeZone: 'America/Chicago' });
+      let dateTime = formatToTimeZone(Number(time), 'h:mm A', { timeZone: this.props.timezone });
 
       slots.push(
         <div key={time} className="timeslot">
@@ -33,7 +46,7 @@ class SchedulePage extends React.Component<ScheduleProps> {
             <Typography variant="h3">{dateTime}</Typography>
           </div>
 
-          {sessions[time].map(this.buildSessionSheet)}
+          {scheduled[time].map(this.buildSessionSheet)}
         </div>
       );
     }
@@ -67,8 +80,10 @@ class SchedulePage extends React.Component<ScheduleProps> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-    sessions: getSessionByStartTime(state),
-    speakers: getSpeakers(state)
+  timezone: getEventTimezone(state),
+  scheduled: getSessionByStartTime(state),
+  unscheduled: getUnscheduledSessions(state),
+  speakers: getSpeakers(state)
 });
 
 export default connect(mapStateToProps)(SchedulePage);

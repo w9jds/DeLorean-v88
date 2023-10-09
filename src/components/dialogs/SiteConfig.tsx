@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { doc, updateDoc } from 'firebase/firestore';
+import { listTimeZones } from 'timezone-support';
 
 import { Loader } from '@googlemaps/js-api-loader';
 
@@ -15,7 +16,7 @@ import { getDatabase, getCurrentConfig } from 'store/current/selectors';
 import { Close } from '@mui/icons-material';
 import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { Button, TextField, Dialog, AppBar, Toolbar, IconButton, Typography, Slide, FormControl } from '@mui/material';
+import { Button, TextField, Dialog, AppBar, Toolbar, IconButton, Typography, Slide, FormControl, Autocomplete } from '@mui/material';
 
 import './SiteConfig.scss';
 
@@ -63,6 +64,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
       address: config?.venue?.address,
       picture: config?.venue?.pictureUrl,
       papercall: config?.event?.papercall?.url,
+      timezone: config?.event?.timezone,
       startDate: config?.event?.startDate?.toDate(),
       speakerClose: config?.event?.papercall?.closing?.toDate()
     });
@@ -85,6 +87,10 @@ const SiteConfig: FC<SiteConfigProps> = ({
   const onDateChange = (date, name: string) => {
     setFields({ ...fields, [name]: date });
   };
+
+  const onOptionChange = (newValue, name: string) => {
+    setFields({ ...fields, [name]: newValue });
+  }
 
   const handleClose = () => {
     setAutoComplete(null);
@@ -111,6 +117,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
       event: {
         ...config.event,
         startDate: fields.startDate || null,
+        timezone: fields.timezone || null,
         papercall: {
           ...config.event.papercall,
           url: fields.papercall || null,
@@ -137,7 +144,6 @@ const SiteConfig: FC<SiteConfigProps> = ({
     handleClose();
   }
 
-
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Dialog
@@ -162,9 +168,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
 
         <div className="dialog-form">
           <div>
-            <FormControl className="form-control">
-              <TextField label="Name" value={fields.name} onChange={e => onSettingChange(e, 'name')} />
-            </FormControl>
+            <Typography variant="h6">Organization Details</Typography>
             <FormControl className="form-control">
               <TextField label="Email" value={fields.email} onChange={e => onSettingChange(e, 'email')} />
             </FormControl>
@@ -183,6 +187,21 @@ const SiteConfig: FC<SiteConfigProps> = ({
           </div>
 
           <div>
+            <Typography variant="h6">Event Details</Typography>
+            <FormControl className="form-control">
+              <TextField label="Name" value={fields.name} onChange={e => onSettingChange(e, 'name')} />
+            </FormControl>
+            <FormControl className="form-control">
+              <DatePicker label="Event Date" value={fields.startDate} onChange={e => onDateChange(e, 'startDate')} />
+            </FormControl>
+            <FormControl className="form-control">
+              <Autocomplete
+                options={listTimeZones()}
+                value={fields.timezone}
+                onChange={(e, newValue) => onOptionChange(newValue, 'timezone')}
+                renderInput={(params) => <TextField {...params} label="Event Timezone" />}
+              />
+            </FormControl>
             <FormControl className="form-control">
               <TextField label="Venue Name" value={fields.venueName} onChange={e => onSettingChange(e, 'venueName')} helperText="Displayed in intro (top of home page)" />
             </FormControl>
@@ -200,14 +219,12 @@ const SiteConfig: FC<SiteConfigProps> = ({
           </div>
 
           <div>
+            <Typography variant="h6">Call for Speakers Details</Typography>
             <FormControl className="form-control">
               <TextField label="Submit Talk Uri" value={fields.papercall} onChange={e => onSettingChange(e, 'papercall')} />
             </FormControl>
             <FormControl className="form-control">
               <DateTimePicker label="Speaker Close Date" value={fields.speakerClose} onChange={e => onDateChange(e, 'speakerClose')} />
-            </FormControl>
-            <FormControl className="form-control">
-              <DatePicker label="Event Date" value={fields.startDate} onChange={e => onDateChange(e, 'startDate')} />
             </FormControl>
           </div>
         </div>

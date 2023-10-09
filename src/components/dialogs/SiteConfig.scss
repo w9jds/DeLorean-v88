@@ -9,10 +9,18 @@
   & .dialog-form {
     @extend %dialog-form;
 
-    .form-control {
-      margin: 5px;
-      min-width: 120px;
-      width: 30%;
+    & > div {
+      margin-bottom: 12px;
+
+      h6 {
+        margin-bottom: 8px;
+      }
+
+      .form-control {
+        margin: 5px;
+        min-width: 120px;
+        width: 30%;
+      }
     }
   }
 }

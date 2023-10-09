@@ -2,9 +2,9 @@ import { takeEvery, all, put } from 'redux-saga/effects';
 import { clearSessionEditorState, setSessionEditorInitialState } from 'store/sessions/actions';
 import { setSpeakerEditorInitialState, clearSpeakerEditorState } from 'store/speakers/actions';
 import { setSpeakerEditorOpen, setSessionEditorOpen } from 'store/admin/actions';
+import { AdminEvents, EditorEvents } from 'store/events';
 
 import { editSession, editSpeaker } from './actions';
-import { AdminEvents, EditorEvents } from 'store/events';
 
 function* editInSpeakerEditor(action: ReturnType<typeof editSpeaker>) {
   const speaker = action.payload.speaker;

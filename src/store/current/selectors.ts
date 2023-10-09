@@ -39,3 +39,9 @@ export const getFirebaseStorage = createSelector(
     }
   }
 );
+
+export const getEventTimezone = createSelector(
+  [getCurrentConfig], config => {
+    return config?.event?.timezone;
+  }
+)

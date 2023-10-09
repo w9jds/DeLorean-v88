@@ -36,26 +36,19 @@ const SessionSheet: FC<SessionSheetProps> = ({
   editSession,
 }) => {
 
-  const buildSpeakerChips = () => {
-    return speakers.map(speaker => (
-      <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
-        <ListItemAvatar>
-          <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
-        </ListItemAvatar>
-        <ListItemText primary={speaker.name} secondary={speaker.company || null} />
-      </ListItem>
-    ));
-  };
-
   const onSpeakerClicked = (speaker) => () => {
     openDialogWindow(<SpeakerDetails key={speaker.id} speaker={speaker} />, false);
   };
 
-  const onDeleteClicked = async () => {
+  const onDeleteClicked = async e => {
+    e.preventDefault();
+    e.stopPropagation();
     await deleteDoc(reference);
   };
 
-  const onEditClicked = () => {
+  const onEditClicked = e => {
+    e.preventDefault();
+    e.stopPropagation();
     editSession(reference, session);
   };
 
@@ -87,7 +80,7 @@ const SessionSheet: FC<SessionSheetProps> = ({
 
   const formatSessionLocation = () => {
     if (!session.location) {
-      return 'To be determined';
+      return null;
     }
 
     if (isNaN(+session.location)) {
@@ -127,8 +120,16 @@ const SessionSheet: FC<SessionSheetProps> = ({
               <Typography variant="h6" className="header">
                 Speakers
               </Typography>
-
-              {buildSpeakerChips()}
+              {
+                speakers.map(speaker => (
+                  <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
+                    <ListItemAvatar>
+                      <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
+                    </ListItemAvatar>
+                    <ListItemText primary={speaker.name} secondary={speaker.company || null} />
+                  </ListItem>
+                ))
+              }
             </div>
           </div>
         </AccordionDetails>

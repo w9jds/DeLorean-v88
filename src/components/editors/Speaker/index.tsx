@@ -89,9 +89,12 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
       font_family_formats: 'Roboto',
       invalid_styles: 'color font-size font-family background-color',
       toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
+    }).then(() => {
+      if (initState?.bio) {
+        tinymce.activeEditor.setContent(initState.bio);
+      }
     });
 
-    tinymce.activeEditor.setContent(initState.bio);
   }
 
   const closeSpeakerEditor = () => setSpeakerEditorOpen(false);
@@ -161,6 +164,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
   }
 
   const getChanges = () => ({
+    ...initState,
     name: fields.name.trim(),
     title: fields.title ? fields.title.trim() : null,
     company: fields.company ? fields.company.trim() : null,
@@ -174,7 +178,6 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
     blog: fields.blog ? fields.blog.trim() : null,
     bio: tinymce.activeEditor.getContent()
   })
-
 
   const onSaveClicked = () => {
     if (isSpeakerValid()) {

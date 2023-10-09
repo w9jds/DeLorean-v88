@@ -1,12 +1,14 @@
-import React, { FC, useRef, useEffect, useState } from 'react';
+import React, { FC, useRef, useEffect, useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import { addDoc, collection, updateDoc } from 'firebase/firestore';
 
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton, DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import {
+  Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton,
+  DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField, FormControlLabel, Checkbox } from '@mui/material';
 
 import tinymce from 'tinymce';
 import 'tinymce/themes/silver';
@@ -31,22 +33,6 @@ import './index.scss';
 
 
 const Transition = (props) => <Slide direction="up" {...props} />;
-// const styleSheet: StyleRulesCallback = theme => ({
-//     dialogForm: {
-//         display: 'flex',
-//         flexFlow: 'column',
-//         padding: '20px'
-//     },
-//     headerFields: {
-//         width: '50%',
-//         margin: 'auto 0'
-//     },
-//     formControl: {
-//         margin: theme.spacing.unit,
-//         display: 'block'
-//     },
-
-// });
 
 type DateTimeTypes = 'startTime' | 'endTime';
 type InputEditableTypes = 'name' | 'location';
@@ -72,6 +58,7 @@ const SessionEditor: FC<SessionEditorProps> = ({
   const [fields, setFields] = useState<Record<string, any>>({
     name: '',
     type: SessionTypes.SESSION,
+    isUnscheduled: false,
     startTime: new Date(),
     endTime: new Date(),
     speakers: [],
@@ -80,22 +67,36 @@ const SessionEditor: FC<SessionEditorProps> = ({
 
   useEffect(() => {
     if (!prevOpen.current && isOpen) {
-      setTimeout(initTinyMce, 0);
       setFields(initState);
+      setTimeout(initTinyMce, 0);
     }
 
     if (prevOpen.current && !isOpen) {
-      tinymce.remove('textarea.description-editor');
+      tinymce.remove('.description-editor > textarea');
     }
 
     prevOpen.current = isOpen;
   }, [isOpen])
 
+  const types = useMemo(() => {
+    let items = [];
+
+    for (let item in SessionTypes) {
+      items.push(
+        <MenuItem key={item} value={SessionTypes[item]}>
+          {SessionTypes[item]}
+        </MenuItem>
+      );
+    }
+
+    return items;
+  }, []);
+
   const closeSessionEditor = () => setSessionEditorOpen(false);
 
   const initTinyMce = () => {
     tinymce.init({
-      selector: 'textarea.description-editor',
+      selector: '.description-editor > textarea',
       plugins: [ 'autolink', 'lists', 'advlist' ],
       resize: false,
       menubar: false,
@@ -103,19 +104,12 @@ const SessionEditor: FC<SessionEditorProps> = ({
       font_family_formats: 'Roboto',
       invalid_styles: 'color font-size font-family background-color',
       toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
+    }).then(() => {
+      if (initState?.description) {
+        tinymce.activeEditor.setContent(initState.description);
+      }
     });
-
-    tinymce.activeEditor.setContent(initState.description);
   }
-
-  const buildFieldInput = (label: string, id: InputEditableTypes, props) => (
-    <TextField id={id} {...props}
-      label={label}
-      value={fields[id]}
-      error={errors.indexOf(id) >= 0}
-      onChange={onValueChanged(id)}
-    />
-  );
 
   const onRenderSpeakers = selected => (
     <div className="speaker-chips">
@@ -135,7 +129,7 @@ const SessionEditor: FC<SessionEditorProps> = ({
   const getChanges = () => ({
     ...fields,
     name: fields.name.trim(),
-    description: tinymce.activeEditor.getContent()
+    description: tinymce.activeEditor.getContent(),
   });
 
   const onValueChanged = (name: InputEditableTypes) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -146,8 +140,8 @@ const SessionEditor: FC<SessionEditorProps> = ({
     setFields({ ...fields, [field]: date } as Pick<SessionEditorState, DateTimeTypes>)
   };
 
-  const onSelectChanged = event => {
-    setFields({ ...fields, [event.target.name]: event.target.value } as SessionEditorState);
+  const onSelectChanged = (name: string) => event => {
+    setFields({ ...fields, [name]: event.target.value } as SessionEditorState);
   };
 
   const isSessionValid = () => {
@@ -184,61 +178,44 @@ const SessionEditor: FC<SessionEditorProps> = ({
     }
   }
 
-  const buildSessionTypes = () => {
-    let items = [];
-
-    for (let item in SessionTypes) {
-      items.push(
-        <MenuItem key={item} value={SessionTypes[item]}>
-          {SessionTypes[item]}
-        </MenuItem>
-      );
-    }
-
-    return items;
-  }
-
   const buildSpeakerSelect = () => {
     if (fields.type !== SessionTypes.SESSION && fields.type !== SessionTypes.WORKSHOP) {
       return null;
     }
 
     return (
-      // className={classes.formControl}
-      <FormControl fullWidth >
-        <InputLabel htmlFor="speakers">Speakers</InputLabel>
+      <FormControl fullWidth>
+        <InputLabel id="session-speakers-label">Speakers</InputLabel>
         <Select multiple displayEmpty
-          classes={{select: 'speaker-selector'}}
+          labelId="session-speakers-label"
+          label="Speakers"
+          className="speaker-selector"
           value={fields.speakers}
-          inputProps={{ name: 'speakers' }}
-          onChange={onSelectChanged}
+          onChange={onSelectChanged('speakers')}
           renderValue={onRenderSpeakers}
         >
-          {buildSpeakerItems()}
+          {
+            Object.keys(speakers).map(key => {
+              let speaker = speakers[key].data() as Speaker;
+
+              return (
+                <MenuItem key={key} value={key}>
+                  {speaker.name}
+                </MenuItem>
+              );
+            })
+          }
         </Select>
       </FormControl>
     );
   }
 
-  const buildSpeakerItems = () => {
-    return Object.keys(speakers).map(key => {
-      let speaker = speakers[key].data() as Speaker;
-
-      return (
-        <MenuItem key={key} value={key}>
-          {speaker.name}
-        </MenuItem>
-      );
-    });
-  }
-
-  return(
+  return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      {/* classes={{ paperFullScreen: classes.fullscreen }} */}
-      <Dialog fullScreen
-        open={isOpen}
+      <Dialog fullScreen open={isOpen}
         className="session-editor"
-        TransitionComponent={Transition}>
+        TransitionComponent={Transition}
+      >
         <AppBar className="header">
           <Toolbar>
             <IconButton color="inherit" aria-label="Close" onClick={closeSessionEditor}>
@@ -255,15 +232,26 @@ const SessionEditor: FC<SessionEditorProps> = ({
 
         <DialogContent>
           <div className="editor-session-title">
-            {buildFieldInput('Name', 'name', { className: 'session-title' })}
-            {buildFieldInput('Location', 'location', { className: 'session-location' })}
+            <TextField label="Name"
+              className="session-title"
+              value={fields?.name}
+              error={errors.indexOf('name') >= 0}
+              onChange={onValueChanged('name')}
+            />
+            <TextField label="Location"
+              className="session-location"
+              value={fields?.location}
+              error={errors.indexOf('location') >= 0}
+              onChange={onValueChanged('location')}
+            />
             <FormControl>
-              <InputLabel htmlFor="type">Type</InputLabel>
-              <Select classes={{ select: 'type-selector' }}
+              <InputLabel id="session-type-label">Type</InputLabel>
+              <Select className="type-selector"
+                labelId="session-type-label"
+                label="Type"
                 value={fields.type}
-                inputProps={{ name: 'type' }}
-                onChange={onSelectChanged}>
-                {buildSessionTypes()}
+                onChange={onSelectChanged('type')}>
+                {types}
               </Select>
             </FormControl>
           </div>
@@ -274,20 +262,31 @@ const SessionEditor: FC<SessionEditorProps> = ({
             <div className="session-schedule">
               <DateTimePicker
                 label="Start Time"
+                disabled={fields.isUnscheduled}
                 value={fields.startTime}
                 onChange={onDateTimeChanged('startTime')}
               />
+              <span className="divider"> - </span>
               <DateTimePicker
                 label="End Time"
+                disabled={fields.isUnscheduled}
                 value={fields.endTime}
                 onChange={onDateTimeChanged('endTime')}
               />
+
+              <FormControlLabel
+                className="scheduled-switch"
+                label="Unannounced/TBD"
+                control={
+                  <Checkbox
+                    onChange={e => setFields({ ...fields, isUnscheduled: e.target.checked })}
+                    checked={fields?.isUnscheduled || false} />
+                }/>
             </div>
           </div>
 
-          {/* className={classes.formControl} */}
-          <FormControl>
-            <textarea className="description-editor" />
+          <FormControl className="description-editor">
+            <textarea />
           </FormControl>
         </DialogContent>
       </Dialog>
