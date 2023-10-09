@@ -164,7 +164,6 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
   }
 
   const getChanges = () => ({
-    ...initState,
     name: fields.name.trim(),
     title: fields.title ? fields.title.trim() : null,
     company: fields.company ? fields.company.trim() : null,

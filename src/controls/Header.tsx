@@ -81,9 +81,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (prevState.isTicketsVisible !== this.state.isTicketsVisible) {
       if (this.state.isTicketsVisible === false) {
         this.mobileAnim = anime({
-            targets: '.get-ticket-mobile',
-            duration: 725,
-            scale: [0, 1]
+          targets: '.get-ticket-mobile',
+          duration: 725,
+          scale: [0, 1]
         });
       }
       if (this.state.isTicketsVisible === true) {
