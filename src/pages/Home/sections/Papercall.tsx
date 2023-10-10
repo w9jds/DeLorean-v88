@@ -10,6 +10,7 @@ import { ArrowRight } from '@mui/icons-material';
 
 import { getCurrentConfig } from 'store/current/selectors';
 import { ApplicationState } from 'models/states';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 const Papercall = ({ config }) => {
   const closing = useMemo(
@@ -17,7 +18,13 @@ const Papercall = ({ config }) => {
     [config]
   );
 
-  const openCalltoAction = () => window.open(config.event.papercall.url);
+  const openCalltoAction = () => {
+    logEvent(getAnalytics(), 'select_content', {
+      content_type: 'button',
+      item_id: 'cfp',
+    });
+    window.open(config.event.papercall.url);
+  };
 
   return closing && isBefore(new Date(), closing) && (
     <section className="call-to-action" style={SiteTheme.CallToAction}>

@@ -20,6 +20,9 @@ export const FirebaseConfig = {
   authDomain: "devfest-kc-2023.firebaseapp.com",
   projectId: "devfest-kc-2023",
   storageBucket: "devfest-kc-2023.appspot.com",
+  messagingSenderId: "374670673309",
+  appId: "1:374670673309:web:1f51d56313f9650f019b74",
+  measurementId: "G-9TEP7Z401Y",
 };
 
 export const EventbriteConfig = {

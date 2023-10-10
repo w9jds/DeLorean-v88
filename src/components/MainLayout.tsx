@@ -10,6 +10,7 @@ import { FirebaseConfig } from 'config/delorean.config';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 import { getUser, getUserProfile } from 'store/current/selectors';
 import { setFirebaseApplication, getSiteData, setUser, setUserProfile } from 'store/current/actions';
@@ -57,6 +58,7 @@ const MainLayout: FC<MainLayoutProps> = ({
     const firebaseApp = initializeApp(FirebaseConfig);
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
+    const analytics = getAnalytics(firebaseApp);
 
     setFirebaseApplication(firebaseApp);
 
@@ -67,6 +69,8 @@ const MainLayout: FC<MainLayoutProps> = ({
         let profile = await getDoc(doc(db, `/users/${user.uid}`));
         setUserProfile(profile.data() as Profile);
         setFirstLoad(false);
+
+        logEvent(analytics, 'login');
       }
     }
 

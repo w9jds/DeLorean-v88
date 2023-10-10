@@ -19,6 +19,7 @@ import { getIsEditMode } from 'store/admin/selectors';
 import { getFirebaseAuth, getUser, getUserProfile } from 'store/current/selectors';
 
 import './Header.scss';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 type HeaderProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
 type HeaderState = {
@@ -153,6 +154,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   signout = async () => {
     this.handleClose();
     await this.props.auth.signOut();
+    logEvent(getAnalytics(), 'logout');
     window.location.reload();
   }
 
