@@ -1,6 +1,5 @@
 import React, { FC, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { format } from 'date-fns';
 
 import { Button } from '@mui/material';
@@ -19,19 +18,18 @@ import Logo from 'assets/event-logo.svg';
 import background from 'assets/intro-background.jpg';
 
 import './index.scss';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-type HomeProps = ReturnType<typeof mapStateToProps> & RouteComponentProps;
+type HomeProps = ReturnType<typeof mapStateToProps>;
 
-const Home: FC<HomeProps> = ({
-  config,
-  location,
-  history,
-}) => {
+const Home: FC<HomeProps> = ({ config }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const startDate = config?.event?.startDate?.toDate();
 
   useEffect(() => {
     if (location.pathname !== DeloreanRoutes.HOME) {
-      history.replace(DeloreanRoutes.HOME);
+      navigate(DeloreanRoutes.HOME);
     }
 
     if ('EBWidgets' in window) {

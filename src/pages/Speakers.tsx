@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { TransitionGroup, Transition } from 'react-transition-group';
 import { DocumentSnapshot } from '@firebase/firestore';
 
@@ -12,7 +11,7 @@ import { getSpeakersInOrder } from 'store/speakers/selectors';
 
 import './Speakers.scss';
 
-type SpeakerPageProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
+type SpeakerPageProps = ReturnType<typeof mapStateToProps>;
 
 const buildSpeakerCard = (speaker: DocumentSnapshot, index: number) => {
   return (

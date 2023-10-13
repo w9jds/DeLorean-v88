@@ -43,16 +43,22 @@ class SpeakerCard extends React.Component<SpeakerCardProps> {
     }, 0);
   }
 
-  onSpeakerClicked = () => {
+  onSpeakerClicked = e => {
     this.props.openDialogWindow(<SpeakerDetails speaker={this.props.speaker} />, false);
   }
 
   onDeleteClicked = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
     const { documentRef } = this.props;
     deleteDoc(documentRef);
   }
 
   onEditClicked = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
     const { documentRef, speaker, editSpeaker } = this.props;
     editSpeaker(documentRef, speaker);
   }
