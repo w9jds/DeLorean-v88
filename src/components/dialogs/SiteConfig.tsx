@@ -34,6 +34,7 @@ const initialState = {
   address: '',
   picture: '',
   papercall: '',
+  prospectus: '',
 };
 
 const SiteConfig: FC<SiteConfigProps> = ({
@@ -64,6 +65,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
       address: config?.venue?.address,
       picture: config?.venue?.pictureUrl,
       papercall: config?.event?.papercall?.url,
+      prospectus: config?.event?.sponsors?.prospectus,
       timezone: config?.event?.timezone,
       startDate: config?.event?.startDate?.toDate(),
       speakerClose: config?.event?.papercall?.closing?.toDate()
@@ -122,6 +124,10 @@ const SiteConfig: FC<SiteConfigProps> = ({
           ...config.event.papercall,
           url: fields.papercall || null,
           closing: fields.speakerClose || null,
+        },
+        sponsors: {
+          ...config.event.sponsors,
+          prospectus: fields.prospectus || null,
         }
       }
     };
@@ -226,6 +232,13 @@ const SiteConfig: FC<SiteConfigProps> = ({
             <FormControl className="form-control">
               <DateTimePicker label="Speaker Close Date" value={fields.speakerClose} onChange={e => onDateChange(e, 'speakerClose')} />
             </FormControl>
+          </div>
+
+          <div>
+          <Typography variant="h6">Sponsor Details</Typography>
+          <FormControl className="form-control">
+            <TextField label="Prospectus Uri" value={fields.prospectus} onChange={e => onSettingChange(e, 'prospectus')} />
+          </FormControl>
           </div>
         </div>
       </Dialog>

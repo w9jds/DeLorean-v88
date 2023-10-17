@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Dispatch, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import renderHTML from 'react-render-html';
+import createDOMPurity from 'dompurify';
 
 import { Speaker } from 'models/speaker';
 import { ApplicationState } from 'models/states';
@@ -25,6 +25,8 @@ type SpeakerDetailsAttribs = {
 };
 
 type SocialType = 'github' | 'medium' | 'twitter' | 'linkedin' | 'facebook' | 'blog';
+
+const DOMPurify = createDOMPurity(window);
 
 class SpeakerDetails extends React.Component<SpeakerDetailsProps> {
 
@@ -103,7 +105,16 @@ class SpeakerDetails extends React.Component<SpeakerDetailsProps> {
       }
     }
 
-    return buttons;
+    if (buttons?.length) {
+      return (
+        <Fragment>
+          <Divider />
+          <div className="social">
+            {buttons}
+          </div>
+        </Fragment>
+      );
+    }
   }
 
   render() {
@@ -123,14 +134,13 @@ class SpeakerDetails extends React.Component<SpeakerDetailsProps> {
             <Typography variant="h6">{speaker.name}</Typography>
             {this.buildSubTitle()}
           </div>
-          <Divider />
-          <div className="social">
-            {this.buildSocialButtons(speaker)}
-          </div>
-          <Divider />
-          <div className="bio">
-            {renderHTML(speaker.bio)}
-          </div>
+          {this.buildSocialButtons(speaker)}
+          {speaker.bio && (
+            <Fragment>
+              <Divider />
+              <div className="bio" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(speaker.bio) }} />
+            </Fragment>
+          )}
         </DialogContent>
       </Fragment>
     );

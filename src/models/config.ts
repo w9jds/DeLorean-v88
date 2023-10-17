@@ -32,11 +32,15 @@ interface Event {
   startDate?: any;
   endDate?: any;
   papercall?: PaperCall;
-  sponsors?: any;
+  sponsors?: Sponsors;
   timezone?: string;
 }
 
 interface PaperCall {
-  url?: any;
+  url?: string;
   closing?: Timestamp;
+}
+
+interface Sponsors {
+  prospectus?: string;
 }
