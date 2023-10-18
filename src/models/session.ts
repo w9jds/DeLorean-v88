@@ -18,11 +18,12 @@ export type SessionEditorFullState = SessionEditorState & {
 };
 
 export enum SessionTypes {
+  BREAK = 'Break',
   SESSION = 'Session',
   CODELAB = 'Codelab',
   WORKSHOP = 'Workshop',
-  BREAK = 'Break',
   REGISTRATION = 'Registration',
+  LIGHTNING_TALK = 'Lightning Talk',
 }
 
 export type SessionEditorState = {
