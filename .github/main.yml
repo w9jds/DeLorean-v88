@@ -1,0 +1,27 @@
+name: Deploy to Windy City Devfest
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - uses: w9jds/setup-firebase@main
+        with:
+          firebase_token: ${{ secrets.FIREBASE_TOKEN }}
+      - run: npm ci
+      - run: npm run build-prod
+        env:
+          DELOREAN_API_KEY: ${{ secrets.DELOREAN_API_KEY }}
+          DELOREAN_MAP_API: ${{ secrets.DELOREAN_MAP_API }}
+          DELOREAN_EVENT_ID: 729485088537
+
+      - run: firebase deploy

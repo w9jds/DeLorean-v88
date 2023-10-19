@@ -23,7 +23,7 @@ export const FirebaseConfig = {
 };
 
 export const EventbriteConfig = {
-  eventId: process.env.WINDY_CITY_EVENT_ID
+  eventId: process.env.DELOREAN_EVENT_ID
 };
 
 export const MapsConfig = {
