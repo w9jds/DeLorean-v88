@@ -68,7 +68,7 @@ const SessionEditor: FC<SessionEditorProps> = ({
   useEffect(() => {
     if (!prevOpen.current && isOpen) {
       setFields(initState);
-      initTinyMce();
+      setTimeout(initTinyMce, 0);
     }
 
     if (prevOpen.current && !isOpen) {
