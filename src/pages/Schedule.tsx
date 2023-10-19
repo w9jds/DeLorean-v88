@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
 import { DocumentSnapshot } from 'firebase/firestore';
 import { formatToTimeZone } from 'date-fns-timezone';
 
@@ -16,7 +15,7 @@ import { Typography } from '@mui/material';
 
 import './Schedule.scss';
 
-type ScheduleProps = RouteComponentProps & ReturnType<typeof mapStateToProps>;
+type ScheduleProps = ReturnType<typeof mapStateToProps>;
 
 class SchedulePage extends React.Component<ScheduleProps> {
 

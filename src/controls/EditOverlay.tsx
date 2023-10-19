@@ -1,9 +1,7 @@
 import React, { FC, Fragment } from 'react';
 import classnames from 'classnames';
-
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import { ApplicationState } from 'models/states';
 
@@ -18,7 +16,7 @@ import { getIsEditMode, getIsCreateOpen, getIsSpeakerEditorOpen, getIsSessionEdi
 
 import './EditOverlay.scss';
 
-type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
+type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 const EditOverlay: FC<EditOverlayProps> = ({
   isOpen,
@@ -111,4 +109,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
   setSessionEditorOpen
 }, dispatch);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditOverlay));
+export default connect(mapStateToProps, mapDispatchToProps)(EditOverlay);

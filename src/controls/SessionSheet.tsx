@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import { DocumentReference, deleteDoc } from '@firebase/firestore';
-import renderHTML from 'react-render-html';
+import createDOMPurify from 'dompurify';
 
 import { Speaker } from 'models/speaker';
 import { Session, SessionTypes } from 'models/session';
@@ -25,6 +25,8 @@ type SessionSheetAttribs = {
   session: Session;
   reference: DocumentReference;
 };
+
+const DOMPurify = createDOMPurify(window);
 
 const SessionSheet: FC<SessionSheetProps> = ({
   session,
@@ -112,7 +114,7 @@ const SessionSheet: FC<SessionSheetProps> = ({
         </AccordionSummary>
         <AccordionDetails>
           <div className="session-content">
-            {renderHTML(session.description)}
+            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(session.description)}} />
 
             <Divider className="divider" />
 

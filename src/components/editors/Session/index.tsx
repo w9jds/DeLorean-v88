@@ -179,7 +179,7 @@ const SessionEditor: FC<SessionEditorProps> = ({
   }
 
   const buildSpeakerSelect = () => {
-    if (fields.type !== SessionTypes.SESSION && fields.type !== SessionTypes.WORKSHOP) {
+    if (fields.type !== SessionTypes.SESSION && fields.type !== SessionTypes.LIGHTNING_TALK && fields.type !== SessionTypes.WORKSHOP) {
       return null;
     }
 

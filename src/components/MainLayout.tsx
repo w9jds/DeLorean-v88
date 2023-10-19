@@ -1,7 +1,7 @@
 import React, { FC, Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
-import { Switch, Route, withRouter, RouteComponentProps, Redirect } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { Profile } from 'models/user';
 import { ApplicationState } from 'models/states';
@@ -32,7 +32,7 @@ import SessionEditor from './editors/Session';
 
 import 'stylesheets/main.scss';
 
-type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & RouteComponentProps;
+type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 export enum DeloreanRoutes {
   HOME = '/',
@@ -100,21 +100,12 @@ const MainLayout: FC<MainLayoutProps> = ({
 
       {buildAdminPanels()}
 
-      <Switch>
-        <Route exact path={DeloreanRoutes.SPEAKERS}
-            component={props => <Speakers {...props} />}
-        />
-        <Route exact path={DeloreanRoutes.SCHEDULE}
-            component={props => <Schedule {...props} />}
-        />
-        <Route exact path={DeloreanRoutes.SESSIONS}
-            component={() => <Redirect to={DeloreanRoutes.SCHEDULE}/>}
-        />
-        <Route exact path={DeloreanRoutes.CODE_OF_CONDUCT}
-            component={Conduct}
-        />
-        <Route path={DeloreanRoutes.HOME} component={Home} />
-      </Switch>
+      <Routes>
+        <Route path={DeloreanRoutes.SPEAKERS} element={<Speakers />} />
+        <Route path={DeloreanRoutes.SCHEDULE} element={<Schedule />} />
+        <Route path={DeloreanRoutes.CODE_OF_CONDUCT} element={<Conduct />} />
+        <Route path="/*" element={<Home />} />
+      </Routes>
 
       {isEditMode ? <EditOverlay /> : null}
 
@@ -136,4 +127,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
   getSiteData
 }, dispatch);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainLayout));
+export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);

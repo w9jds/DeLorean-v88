@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import SponsorTile from './Tile';
 
@@ -8,9 +8,10 @@ import { getSponsors, getCurrentConfig } from 'store/current/selectors';
 import { SiteTheme } from 'config/delorean.config';
 import { DevfestDetails } from 'config/delorean.details.js';
 
-type SponsorsProps = ReturnType<typeof mapStateToProps>;
 
-const Sponsors: FC<SponsorsProps> = ({config, sponsors}) => {
+const Sponsors: FC = () => {
+  const sponsors = useSelector(getSponsors);
+  const config = useSelector(getCurrentConfig);
 
   return (
     <section className="sponsors">
@@ -20,9 +21,9 @@ const Sponsors: FC<SponsorsProps> = ({config, sponsors}) => {
         </div>
 
         <div className="action container-thin">
-          <span>{`Meet the organizations that make ${DevfestDetails.name} ${DevfestDetails.location} possible. If you’d like to learn more about sponsorships, read our `}</span>
-          {/* <a href="https://docs.google.com/document/d/15Bj6Cw9wZ6a128YijDlbfL8LwpuZ-mKhMgjg1DHrp5w/edit?usp=sharing">Sponsor Prospectus</a> */}
-          {/* <span> or </span> */}
+          <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, read our `}</span>
+          <a href={config?.event?.sponsors?.prospectus}>Sponsor Prospectus</a>
+          <span> or </span>
           <a href={config?.org ? `mailto:${config.org.email}` : ''}>email us</a>
         </div>
       </header>
@@ -38,9 +39,4 @@ const Sponsors: FC<SponsorsProps> = ({config, sponsors}) => {
   );
 };
 
-const mapStateToProps = (state: ApplicationState) => ({
-  sponsors: getSponsors(state),
-  config: getCurrentConfig(state)
-});
-
-export default connect(mapStateToProps)(Sponsors);
+export default Sponsors;

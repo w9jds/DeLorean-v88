@@ -17,7 +17,7 @@ export const getSessionByStartTime = createSelector(
       const session = document.data() as Session;
 
       if (session.startTime && session.isUnscheduled === false) {
-        const time = session.startTime.toDate().getTime();
+        const time = session.startTime.toDate().setSeconds(0, 0);
         slots[time] = slots[time] ? slots[time].concat(document) : [document];
       }
     }
