@@ -24,4 +24,5 @@ jobs:
           DELOREAN_MAP_API: ${{ secrets.DELOREAN_MAP_API }}
           DELOREAN_EVENT_ID: 729485088537
 
+      - run: firebase use default
       - run: firebase deploy
