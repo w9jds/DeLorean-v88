@@ -25,4 +25,4 @@ jobs:
           DELOREAN_EVENT_ID: 729485088537
 
       - run: firebase use default
-      - run: firebase deploy
+      - run: firebase deploy --only hosting
