@@ -5,7 +5,7 @@
 Purpose
 -------
 
-A primary goal of [GDG Kansas City](https://gdgkc.org) is to be inclusive to the largest number of contributors, with the most varied and diverse backgrounds possible. We are committed to providing a friendly, safe, and welcoming environment for all, regardless of gender, sexual orientation, ability, ethnicity, socioeconomic status, and religion (or lack thereof). GDG Chicago prides itself on being an open, respectful, and inclusive community. That means [jerky behavior](https://meta.wikimedia.org/wiki/Don%27t_be_a_jerk) isn’t allowed.
+A primary goal of [GDG Kansas City](https://gdgkc.org) is to be inclusive to the largest number of contributors, with the most varied and diverse backgrounds possible. We are committed to providing a friendly, safe, and welcoming environment for all, regardless of gender, sexual orientation, ability, ethnicity, socioeconomic status, and religion (or lack thereof). GDG Kansas city prides itself on being an open, respectful, and inclusive community. That means [jerky behavior](https://meta.wikimedia.org/wiki/Don%27t_be_a_jerk) isn’t allowed.
 
 This goal and policy is applied to any and all events ran by GDG Kansas City, including DevFest KC. All attendees are expected to comply in full to this policy.
 
@@ -45,7 +45,7 @@ Consequences of Unacceptable Behavior
 -------------------------------------
 Unacceptable behavior from any community member, including sponsors and those with decision-making authority, will not be tolerated.
 
-Anyone asked to stop unacceptable behavior is expected to comply immediately. If a community member engages in unacceptable behavior, Windy City DevFest organizers may take any action they deem appropriate, up to and including a warning, temporary ban, or permanent expulsion from the community/event without warning (and without refund in the case of a paid event).
+Anyone asked to stop unacceptable behavior is expected to comply immediately. If a community member engages in unacceptable behavior, DevFest KC organizers may take any action they deem appropriate, up to and including a warning, temporary ban, or permanent expulsion from the community/event without warning (and without refund in the case of a paid event).
 
 Reporting
 ---------

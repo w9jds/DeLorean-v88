@@ -58,7 +58,7 @@ const Home: FC<HomeProps> = ({ config }) => {
 
           <div className="mt-4">
             <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
-              Tickets On Sale Soon
+              Get Tickets
             </Button>
           </div>
         </div>
