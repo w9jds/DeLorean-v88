@@ -35,7 +35,7 @@ import './index.scss';
 const Transition = (props) => <Slide direction="up" {...props} />;
 
 type DateTimeTypes = 'startTime' | 'endTime';
-type InputEditableTypes = 'name' | 'location';
+type InputEditableTypes = 'name' | 'location' | 'slidesUrl';
 type SessionEditorProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 enum ErrorTypes {
@@ -132,6 +132,10 @@ const SessionEditor: FC<SessionEditorProps> = ({
     description: tinymce.activeEditor.getContent(),
   });
 
+  // const onValueChanged = (name: keyof SessionEditorState) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  //   setFields({ ...fields, [name as keyof SessionEditorState]: e.target.value })
+  // };
+
   const onValueChanged = (name: InputEditableTypes) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setFields({ ...fields, [name]: e.target.value } as Pick<SessionEditorState, InputEditableTypes>)
   };
@@ -184,29 +188,36 @@ const SessionEditor: FC<SessionEditorProps> = ({
     }
 
     return (
-      <FormControl fullWidth>
-        <InputLabel id="session-speakers-label">Speakers</InputLabel>
-        <Select multiple displayEmpty
-          labelId="session-speakers-label"
-          label="Speakers"
-          className="speaker-selector"
-          value={fields.speakers}
-          onChange={onSelectChanged('speakers')}
-          renderValue={onRenderSpeakers}
-        >
-          {
-            Object.keys(speakers).map(key => {
-              let speaker = speakers[key].data() as Speaker;
+      <div className="speaker-row">
+        <FormControl>
+          <InputLabel id="session-speakers-label">Speakers</InputLabel>
+          <Select multiple displayEmpty
+            labelId="session-speakers-label"
+            label="Speakers"
+            className="speaker-selector"
+            value={fields.speakers}
+            onChange={onSelectChanged('speakers')}
+            renderValue={onRenderSpeakers}
+          >
+            {
+              Object.keys(speakers).map(key => {
+                let speaker = speakers[key].data() as Speaker;
 
-              return (
-                <MenuItem key={key} value={key}>
-                  {speaker.name}
-                </MenuItem>
-              );
-            })
-          }
-        </Select>
-      </FormControl>
+                return (
+                  <MenuItem key={key} value={key}>
+                    {speaker.name}
+                  </MenuItem>
+                );
+              })
+            }
+          </Select>
+        </FormControl>
+        <TextField label="Slides"
+          className="speaker-slides"
+          value={fields?.slidesUrl}
+          onChange={onValueChanged('slidesUrl')}
+        />
+      </div>
     );
   }
 
