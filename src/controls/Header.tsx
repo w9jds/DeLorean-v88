@@ -38,15 +38,15 @@ const Header = ({ }) => {
     //   navigate(DeloreanRoutes.HOME);
     // }
 
-    if ('EBWidgets' in window) {
-      // tslint:disable-next-line:no-string-literal
-      (window['EBWidgets'] as any).createWidget({
-        widgetType: 'checkout',
-        eventId: EventbriteConfig.eventId,
-        modal: true,
-        modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
-      });
-    }
+    // if ('EBWidgets' in window) {
+    //   // tslint:disable-next-line:no-string-literal
+    //   (window['EBWidgets'] as any).createWidget({
+    //     widgetType: 'checkout',
+    //     eventId: EventbriteConfig.eventId,
+    //     modal: true,
+    //     modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
+    //   });
+    // }
   }, []);
 
   const onNavigationChanged = (event, value) => {
