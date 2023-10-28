@@ -30,6 +30,7 @@ export type SessionEditorState = {
   name: string;
   type: string;
   location?: string;
+  slidesUrl?: string;
   startTime?: Date;
   endTime?: Date;
   speakers: string[];

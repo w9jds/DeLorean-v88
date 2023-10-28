@@ -36,16 +36,16 @@
       &-title {
         display: flex;
 
-        .type-selector {
-          min-width: 100px;
+        & > div {
+          min-width: 200px;
+
+          &:not(:last-of-type) {
+            margin-right: 12px;
+          }
         }
 
         .session-title {
-          width: 50vw;
-        }
-
-        .session-location {
-          width: 150px;
+          flex: 1;
         }
       }
 
@@ -58,8 +58,21 @@
           margin: auto 0;
         }
 
-        .speaker-selector {
-          min-width: 400px;
+        .speaker {
+          &-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          }
+
+          &-selector {
+            width: 50vw;
+            margin-right: 12px;
+          }
+
+          &-slides {
+            flex: 1;
+          }
         }
 
         .session-schedule {
