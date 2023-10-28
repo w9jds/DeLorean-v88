@@ -133,7 +133,8 @@ const TicketButton = () => {
     const props = {
       id: `get-header-event-tickets-${EventbriteConfig.eventId}`,
       color: 'secondary',
-      variant: isFooterVisible ? 'extended' : null
+      variant: isFooterVisible ? 'extended' : null,
+      href: 'https://devfestkc23.eventbrite.com/?aff=dotcom'
     };
 
     return (
@@ -153,7 +154,8 @@ const TicketButton = () => {
   const props = {
     id: `get-header-event-tickets-${EventbriteConfig.eventId}`,
     color: 'secondary',
-    variant: 'contained'
+    variant: 'contained',
+    href: 'https://devfestkc23.eventbrite.com/?aff=dotcom'
   };
 
   return (

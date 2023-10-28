@@ -28,19 +28,19 @@ const Home: FC<HomeProps> = ({ config }) => {
   const startDate = config?.event?.startDate?.toDate();
 
   useEffect(() => {
-    if (location.pathname !== DeloreanRoutes.HOME) {
-      navigate(DeloreanRoutes.HOME);
-    }
+    // if (location.pathname !== DeloreanRoutes.HOME) {
+    //   navigate(DeloreanRoutes.HOME);
+    // }
 
-    if ('EBWidgets' in window) {
-      const eventbrite: any = window['EBWidgets'];
-      eventbrite.createWidget({
-        widgetType: 'checkout',
-        eventId: EventbriteConfig.eventId,
-        modal: true,
-        modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
-      });
-    }
+    // if ('EBWidgets' in window) {
+    //   const eventbrite: any = window['EBWidgets'];
+    //   eventbrite.createWidget({
+    //     widgetType: 'checkout',
+    //     eventId: EventbriteConfig.eventId,
+    //     modal: true,
+    //     modalTriggerElementId: `get-event-tickets-${EventbriteConfig.eventId}`
+    //   });
+    // }
   }, [])
 
   return (
@@ -57,7 +57,11 @@ const Home: FC<HomeProps> = ({ config }) => {
           <h3>{config?.venue?.name}</h3>
 
           <div className="mt-4">
-            <Button id={`get-event-tickets-${EventbriteConfig.eventId}`} variant="contained" color="secondary">
+            <Button 
+                id={`get-event-tickets-${EventbriteConfig.eventId}`} 
+                variant="contained" 
+                color="secondary" 
+                href='https://devfestkc23.eventbrite.com/?aff=dotcom'>
               Get Tickets
             </Button>
           </div>
