@@ -61,7 +61,8 @@ const Home: FC<HomeProps> = ({ config }) => {
                 id={`get-event-tickets-${EventbriteConfig.eventId}`} 
                 variant="contained" 
                 color="secondary" 
-                href='https://devfestkc23.eventbrite.com/?aff=dotcom'>
+                href='https://devfestkc23.eventbrite.com/?aff=dotcom'
+                target='_blank'>
               Get Tickets
             </Button>
           </div>
