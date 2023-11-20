@@ -30,10 +30,11 @@ const Papercall = ({ config }) => {
     <section className="call-to-action" style={SiteTheme.CallToAction}>
       <div className="container">
         <h1 className="container-thin">
-          {`Interested in speaking at ${DevfestDetails.location} ${DevfestDetails.name}?`}
+          {`Interested in speaking at ${DevfestDetails.name} ${DevfestDetails.location}?`}
         </h1>
 
-        <p>{`Consider submitting your talk by ${format(closing, 'MMMM d, yyyy')}`}</p>
+        <p>{`Consider submitting your talk by ${format(closing, 'MMMM d, yyyy')}.`}</p>
+        <p>Someone will reach out ASAP after your submission.</p>
 
         <div className="action">
           <Fab onClick={openCalltoAction}>
