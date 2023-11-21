@@ -1,3 +1,5 @@
+import background from 'assets/intro-background.jpg';
+
 export const SiteTheme = {
   Secondary: '#03dac4',
   Primary: '#1565c0',
@@ -12,6 +14,11 @@ export const SiteTheme = {
   SponsorHeader: {
     backgroundColor: '#6200EE',
     color: '#fff'
+  },
+  HeroBackground: {
+    backgroundImage: `url(${background})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   }
 };
 
