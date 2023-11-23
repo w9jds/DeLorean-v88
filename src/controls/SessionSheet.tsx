@@ -54,6 +54,20 @@ const SessionSheet: FC<SessionSheetProps> = ({
     editSession(reference, session);
   };
 
+  const shouldShowDescription = () => {
+    console.log(`Session ${session.name} has ${session.description.length} description length`);
+    return session.description.length > 0;
+  }
+
+  const shouldShowSpeakers = () => {
+    console.log(`Session ${session.name} has ${session.speakers.length} speakers`);
+    return session.speakers.length > 0;
+  }
+
+  const shouldShowAccordion = () => {
+    return shouldShowDescription() || shouldShowSpeakers();
+  }
+
   const buildAdminActions = () => (
     <div className="edit-actions">
       <Tooltip title="Edit" placement="top">
@@ -69,11 +83,23 @@ const SessionSheet: FC<SessionSheetProps> = ({
     </div>
   );
 
+  const buildSessionHeader = () => {
+    return <div className="session-header">
+      <Typography variant="h5">{formatSessionTitle()}</Typography>
+      <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
+      <Typography variant="subtitle2">{formatSessionDuration()}</Typography>
+    </div>
+  }
+
   const formatSessionTitle = () => {
     let title = '';
 
-    if (session.type) {
-      title += `[${session.type}] `;
+    switch (session.type) {
+      case SessionTypes.BREAK:
+      case SessionTypes.REGISTRATION:
+        break;
+      default:
+        title += `[${session.type}] `;
     }
 
     title += session.name;
@@ -92,14 +118,28 @@ const SessionSheet: FC<SessionSheetProps> = ({
     return `Room ${session.location}`;
   };
 
-  if (session.type === SessionTypes.BREAK || session.type === SessionTypes.REGISTRATION) {
+  const formatSessionDuration = () => {
+    if (!session.startTime || !session.endTime) return null;
+
+    const startDate = new Date(session.startTime.seconds * 1000);
+    const endDate = new Date(session.endTime.seconds * 1000);
+    
+    const seconds = Math.floor((endDate.getTime() - startDate.getTime()) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+  
+    if (hours > 0) {
+      return `${hours} hr ${minutes % 60} mins`;
+    } else {
+      return `${minutes} mins`;
+    }
+  }
+
+  if (!shouldShowAccordion()) {
     return (
       <Paper square className="session-card">
         {isEditMode ? buildAdminActions() : null}
-        <div className="session-header">
-          <Typography variant="h5">{session.name}</Typography>
-          <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
-        </div>
+        {buildSessionHeader()}
       </Paper>
     );
   } else {
@@ -107,38 +147,43 @@ const SessionSheet: FC<SessionSheetProps> = ({
       <Accordion className="session">
         <AccordionSummary expandIcon={<ExpandMore />} >
           {isEditMode ? buildAdminActions() : null}
-          <div className="session-header">
-            <Typography variant="h5">{formatSessionTitle()}</Typography>
-            <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
-          </div>
+          {buildSessionHeader()}
         </AccordionSummary>
         <AccordionDetails>
           <div className="session-content">
-            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(session.description)}} />
+            { shouldShowDescription()
+                ? <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(session.description)}} />
+                : null
+            }
 
-            <Divider className="divider" />
+            { shouldShowDescription() && shouldShowSpeakers()
+                ? <Divider hidden={!shouldShowDescription() && !shouldShowSpeakers()} className="divider" />
+                : null
+            }
 
-            <div className="speakers">
-              <Typography variant="h6" className="header">
-                Speakers
-              </Typography>
-              {
-                speakers.map(speaker => (
-                  <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
-                    <ListItemAvatar>
-                      <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
-                    </ListItemAvatar>
-                    <ListItemText primary={speaker.name} secondary={speaker.company || null} />
-                  </ListItem>
-                ))
-              }
-            </div>
+            { shouldShowSpeakers()
+                ? <div hidden={!shouldShowSpeakers()} className="speakers">
+                    <Typography variant="h6" className="header">
+                      Speakers
+                    </Typography>
+                    {
+                      speakers.map(speaker => (
+                        <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
+                          <ListItemAvatar>
+                            <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
+                          </ListItemAvatar>
+                          <ListItemText primary={speaker.name} secondary={speaker.company || null} />
+                        </ListItem>
+                      ))
+                    }
+                  </div>
+              : null
+            }
           </div>
         </AccordionDetails>
       </Accordion>
     );
   }
-
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
