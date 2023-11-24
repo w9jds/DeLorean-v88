@@ -10,7 +10,7 @@
     align-items: center;
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 100vw 600px;
+    background-size: cover;
     position: relative;
 
     &:before {
@@ -47,7 +47,6 @@
   @media (min-width: 1000px) {
     .intro {
       min-height: 90vh;
-      background-size: 100vw 90vh;
     }
   }
 }
