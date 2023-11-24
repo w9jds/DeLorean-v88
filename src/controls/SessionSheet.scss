@@ -5,6 +5,11 @@
   &-header {
     display: flex;
     flex-direction: column;
+
+    h6 {
+      font-weight: 100;
+      opacity: 0.8;
+    }
   }
 
   &-content {
@@ -66,6 +71,6 @@
   border-radius: 0;
 
   .session-header {
-    padding: 12px 24px;
+    padding: 12px 16px;
   }
 }

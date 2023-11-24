@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import { DocumentReference, deleteDoc } from '@firebase/firestore';
+import { intervalToDuration } from 'date-fns/fp';
 import createDOMPurify from 'dompurify';
 
 import { Speaker } from 'models/speaker';
@@ -54,6 +55,9 @@ const SessionSheet: FC<SessionSheetProps> = ({
     editSession(reference, session);
   };
 
+  const hasDescription = useMemo(() => session.description.length > 0, [session.description]);
+  const hasSpeakers = useMemo(() => session.speakers.length > 0, [session.speakers]);
+
   const buildAdminActions = () => (
     <div className="edit-actions">
       <Tooltip title="Edit" placement="top">
@@ -69,11 +73,23 @@ const SessionSheet: FC<SessionSheetProps> = ({
     </div>
   );
 
+  const buildSessionHeader = () => {
+    return <div className="session-header">
+      <Typography variant="h5">{formatSessionTitle()}</Typography>
+      <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
+      <Typography variant="subtitle2">{formatSessionDuration()}</Typography>
+    </div>
+  }
+
   const formatSessionTitle = () => {
     let title = '';
 
-    if (session.type) {
-      title += `[${session.type}] `;
+    switch (session.type) {
+      case SessionTypes.BREAK:
+      case SessionTypes.REGISTRATION:
+        break;
+      default:
+        title += `[${session.type}] `;
     }
 
     title += session.name;
@@ -92,14 +108,26 @@ const SessionSheet: FC<SessionSheetProps> = ({
     return `Room ${session.location}`;
   };
 
-  if (session.type === SessionTypes.BREAK || session.type === SessionTypes.REGISTRATION) {
+  const formatSessionDuration = () => {
+    if (!session.startTime || !session.endTime) return null;
+
+    const interval = intervalToDuration({
+      start: session.startTime.toDate(),
+      end: session.endTime.toDate()
+    });
+
+    if (interval.hours > 0) {
+      return `${interval.hours} hr ${interval.minutes} mins`;
+    } else {
+      return `${interval.minutes} mins`;
+    }
+  }
+
+  if (!hasDescription && !hasSpeakers) {
     return (
       <Paper square className="session-card">
         {isEditMode ? buildAdminActions() : null}
-        <div className="session-header">
-          <Typography variant="h5">{session.name}</Typography>
-          <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
-        </div>
+        {buildSessionHeader()}
       </Paper>
     );
   } else {
@@ -107,38 +135,35 @@ const SessionSheet: FC<SessionSheetProps> = ({
       <Accordion className="session">
         <AccordionSummary expandIcon={<ExpandMore />} >
           {isEditMode ? buildAdminActions() : null}
-          <div className="session-header">
-            <Typography variant="h5">{formatSessionTitle()}</Typography>
-            <Typography variant="subtitle1">{formatSessionLocation()}</Typography>
-          </div>
+          {buildSessionHeader()}
         </AccordionSummary>
         <AccordionDetails>
           <div className="session-content">
-            <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(session.description)}} />
+            { hasDescription ? <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(session.description)}} /> : null }
+            { hasDescription && hasSpeakers ? <Divider className="divider" /> : null }
 
-            <Divider className="divider" />
-
-            <div className="speakers">
-              <Typography variant="h6" className="header">
-                Speakers
-              </Typography>
-              {
-                speakers.map(speaker => (
-                  <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
-                    <ListItemAvatar>
-                      <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
-                    </ListItemAvatar>
-                    <ListItemText primary={speaker.name} secondary={speaker.company || null} />
-                  </ListItem>
-                ))
-              }
-            </div>
+            { hasSpeakers ?
+              <div className="speakers">
+                <Typography variant="h6" className="header">
+                  Speakers
+                </Typography>
+                {
+                  speakers.map(speaker => (
+                    <ListItem key={speaker.name} button onClick={onSpeakerClicked(speaker)}>
+                      <ListItemAvatar>
+                        <Avatar className="big-avatar" alt={speaker.name} src={speaker.portraitUrl} />
+                      </ListItemAvatar>
+                      <ListItemText primary={speaker.name} secondary={speaker.company || null} />
+                    </ListItem>
+                  ))
+                }
+              </div> : null
+            }
           </div>
         </AccordionDetails>
       </Accordion>
     );
   }
-
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
