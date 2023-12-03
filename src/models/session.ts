@@ -4,6 +4,7 @@ export interface Session {
   name: string;
   type: string;
   location?: string;
+  slidesUrl?: string;
   speakers: string[];
   description: string;
   isUnscheduled?: boolean;
