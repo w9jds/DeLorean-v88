@@ -8,6 +8,8 @@ export const getSpeakers = (state: ApplicationState) => state.speakers.speakers;
 
 export const getEditorState = (state: ApplicationState) => state.speakers.editor;
 
+export const isSpeakerEditorOpen = (state: ApplicationState) => state.speakers.isEditorOpen;
+
 export const getSpeakersInOrder = createSelector(getSpeakers, documents => {
   let speakers: DocumentSnapshot[] = [];
 

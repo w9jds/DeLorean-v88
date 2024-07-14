@@ -1,6 +1,5 @@
 import React, { FC, useRef, useEffect, useState, useMemo } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { connect, useDispatch } from 'react-redux';
 import { addDoc, collection, updateDoc } from 'firebase/firestore';
 
 import { Close } from '@mui/icons-material';
@@ -8,7 +7,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
   Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton,
-  DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField, FormControlLabel, Checkbox } from '@mui/material';
+  DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField, FormControlLabel, Checkbox
+} from '@mui/material';
 
 import tinymce from 'tinymce';
 import 'tinymce/themes/silver';
@@ -25,18 +25,16 @@ import { SessionEditorState, SessionTypes } from 'models/session';
 
 import { getDatabase } from 'store/current/selectors';
 import { getSpeakers } from 'store/speakers/selectors';
-import { getIsSessionEditorOpen } from 'store/admin/selectors';
-import { setSessionEditorOpen } from 'store/admin/actions';
-import { getSessionEditorState } from 'store/sessions/selectors';
+import { setSessionEditorOpen } from 'store/sessions/reducer';
+import { getSessionEditorState, isSessionEditorOpen } from 'store/sessions/selectors';
 
 import './index.scss';
-
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 
 type DateTimeTypes = 'startTime' | 'endTime';
 type InputEditableTypes = 'name' | 'location' | 'slidesUrl';
-type SessionEditorProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+type SessionEditorProps = ReturnType<typeof mapStateToProps>;
 
 enum ErrorTypes {
   NAME = 'name',
@@ -49,9 +47,8 @@ const SessionEditor: FC<SessionEditorProps> = ({
   isOpen,
   initState,
   speakers,
-
-  setSessionEditorOpen
 }) => {
+  const dispatch = useDispatch();
 
   const prevOpen = useRef(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -92,7 +89,9 @@ const SessionEditor: FC<SessionEditorProps> = ({
     return items;
   }, []);
 
-  const closeSessionEditor = () => setSessionEditorOpen(false);
+  const closeSessionEditor = () => {
+    dispatch(setSessionEditorOpen(false));
+  }
 
   const initTinyMce = () => {
     tinymce.init({
@@ -297,7 +296,7 @@ const SessionEditor: FC<SessionEditorProps> = ({
           </div>
 
           <FormControl className="description-editor">
-            <textarea />
+            <textarea placeholder="Session Details" />
           </FormControl>
         </DialogContent>
       </Dialog>
@@ -307,13 +306,9 @@ const SessionEditor: FC<SessionEditorProps> = ({
 
 const mapStateToProps = (state: ApplicationState) => ({
   db: getDatabase(state),
-  isOpen: getIsSessionEditorOpen(state),
+  isOpen: isSessionEditorOpen(state),
   initState: getSessionEditorState(state),
   speakers: getSpeakers(state),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  setSessionEditorOpen
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SessionEditor);
+export default connect(mapStateToProps)(SessionEditor);

@@ -1,4 +1,3 @@
-import anime from 'animejs';
 import React, { useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 
@@ -47,11 +46,11 @@ const TicketButton = () => {
 
       if (prev.current.isTicketsVisible !== isTicketsVisible) {
         if (isTicketsVisible === false) {
-          mobileAnimation.current = anime({
-            targets: '.get-ticket-mobile',
-            duration: 725,
-            scale: [0, 1]
-          });
+          // mobileAnimation.current = anime({
+          //   targets: '.get-ticket-mobile',
+          //   duration: 725,
+          //   scale: [0, 1]
+          // });
         }
 
         if (mobileAnimation.current && isTicketsVisible === true) {
@@ -65,11 +64,11 @@ const TicketButton = () => {
           expandTickets();
         }
         if (isFooterVisible === false) {
-          anime({
-            ...animationBase,
-            translateY: 0,
-            translateX: 0
-          });
+          // anime({
+          //   ...animationBase,
+          //   translateY: 0,
+          //   translateX: 0
+          // });
         }
       }
     }
@@ -114,15 +113,15 @@ const TicketButton = () => {
     const targetBounds = targets.getBoundingClientRect();
     const footerHeight = footer.getBoundingClientRect().height;
 
-    anime({
-      targets: targets,
-      translateY: [0, -(footerHeight - 10)],
-      translateX: () => {
-        let left = (window.innerWidth / 2) - (targetBounds.width / 2);
-        return [0, left - targetBounds.left];
-      },
-      duration: 725
-    });
+    // anime({
+    //   targets: targets,
+    //   translateY: [0, -(footerHeight - 10)],
+    //   translateX: () => {
+    //     let left = (window.innerWidth / 2) - (targetBounds.width / 2);
+    //     return [0, left - targetBounds.left];
+    //   },
+    //   duration: 725
+    // });
   }
 
   if (isMobile) {

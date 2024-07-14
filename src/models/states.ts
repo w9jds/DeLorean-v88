@@ -1,7 +1,7 @@
 import { Profile } from './user';
 import Configuration from './config';
 
-import { User } from '@firebase/auth';
+import { User } from 'firebase/auth';
 import { FirebaseApp } from '@firebase/app';
 import { DocumentSnapshot } from '@firebase/firestore';
 
@@ -29,8 +29,6 @@ export type CurrentState = {
 export type AdminState = {
   readonly isEditMode: boolean;
   readonly isCreateOpen: boolean;
-  readonly isSpeakerEditorOpen: boolean;
-  readonly isSessionEditorOpen: boolean;
 };
 
 export type ConfigState = {
@@ -49,11 +47,13 @@ export type SponsorState = {
 };
 
 export type SpeakerState = {
+  readonly isEditorOpen: boolean;
   readonly editor?: SpeakerEditorFullState;
   readonly speakers: Record<string, DocumentSnapshot>;
 };
 
 export type SessionState = {
+  readonly isEditorOpen: boolean;
   readonly editor?: SessionEditorFullState;
   readonly sessions: Record<string, DocumentSnapshot>;
 };

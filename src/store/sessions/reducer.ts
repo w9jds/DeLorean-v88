@@ -1,11 +1,8 @@
-import { Reducer } from 'redux';
-import { handleActions } from 'redux-actions';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DocumentSnapshot } from 'firebase/firestore';
 
 import { SessionState } from 'models/states';
-import { SessionEditorFullState, SessionTypes } from 'models/session';
-
-import { SessionEvents } from 'store/events';
-import { setSession, setSessionEditorInitialState } from './actions';
+import { SessionChanges, SessionEditorFullState, SessionTypes } from 'models/session';
 
 const clearState: SessionEditorFullState = {
   name: '',
@@ -18,23 +15,34 @@ const clearState: SessionEditorFullState = {
 };
 
 const initialState: SessionState = {
+  isEditorOpen: false,
   editor: clearState,
   sessions: {}
 };
 
-const sessions: Reducer<SessionState> = handleActions<any>({
-  [SessionEvents.SET_SESSION]: (state: SessionState, action: ReturnType<typeof setSession>) => ({
-      ...state,
-      sessions: action.payload
-  }),
-  [SessionEvents.SET_SESSION_STATE]: (state: SessionState, action: ReturnType<typeof setSessionEditorInitialState>) => ({
-      ...state,
-      editor: action.payload
-  }),
-  [SessionEvents.CLEAR_SESSION_STATE]: (state: SessionState) => ({
-      ...state,
-      editor: clearState
-  })
-}, initialState);
+const sessionsSlice = createSlice({
+  name: 'sessions',
+  initialState,
+  reducers: {
+    setSession: (state, action: PayloadAction<Record<string, DocumentSnapshot>>) => {
+      state.sessions = action.payload;
+    },
+    setSessionEditorInitialState: (state, action: PayloadAction<SessionEditorFullState>) => {
+      state.editor = action.payload;
+    },
+    setSessionEditorOpen: (state, action: PayloadAction<boolean>) => {
+      state.isEditorOpen = action.payload;
 
-export default sessions;
+      if (action.payload === false) {
+        state.editor = clearState;
+      }
+    },
+
+    //Saga Triggers
+    editSession: (_, action: PayloadAction<SessionChanges>) => {},
+  }
+});
+
+export const { setSession, setSessionEditorInitialState, setSessionEditorOpen, editSession } = sessionsSlice.actions;
+
+export default sessionsSlice;

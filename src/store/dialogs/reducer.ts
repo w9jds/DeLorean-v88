@@ -1,9 +1,11 @@
-import { Reducer } from 'redux';
-import { handleActions } from 'redux-actions';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { DialogsState } from 'models/states';
-import { DialogEvents } from 'store/events';
-import { openDialogWindow } from './actions';
+
+type DialogConfig = {
+  views: React.ReactElement<any> | React.ReactElement<any>[], 
+  fullscreen: boolean
+}
 
 const initialState: DialogsState = {
   open: false,
@@ -11,17 +13,23 @@ const initialState: DialogsState = {
   views: undefined
 };
 
-const dialogs: Reducer<DialogsState> = handleActions<any>({
-  [DialogEvents.OPEN_DIALOG]: (_state: DialogsState, action: ReturnType<typeof openDialogWindow>) => ({
+const dialogSlice = createSlice({
+  name: 'dialogs',
+  initialState,
+  reducers: {
+    openDialog: (_state, action: PayloadAction<DialogConfig>) => ({
       open: true,
       views: action.payload.views,
       fullscreen: action.payload.fullscreen || false
-  }),
-  [DialogEvents.CLOSE_DIALOG]: () => ({
+    }),
+    closeDialog: () => ({
       open: false,
       views: undefined,
       fullscreen: false
-  })
-}, initialState);
+    })
+  }
+})
 
-export default dialogs;
+export const { openDialog, closeDialog } = dialogSlice.actions;
+
+export default dialogSlice;

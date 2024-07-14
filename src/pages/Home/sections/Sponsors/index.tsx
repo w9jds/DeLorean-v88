@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 import SponsorTile from './Tile';
 
-import { ApplicationState } from 'models/states';
 import { getSponsors, getCurrentConfig } from 'store/current/selectors';
 import { SiteTheme } from 'config/delorean.config';
 import { DevfestDetails } from 'config/delorean.details.js';
@@ -31,7 +30,7 @@ const Sponsors: FC = () => {
       {
         sponsors && Object.keys(sponsors)?.length && (
           <div className="sponsor-grid container" >
-            {Object.values(sponsors).map(sponsor => <SponsorTile details={sponsor} />)}
+            {Object.values(sponsors).map(sponsor => <SponsorTile key={sponsor.name} details={sponsor} />)}
           </div>
         )
       }

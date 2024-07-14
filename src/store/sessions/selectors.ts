@@ -8,6 +8,8 @@ export const getSessions = (state: ApplicationState) => state.sessions.sessions;
 
 export const getSessionEditorState = (state: ApplicationState) => state.sessions.editor;
 
+export const isSessionEditorOpen = (state: ApplicationState) => state.sessions.isEditorOpen;
+
 export const getSessionByStartTime = createSelector(
   [getSessions], (sessions) => {
     const slots: Record<number, DocumentSnapshot[]> = {};

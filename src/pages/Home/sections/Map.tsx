@@ -5,7 +5,6 @@ import { Dispatch, bindActionCreators } from 'redux';
 import { Loader } from '@googlemaps/js-api-loader';
 
 import { ApplicationState } from 'models/states';
-import { closeConfigDialog } from 'store/config/actions';
 import { getCurrentConfig } from 'store/current/selectors'
 import { MapsConfig } from 'config/delorean.config';;
 
@@ -13,11 +12,9 @@ import { Directions } from '@mui/icons-material';
 
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
 
-type MapProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+type MapProps = ReturnType<typeof mapStateToProps>;
 
-const Map: FC<MapProps> = ({
-  config
-}) => {
+const Map: FC<MapProps> = ({ config }) => {
   const mapRef = createRef<HTMLDivElement>();
   const [map, setMap] = useState<google.maps.Map>();
 
@@ -119,8 +116,4 @@ const mapStateToProps = (state: ApplicationState) => ({
   config: getCurrentConfig(state)
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  closeConfigDialog
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Map);
+export default connect(mapStateToProps)(Map);

@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 import { Button, ClickAwayListener, Divider, MenuItem, MenuList, Paper, Popover } from '@mui/material';
+
 import { getFirebaseAuth, getUser, getUserProfile } from 'store/current/selectors';
-import { openConfigDialog } from 'store/config/actions';
-import { toggleEditMode } from 'store/admin/actions';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { toggleEditMode } from 'store/admin/reducer';
+import { toggleConfig } from 'store/config/reducer';
 
 const UserMenu = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const UserMenu = () => {
 
     if (profile?.admin) {
       items = items.concat(
-        <MenuItem key="site-config" onClick={() => onMenuClick(openConfigDialog)}>
+        <MenuItem key="site-config" onClick={() => onMenuClick(toggleConfig)}>
           Site configuration
         </MenuItem>,
         <MenuItem key="toggle-edit-mode" onClick={() => onMenuClick(toggleEditMode)}>
@@ -73,7 +74,7 @@ const UserMenu = () => {
 
   return (
     <div className="login">
-      <img ref={anchorEl}
+      <img title="Menu-Anchor" ref={anchorEl}
         className={isOpen ? 'user-selected' : ''}
         onClick={openMenu}
         src={user.photoURL}

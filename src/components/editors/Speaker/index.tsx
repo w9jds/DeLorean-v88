@@ -1,12 +1,14 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import Dropzone from 'react-dropzone';
 import { DocumentSnapshot, addDoc, collection, updateDoc } from 'firebase/firestore';
 import { UploadTaskSnapshot, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-import { Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton, DialogContent, FormControl, TextField } from '@mui/material';
+import { 
+  Dialog, AppBar, Toolbar, Button, Slide, Typography, 
+  IconButton, DialogContent, TextField 
+} from '@mui/material';
 import { Close, Face } from '@mui/icons-material';
 
 import tinymce from 'tinymce';
@@ -14,33 +16,26 @@ import 'tinymce/themes/silver';
 import 'tinymce/icons/default';
 import 'tinymce/models/dom';
 import 'tinymce/skins/ui/oxide-dark/skin.css';
+
 import 'tinymce/plugins/autolink';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/advlist';
 
-import { ApplicationState } from 'models/states';
 import { SpeakerEditorState, Speaker } from 'models/speaker';
+import { setSpeakerEditorOpen } from 'store/speakers/reducer';
 import { getDatabase, getFirebaseStorage } from 'store/current/selectors';
-import { closeConfigDialog } from 'store/config/actions';
-import { getEditorState } from 'store/speakers/selectors';
-
-import { getIsSpeakerEditorOpen } from 'store/admin/selectors';
-import { setSpeakerEditorOpen } from 'store/admin/actions';
+import { getEditorState, isSpeakerEditorOpen } from 'store/speakers/selectors';
 
 import './index.scss';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 
-type EditableTypes = 'medium' | 'name' | 'title' | 'company' | 'twitter' | 'github' | 'facebook' | 'linkedin' | 'blog';
-type SpeakerEditorProps = SpeakerEditorAttrs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
-type SpeakerEditorAttrs = {
-  speaker?: DocumentSnapshot;
-};
-
 enum ErrorTypes {
   NAME = 'name',
   PORTRAIT = 'portrait',
 };
+
+type EditableTypes = 'medium' | 'name' | 'title' | 'company' | 'twitter' | 'github' | 'facebook' | 'linkedin' | 'blog';
 
 type Avatar = {
   metadata?: File;
@@ -48,17 +43,18 @@ type Avatar = {
   preview: string;
 }
 
-const SpeakerEditor: FC<SpeakerEditorProps> = ({
-  db,
-  isOpen,
-  storage,
-  initState,
+type Props = {
+  speaker?: DocumentSnapshot;
+};
 
-  closeConfigDialog,
-  setSpeakerEditorOpen
-}) => {
-
+const SpeakerEditor: FC<Props> = ({ speaker }) => {
+  const db = useSelector(getDatabase);
+  const isOpen = useSelector(isSpeakerEditorOpen);
+  const storage = useSelector(getFirebaseStorage);
+  const initState = useSelector(getEditorState);
+  const dispatch = useDispatch();
   const prevOpen = useRef(false);
+
   const [file, setFile] = useState<Avatar>();
   const [errors, setErrors] = useState<string[]>([]);
   const [fields, setFields] = useState<Record<string, any>>({});
@@ -72,7 +68,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
     }
 
     if (prevOpen.current && !isOpen) {
-      tinymce.remove('textarea.bio-editor');
+      tinymce.remove('textarea#bio');
     }
 
     prevOpen.current = isOpen;
@@ -80,7 +76,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
 
   const initTinyMce = () => {
     tinymce.init({
-      selector: 'textarea.bio-editor',
+      selector: 'textarea#bio',
       plugins: [ 'autolink', 'lists', 'advlist' ],
       resize: false,
       menubar: false,
@@ -94,10 +90,11 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
         tinymce.activeEditor.setContent(initState.bio);
       }
     });
-
   }
 
-  const closeSpeakerEditor = () => setSpeakerEditorOpen(false);
+  const closeSpeakerEditor = () => {
+    dispatch(setSpeakerEditorOpen(false));
+  }
 
   const buildFieldInput = (label: String, id: EditableTypes) => {
     return (
@@ -122,7 +119,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
     return (
       <div {...getRootProps()} className={style}>
         <input {...getInputProps()} />
-        {file?.preview ? <img src={file.preview} className="portrait-image" /> : <Face />}
+        {file?.preview ? <img title="avatar" src={file.preview} className="portrait-image" /> : <Face />}
       </div>
     );
   }
@@ -244,7 +241,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
 
       <DialogContent>
         <div className="editor-profile-header">
-          <Dropzone accept="image/*" onDrop={onFileDrop} >
+          <Dropzone accept={{ 'image/*': [] }} onDrop={onFileDrop} >
             {dropZoneRender}
           </Dropzone>
 
@@ -266,24 +263,12 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
         </div>
 
         {/* className={classes.formControl} */}
-        <FormControl>
-          <textarea className="bio-editor" />
-        </FormControl>
+        <div>
+          <textarea id="bio" className="bio-editor" />
+        </div>
       </DialogContent>
     </Dialog>
   );
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  db: getDatabase(state),
-  storage: getFirebaseStorage(state),
-  isOpen: getIsSpeakerEditorOpen(state),
-  initState: getEditorState(state)
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  closeConfigDialog,
-  setSpeakerEditorOpen
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SpeakerEditor);
+export default SpeakerEditor;
