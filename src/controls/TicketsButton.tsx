@@ -4,7 +4,7 @@ import { useNavigation } from 'react-router-dom';
 import classnames from 'classnames';
 
 import { EventbriteConfig } from 'config/delorean.config';
-import { Button, ButtonProps, Collapse, Fab, Grow, Typography } from '@mui/material';
+import { Button, ButtonProps, Collapse, Fab, Grow, Typography, Zoom } from '@mui/material';
 import { LocalActivity } from '@mui/icons-material';
 
 import './TicketsButton.scss';
@@ -36,7 +36,7 @@ const TicketButton = () => {
   }, [])
 
   useEffect(() => {
-    if (isMobile && prev.current.isFooterVisible !== isFooterVisible) {
+    if (scope.current && isMobile && prev.current.isFooterVisible !== isFooterVisible) {
       if (isFooterVisible) {
         const footer = document.querySelector('.footer.container-wide');
   
@@ -104,18 +104,20 @@ const TicketButton = () => {
   if (isMobile) {
     return (
       <motion.div ref={scope} className="get-ticket-mobile">
-        <Fab id={`get-header-event-tickets-${EventbriteConfig.eventId}`} size="large" color="secondary" variant="extended">
-          <Collapse in={isFooterVisible} orientation="horizontal" collapsedSize={24} exit={true}>
-            <div className="contents">
-              <LocalActivity />
-              <Grow in={isFooterVisible}>
-                <Typography variant="button" display="block" noWrap>
-                  Get Tickets
-                </Typography>
-              </Grow>
-            </div>
-          </Collapse>
-        </Fab>
+        <Zoom in={!isTicketsVisible} unmountOnExit>
+          <Fab id={`get-event-tickets-${EventbriteConfig.eventId}`} size="large" color="secondary" variant="extended">
+            <Collapse in={isFooterVisible} orientation="horizontal" collapsedSize={24} exit={true}>
+              <div className="contents">
+                <LocalActivity />
+                <Grow in={isFooterVisible}>
+                  <Typography variant="button" display="block" noWrap>
+                    Get Tickets
+                  </Typography>
+                </Grow>
+              </div>
+            </Collapse>
+          </Fab>
+        </Zoom>
       </motion.div>
     );
   }
@@ -125,7 +127,7 @@ const TicketButton = () => {
   });
 
   const props = {
-    id: `get-header-event-tickets-${EventbriteConfig.eventId}`,
+    id: `get-event-tickets-${EventbriteConfig.eventId}`,
     color: 'secondary',
     variant: 'contained'
   };
