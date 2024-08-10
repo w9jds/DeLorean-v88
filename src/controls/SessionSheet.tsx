@@ -57,6 +57,7 @@ const SessionSheet: FC<SessionSheetProps> = ({
 
   const hasDescription = useMemo(() => session.description.length > 0, [session.description]);
   const hasSpeakers = useMemo(() => session.speakers.length > 0, [session.speakers]);
+  const hasSlides = useMemo(() => session.slidesUrl && session.slidesUrl.length > 0, [session.slidesUrl])
 
   const buildAdminActions = () => (
     <div className="edit-actions">
@@ -123,7 +124,21 @@ const SessionSheet: FC<SessionSheetProps> = ({
     }
   }
 
-  if (!hasDescription && !hasSpeakers) {
+  const formatSlidesUrl = () => {
+    if (!session.slidesUrl) return null;
+
+    var text = session.slidesUrl;
+    const length = 30;
+    if (text.length > length) {
+      text = text.substring(0, length - 3) + "..."
+    }
+
+    return (
+      <a href={session.slidesUrl} target="_blank">Presentation slides</a>
+    );
+  }
+
+  if (!hasDescription && !hasSpeakers && !hasSlides) {
     return (
       <Paper square className="session-card">
         {isEditMode ? buildAdminActions() : null}
@@ -139,8 +154,10 @@ const SessionSheet: FC<SessionSheetProps> = ({
         </AccordionSummary>
         <AccordionDetails>
           <div className="session-content">
+            { hasSlides ? <div>{formatSlidesUrl()}</div> : null }
+            { hasSlides && hasDescription ? <br /> : null }
             { hasDescription ? <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(session.description)}} /> : null }
-            { hasDescription && hasSpeakers ? <Divider className="divider" /> : null }
+            { (hasDescription || hasSlides) && hasSpeakers ? <Divider className="divider" /> : null }
 
             { hasSpeakers ?
               <div className="speakers">
