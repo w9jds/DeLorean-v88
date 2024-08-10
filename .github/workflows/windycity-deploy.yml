@@ -16,6 +16,7 @@ jobs:
           node-version: '18'
       - uses: w9jds/setup-firebase@main
         with:
+          tools-version: 'v13.0.1'
           firebase_token: ${{ secrets.FIREBASE_TOKEN }}
       - run: npm ci
       - run: npm run build-prod
@@ -24,5 +25,5 @@ jobs:
           DELOREAN_MAP_API: ${{ secrets.DELOREAN_MAP_API }}
           DELOREAN_EVENT_ID: 971184989447
 
-      # - run: firebase use devfest-e4f7e
+      - run: firebase use prod
       - run: firebase deploy --only hosting
