@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import Dropzone from 'react-dropzone';
@@ -11,15 +11,7 @@ import {
 } from '@mui/material';
 import { Close, Face } from '@mui/icons-material';
 
-import tinymce from 'tinymce';
-import 'tinymce/themes/silver';
-import 'tinymce/icons/default';
-import 'tinymce/models/dom';
-import 'tinymce/skins/ui/oxide-dark/skin.css';
-
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/advlist';
+import { Editor } from '@tinymce/tinymce-react';
 
 import { SpeakerEditorState, Speaker } from 'models/speaker';
 import { setSpeakerEditorOpen } from 'store/speakers/reducer';
@@ -48,49 +40,23 @@ type Props = {
 };
 
 const SpeakerEditor: FC<Props> = ({ speaker }) => {
+  const dispatch = useDispatch();
+
   const db = useSelector(getDatabase);
   const isOpen = useSelector(isSpeakerEditorOpen);
   const storage = useSelector(getFirebaseStorage);
   const initState = useSelector(getEditorState);
-  const dispatch = useDispatch();
-  const prevOpen = useRef(false);
 
   const [file, setFile] = useState<Avatar>();
   const [errors, setErrors] = useState<string[]>([]);
   const [fields, setFields] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    if (!prevOpen.current && isOpen) {
-      setTimeout(initTinyMce, 0);
-
+    if (isOpen) {
       setFile(initState?.file);
       setFields(initState);
     }
-
-    if (prevOpen.current && !isOpen) {
-      tinymce.remove('textarea#bio');
-    }
-
-    prevOpen.current = isOpen;
   }, [isOpen])
-
-  const initTinyMce = () => {
-    tinymce.init({
-      selector: 'textarea#bio',
-      plugins: [ 'autolink', 'lists', 'advlist' ],
-      resize: false,
-      menubar: false,
-      statusbar: false,
-      extended_valid_elements : 'span[!class]',
-      font_family_formats: 'Roboto',
-      invalid_styles: 'color font-size font-family background-color',
-      toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
-    }).then(() => {
-      if (initState?.bio) {
-        tinymce.activeEditor.setContent(initState.bio);
-      }
-    });
-  }
 
   const closeSpeakerEditor = () => {
     dispatch(setSpeakerEditorOpen(false));
@@ -144,7 +110,6 @@ const SpeakerEditor: FC<Props> = ({ speaker }) => {
   const isSpeakerValid = () => {
     let errors = [];
 
-    debugger;
     if (!fields?.name) {
       errors.push(ErrorTypes.NAME);
     }
@@ -172,7 +137,7 @@ const SpeakerEditor: FC<Props> = ({ speaker }) => {
     // featured: this.state.featured,
     featured: false,
     blog: fields.blog ? fields.blog.trim() : null,
-    bio: tinymce.activeEditor.getContent()
+    bio: fields?.bio.trim() || null,
   })
 
   const onSaveClicked = () => {
@@ -219,7 +184,6 @@ const SpeakerEditor: FC<Props> = ({ speaker }) => {
   }
 
   return (
-    // classes={{ paperFullScreen: classes.fullscreen }}
     <Dialog fullScreen
       open={isOpen}
       className="speaker-editor"
@@ -262,9 +226,23 @@ const SpeakerEditor: FC<Props> = ({ speaker }) => {
           </div>
         </div>
 
-        {/* className={classes.formControl} */}
         <div>
-          <textarea id="bio" className="bio-editor" />
+          <Editor
+            licenseKey='gpl'
+            tinymceScriptSrc={'/static/tinymce/tinymce.min.js'}
+            value={fields?.bio}
+            onEditorChange={newValue => setFields({...fields, bio: newValue})}
+            init={{
+              plugins: [ 'autolink', 'lists', 'advlist' ],
+              resize: false,
+              menubar: false,
+              statusbar: false,
+              extended_valid_elements : 'span[!class]',
+              font_family_formats: 'Roboto',
+              invalid_styles: 'color font-size font-family background-color',
+              toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
+            }}
+          />
         </div>
       </DialogContent>
     </Dialog>

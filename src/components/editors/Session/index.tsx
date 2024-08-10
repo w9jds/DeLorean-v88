@@ -1,23 +1,15 @@
-import React, { FC, useRef, useEffect, useState, useMemo } from 'react';
+import React, { FC, useEffect, useState, useMemo } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { addDoc, collection, updateDoc } from 'firebase/firestore';
 
 import { Close } from '@mui/icons-material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { Editor } from '@tinymce/tinymce-react';
 import {
   Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton,
   DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField, FormControlLabel, Checkbox
 } from '@mui/material';
-
-import tinymce from 'tinymce';
-import 'tinymce/themes/silver';
-import 'tinymce/icons/default';
-import 'tinymce/models/dom';
-import 'tinymce/skins/ui/oxide-dark/skin.css';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/advlist';
 
 import { Speaker } from 'models/speaker';
 import { ApplicationState } from 'models/states';
@@ -50,11 +42,11 @@ const SessionEditor: FC<SessionEditorProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const prevOpen = useRef(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [fields, setFields] = useState<Record<string, any>>({
     name: '',
     type: SessionTypes.SESSION,
+    description: '',
     isUnscheduled: false,
     startTime: new Date(),
     endTime: new Date(),
@@ -63,16 +55,9 @@ const SessionEditor: FC<SessionEditorProps> = ({
   });
 
   useEffect(() => {
-    if (!prevOpen.current && isOpen) {
+    if (isOpen) {
       setFields(initState);
-      setTimeout(initTinyMce, 0);
     }
-
-    if (prevOpen.current && !isOpen) {
-      tinymce.remove('.description-editor > textarea');
-    }
-
-    prevOpen.current = isOpen;
   }, [isOpen])
 
   const types = useMemo(() => {
@@ -93,23 +78,6 @@ const SessionEditor: FC<SessionEditorProps> = ({
     dispatch(setSessionEditorOpen(false));
   }
 
-  const initTinyMce = () => {
-    tinymce.init({
-      selector: '.description-editor > textarea',
-      plugins: [ 'autolink', 'lists', 'advlist' ],
-      resize: false,
-      menubar: false,
-      statusbar: false,
-      font_family_formats: 'Roboto',
-      invalid_styles: 'color font-size font-family background-color',
-      toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
-    }).then(() => {
-      if (initState?.description) {
-        tinymce.activeEditor.setContent(initState.description);
-      }
-    });
-  }
-
   const onRenderSpeakers = selected => (
     <div className="speaker-chips">
       {selected.map(key => {
@@ -128,7 +96,6 @@ const SessionEditor: FC<SessionEditorProps> = ({
   const getChanges = () => ({
     ...fields,
     name: fields.name.trim(),
-    description: tinymce.activeEditor.getContent(),
   });
 
   // const onValueChanged = (name: keyof SessionEditorState) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -296,7 +263,21 @@ const SessionEditor: FC<SessionEditorProps> = ({
           </div>
 
           <FormControl className="description-editor">
-            <textarea placeholder="Session Details" />
+            <Editor 
+              licenseKey='gpl'
+              tinymceScriptSrc={'/static/tinymce/tinymce.min.js'}
+              value={fields?.description}
+              onEditorChange={newValue => setFields({ ...fields, description: newValue })}
+              init={{
+                plugins: [ 'autolink', 'lists', 'advlist' ],
+                resize: false,
+                menubar: false,
+                statusbar: false,
+                font_family_formats: 'Roboto',
+                invalid_styles: 'color font-size font-family background-color',
+                toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
+              }}
+            />
           </FormControl>
         </DialogContent>
       </Dialog>

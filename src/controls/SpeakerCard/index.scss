@@ -2,6 +2,7 @@
 
 .speaker-card {
   display: flex;
+  position: relative;
   background-color: $dark_paper;
   border-radius: 10px;
   flex-direction: column;

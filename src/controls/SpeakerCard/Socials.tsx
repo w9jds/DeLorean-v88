@@ -64,7 +64,7 @@ const Socials: FC<Props> = ({ speaker }) => {
     return items;
   }, [speaker]);
 
-  return buttons?.length && (
+  return buttons?.length > 0 && (
     <>
       <Divider />
       <div className="social">
