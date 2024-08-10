@@ -1,47 +1,47 @@
 import React, { FC, Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-
-import { ApplicationState } from 'models/states';
 
 import { Fab, Button } from '@mui/material';
 import { Add, PersonAdd, CreditCard, CalendarMonth } from '@mui/icons-material';
 
 import CreateSponsor from 'components/editors/Sponsor';
 
-import { openDialogWindow } from 'store/dialogs/actions';
-import { toggleCreateMenu, setSpeakerEditorOpen, setSessionEditorOpen } from 'store/admin/actions';
-import { getIsEditMode, getIsCreateOpen, getIsSpeakerEditorOpen, getIsSessionEditorOpen } from 'store/admin/selectors';
+import { openDialog } from 'store/dialogs/reducer';
+import { isCreateOpen } from 'store/admin/selectors';
+import { toggleCreateMenu } from 'store/admin/reducer';
+import { isSpeakerEditorOpen } from 'store/speakers/selectors';
+import { setSpeakerEditorOpen } from 'store/speakers/reducer';
+import { isSessionEditorOpen } from 'store/sessions/selectors';
+import { setSessionEditorOpen } from 'store/sessions/reducer';
 
 import './EditOverlay.scss';
 
-type EditOverlayProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+const EditOverlay: FC = () => {
+  const dispatch = useDispatch();
 
-const EditOverlay: FC<EditOverlayProps> = ({
-  isOpen,
-  isSpeakerEditorOpen,
-  isSessionEditorOpen,
-
-  openDialogWindow,
-  toggleCreateMenu,
-  setSpeakerEditorOpen,
-  setSessionEditorOpen
-}) => {
+  const isOpen = useSelector(isCreateOpen);
+  const isSpeakerEditing = useSelector(isSpeakerEditorOpen);
+  const isSessionEditing = useSelector(isSessionEditorOpen);
 
   const onCreateSponsor = () => {
-    toggleCreateMenu();
-    openDialogWindow(<CreateSponsor />, false);
+    dispatch(toggleCreateMenu());
+    dispatch(
+      openDialog({
+        views: <CreateSponsor />,
+        fullscreen: false
+      })
+    );
   }
 
   const onCreateSpeaker = () => {
-    toggleCreateMenu();
-    setSpeakerEditorOpen(true);
+    dispatch(toggleCreateMenu());
+    dispatch(setSpeakerEditorOpen(true));
   }
 
   const onCreateSession = () => {
-    toggleCreateMenu();
-    setSessionEditorOpen(true);
+    dispatch(toggleCreateMenu());
+    dispatch(setSessionEditorOpen(true));
   }
 
   const actionsClass = classnames('menu-contents', {
@@ -54,12 +54,12 @@ const EditOverlay: FC<EditOverlayProps> = ({
 
   const menuClass = classnames('fab-button', {
     'menu-open': isOpen,
-    'hidden': isSpeakerEditorOpen || isSessionEditorOpen
+    'hidden': isSpeakerEditing || isSessionEditing
   });
 
   return (
     <Fragment>
-      <div className={overlayClass} onClick={toggleCreateMenu} />
+      <div className={overlayClass} onClick={() => dispatch(toggleCreateMenu())} />
 
       <div className="action-menu">
         <div className={actionsClass}>
@@ -87,7 +87,7 @@ const EditOverlay: FC<EditOverlayProps> = ({
           </Fab>
         </div>
 
-        <Fab className={menuClass} onClick={toggleCreateMenu}>
+        <Fab className={menuClass} onClick={() => dispatch(toggleCreateMenu())}>
           <Add />
         </Fab>
       </div>
@@ -95,18 +95,4 @@ const EditOverlay: FC<EditOverlayProps> = ({
   );
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  isOpen: getIsCreateOpen(state),
-  isEditMode: getIsEditMode(state),
-  isSpeakerEditorOpen: getIsSpeakerEditorOpen(state),
-  isSessionEditorOpen: getIsSessionEditorOpen(state)
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  openDialogWindow,
-  toggleCreateMenu,
-  setSpeakerEditorOpen,
-  setSessionEditorOpen
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditOverlay);
+export default EditOverlay;

@@ -1,23 +1,15 @@
-import React, { FC, useRef, useEffect, useState, useMemo } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import React, { FC, useEffect, useState, useMemo } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import { addDoc, collection, updateDoc } from 'firebase/firestore';
 
 import { Close } from '@mui/icons-material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { Editor } from '@tinymce/tinymce-react';
 import {
   Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton,
-  DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField, FormControlLabel, Checkbox } from '@mui/material';
-
-import tinymce from 'tinymce';
-import 'tinymce/themes/silver';
-import 'tinymce/icons/default';
-import 'tinymce/models/dom';
-import 'tinymce/skins/ui/oxide-dark/skin.css';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/advlist';
+  DialogContent, FormControl, InputLabel, Select, MenuItem, Chip, Avatar, TextField, FormControlLabel, Checkbox
+} from '@mui/material';
 
 import { Speaker } from 'models/speaker';
 import { ApplicationState } from 'models/states';
@@ -25,18 +17,16 @@ import { SessionEditorState, SessionTypes } from 'models/session';
 
 import { getDatabase } from 'store/current/selectors';
 import { getSpeakers } from 'store/speakers/selectors';
-import { getIsSessionEditorOpen } from 'store/admin/selectors';
-import { setSessionEditorOpen } from 'store/admin/actions';
-import { getSessionEditorState } from 'store/sessions/selectors';
+import { setSessionEditorOpen } from 'store/sessions/reducer';
+import { getSessionEditorState, isSessionEditorOpen } from 'store/sessions/selectors';
 
 import './index.scss';
-
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 
 type DateTimeTypes = 'startTime' | 'endTime';
 type InputEditableTypes = 'name' | 'location' | 'slidesUrl';
-type SessionEditorProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+type SessionEditorProps = ReturnType<typeof mapStateToProps>;
 
 enum ErrorTypes {
   NAME = 'name',
@@ -49,15 +39,14 @@ const SessionEditor: FC<SessionEditorProps> = ({
   isOpen,
   initState,
   speakers,
-
-  setSessionEditorOpen
 }) => {
+  const dispatch = useDispatch();
 
-  const prevOpen = useRef(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [fields, setFields] = useState<Record<string, any>>({
     name: '',
     type: SessionTypes.SESSION,
+    description: '',
     isUnscheduled: false,
     startTime: new Date(),
     endTime: new Date(),
@@ -66,16 +55,9 @@ const SessionEditor: FC<SessionEditorProps> = ({
   });
 
   useEffect(() => {
-    if (!prevOpen.current && isOpen) {
+    if (isOpen) {
       setFields(initState);
-      setTimeout(initTinyMce, 0);
     }
-
-    if (prevOpen.current && !isOpen) {
-      tinymce.remove('.description-editor > textarea');
-    }
-
-    prevOpen.current = isOpen;
   }, [isOpen])
 
   const types = useMemo(() => {
@@ -92,23 +74,8 @@ const SessionEditor: FC<SessionEditorProps> = ({
     return items;
   }, []);
 
-  const closeSessionEditor = () => setSessionEditorOpen(false);
-
-  const initTinyMce = () => {
-    tinymce.init({
-      selector: '.description-editor > textarea',
-      plugins: [ 'autolink', 'lists', 'advlist' ],
-      resize: false,
-      menubar: false,
-      statusbar: false,
-      font_family_formats: 'Roboto',
-      invalid_styles: 'color font-size font-family background-color',
-      toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
-    }).then(() => {
-      if (initState?.description) {
-        tinymce.activeEditor.setContent(initState.description);
-      }
-    });
+  const closeSessionEditor = () => {
+    dispatch(setSessionEditorOpen(false));
   }
 
   const onRenderSpeakers = selected => (
@@ -129,7 +96,6 @@ const SessionEditor: FC<SessionEditorProps> = ({
   const getChanges = () => ({
     ...fields,
     name: fields.name.trim(),
-    description: tinymce.activeEditor.getContent(),
   });
 
   // const onValueChanged = (name: keyof SessionEditorState) => (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -297,7 +263,21 @@ const SessionEditor: FC<SessionEditorProps> = ({
           </div>
 
           <FormControl className="description-editor">
-            <textarea />
+            <Editor 
+              licenseKey='gpl'
+              tinymceScriptSrc={'/static/tinymce/tinymce.min.js'}
+              value={fields?.description}
+              onEditorChange={newValue => setFields({ ...fields, description: newValue })}
+              init={{
+                plugins: [ 'autolink', 'lists', 'advlist' ],
+                resize: false,
+                menubar: false,
+                statusbar: false,
+                font_family_formats: 'Roboto',
+                invalid_styles: 'color font-size font-family background-color',
+                toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
+              }}
+            />
           </FormControl>
         </DialogContent>
       </Dialog>
@@ -307,13 +287,9 @@ const SessionEditor: FC<SessionEditorProps> = ({
 
 const mapStateToProps = (state: ApplicationState) => ({
   db: getDatabase(state),
-  isOpen: getIsSessionEditorOpen(state),
+  isOpen: isSessionEditorOpen(state),
   initState: getSessionEditorState(state),
   speakers: getSpeakers(state),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  setSessionEditorOpen
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SessionEditor);
+export default connect(mapStateToProps)(SessionEditor);

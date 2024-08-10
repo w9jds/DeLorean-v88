@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 import SponsorTile from './Tile';
 
-import { ApplicationState } from 'models/states';
 import { getSponsors, getCurrentConfig } from 'store/current/selectors';
 import { SiteTheme } from 'config/delorean.config';
 import { DevfestDetails } from 'config/delorean.details.js';
@@ -20,7 +19,7 @@ const Sponsors: FC = () => {
           <h1>Sponsors and Community Partners</h1>
         </div>
 
-        <div className="action container-thin">
+        <div className="action">
           <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, read our `}</span>
           <a href={config?.event?.sponsors?.prospectus}>Sponsor Prospectus</a>
           <span> or </span>
@@ -31,7 +30,7 @@ const Sponsors: FC = () => {
       {
         sponsors && Object.keys(sponsors)?.length && (
           <div className="sponsor-grid container" >
-            {Object.values(sponsors).map(sponsor => <SponsorTile details={sponsor} />)}
+            {Object.values(sponsors).map(sponsor => <SponsorTile key={sponsor.name} details={sponsor} />)}
           </div>
         )
       }

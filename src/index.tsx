@@ -3,10 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import { BrowserRouter } from 'react-router-dom';
-import { applyMiddleware, createStore, combineReducers } from 'redux';
 
 import { SiteTheme } from './config/delorean.config';
-import { ApplicationState } from './models/states';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -19,22 +17,29 @@ import sessions from 'store/sessions/reducer';
 import speakers from 'store/speakers/reducer';
 
 import MainLayout from 'components/MainLayout';
+import { listenerMiddleware } from 'store/middleware';
+import { configureStore } from '@reduxjs/toolkit';
 
+const sagaMiddleware = createSagaMiddleware();
 const middleware = [
-  createSagaMiddleware()
+  listenerMiddleware.middleware,
+  sagaMiddleware,
 ];
 
-const store = createStore(
-  combineReducers<ApplicationState>({
-    current,
-    config,
-    dialogs,
-    admin,
-    sessions,
-    speakers,
-  }),
-  applyMiddleware(...middleware)
-);
+const store = configureStore({
+  reducer: {
+    admin: admin.reducer,
+    config: config.reducer,
+    dialogs: dialogs.reducer,
+    current: current.reducer,
+    sessions: sessions.reducer,
+    speakers: speakers.reducer,
+  },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    }).concat(middleware),
+})
 
 const theme = createTheme({
   palette: {
@@ -64,7 +69,7 @@ const theme = createTheme({
   },
 })
 
-middleware[0].run(sagas);
+sagaMiddleware.run(sagas);
 
 createRoot(document.getElementById('root'))
   .render(

@@ -1,46 +1,33 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import React, { FC, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import Dropzone from 'react-dropzone';
 import { DocumentSnapshot, addDoc, collection, updateDoc } from 'firebase/firestore';
 import { UploadTaskSnapshot, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-import { Dialog, AppBar, Toolbar, Button, Slide, Typography, IconButton, DialogContent, FormControl, TextField } from '@mui/material';
+import { 
+  Dialog, AppBar, Toolbar, Button, Slide, Typography, 
+  IconButton, DialogContent, TextField 
+} from '@mui/material';
 import { Close, Face } from '@mui/icons-material';
 
-import tinymce from 'tinymce';
-import 'tinymce/themes/silver';
-import 'tinymce/icons/default';
-import 'tinymce/models/dom';
-import 'tinymce/skins/ui/oxide-dark/skin.css';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/advlist';
+import { Editor } from '@tinymce/tinymce-react';
 
-import { ApplicationState } from 'models/states';
 import { SpeakerEditorState, Speaker } from 'models/speaker';
+import { setSpeakerEditorOpen } from 'store/speakers/reducer';
 import { getDatabase, getFirebaseStorage } from 'store/current/selectors';
-import { closeConfigDialog } from 'store/config/actions';
-import { getEditorState } from 'store/speakers/selectors';
-
-import { getIsSpeakerEditorOpen } from 'store/admin/selectors';
-import { setSpeakerEditorOpen } from 'store/admin/actions';
+import { getEditorState, isSpeakerEditorOpen } from 'store/speakers/selectors';
 
 import './index.scss';
 
 const Transition = (props) => <Slide direction="up" {...props} />;
 
-type EditableTypes = 'medium' | 'name' | 'title' | 'company' | 'twitter' | 'github' | 'facebook' | 'linkedin' | 'blog';
-type SpeakerEditorProps = SpeakerEditorAttrs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
-type SpeakerEditorAttrs = {
-  speaker?: DocumentSnapshot;
-};
-
 enum ErrorTypes {
   NAME = 'name',
   PORTRAIT = 'portrait',
 };
+
+type EditableTypes = 'medium' | 'name' | 'title' | 'company' | 'twitter' | 'github' | 'facebook' | 'linkedin' | 'blog';
 
 type Avatar = {
   metadata?: File;
@@ -48,56 +35,32 @@ type Avatar = {
   preview: string;
 }
 
-const SpeakerEditor: FC<SpeakerEditorProps> = ({
-  db,
-  isOpen,
-  storage,
-  initState,
+type Props = {
+  speaker?: DocumentSnapshot;
+};
 
-  closeConfigDialog,
-  setSpeakerEditorOpen
-}) => {
+const SpeakerEditor: FC<Props> = ({ speaker }) => {
+  const dispatch = useDispatch();
 
-  const prevOpen = useRef(false);
+  const db = useSelector(getDatabase);
+  const isOpen = useSelector(isSpeakerEditorOpen);
+  const storage = useSelector(getFirebaseStorage);
+  const initState = useSelector(getEditorState);
+
   const [file, setFile] = useState<Avatar>();
   const [errors, setErrors] = useState<string[]>([]);
   const [fields, setFields] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    if (!prevOpen.current && isOpen) {
-      setTimeout(initTinyMce, 0);
-
+    if (isOpen) {
       setFile(initState?.file);
       setFields(initState);
     }
-
-    if (prevOpen.current && !isOpen) {
-      tinymce.remove('textarea.bio-editor');
-    }
-
-    prevOpen.current = isOpen;
   }, [isOpen])
 
-  const initTinyMce = () => {
-    tinymce.init({
-      selector: 'textarea.bio-editor',
-      plugins: [ 'autolink', 'lists', 'advlist' ],
-      resize: false,
-      menubar: false,
-      statusbar: false,
-      extended_valid_elements : 'span[!class]',
-      font_family_formats: 'Roboto',
-      invalid_styles: 'color font-size font-family background-color',
-      toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
-    }).then(() => {
-      if (initState?.bio) {
-        tinymce.activeEditor.setContent(initState.bio);
-      }
-    });
-
+  const closeSpeakerEditor = () => {
+    dispatch(setSpeakerEditorOpen(false));
   }
-
-  const closeSpeakerEditor = () => setSpeakerEditorOpen(false);
 
   const buildFieldInput = (label: String, id: EditableTypes) => {
     return (
@@ -122,7 +85,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
     return (
       <div {...getRootProps()} className={style}>
         <input {...getInputProps()} />
-        {file?.preview ? <img src={file.preview} className="portrait-image" /> : <Face />}
+        {file?.preview ? <img title="avatar" src={file.preview} className="portrait-image" /> : <Face />}
       </div>
     );
   }
@@ -147,7 +110,6 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
   const isSpeakerValid = () => {
     let errors = [];
 
-    debugger;
     if (!fields?.name) {
       errors.push(ErrorTypes.NAME);
     }
@@ -175,7 +137,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
     // featured: this.state.featured,
     featured: false,
     blog: fields.blog ? fields.blog.trim() : null,
-    bio: tinymce.activeEditor.getContent()
+    bio: fields?.bio.trim() || null,
   })
 
   const onSaveClicked = () => {
@@ -222,7 +184,6 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
   }
 
   return (
-    // classes={{ paperFullScreen: classes.fullscreen }}
     <Dialog fullScreen
       open={isOpen}
       className="speaker-editor"
@@ -244,7 +205,7 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
 
       <DialogContent>
         <div className="editor-profile-header">
-          <Dropzone accept="image/*" onDrop={onFileDrop} >
+          <Dropzone accept={{ 'image/*': [] }} onDrop={onFileDrop} >
             {dropZoneRender}
           </Dropzone>
 
@@ -265,25 +226,27 @@ const SpeakerEditor: FC<SpeakerEditorProps> = ({
           </div>
         </div>
 
-        {/* className={classes.formControl} */}
-        <FormControl>
-          <textarea className="bio-editor" />
-        </FormControl>
+        <div>
+          <Editor
+            licenseKey='gpl'
+            tinymceScriptSrc={'/static/tinymce/tinymce.min.js'}
+            value={fields?.bio}
+            onEditorChange={newValue => setFields({...fields, bio: newValue})}
+            init={{
+              plugins: [ 'autolink', 'lists', 'advlist' ],
+              resize: false,
+              menubar: false,
+              statusbar: false,
+              extended_valid_elements : 'span[!class]',
+              font_family_formats: 'Roboto',
+              invalid_styles: 'color font-size font-family background-color',
+              toolbar: 'undo redo | bold italic underline strikethrough | bullist numlist | outdent indent'
+            }}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  db: getDatabase(state),
-  storage: getFirebaseStorage(state),
-  isOpen: getIsSpeakerEditorOpen(state),
-  initState: getEditorState(state)
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  closeConfigDialog,
-  setSpeakerEditorOpen
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SpeakerEditor);
+export default SpeakerEditor;

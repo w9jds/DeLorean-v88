@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { format } from 'date-fns';
 
 import { Button } from '@mui/material';
@@ -25,6 +25,7 @@ type HomeProps = ReturnType<typeof mapStateToProps>;
 const Home: FC<HomeProps> = ({ config }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const startDate = config?.event?.startDate?.toDate();
 
   useEffect(() => {

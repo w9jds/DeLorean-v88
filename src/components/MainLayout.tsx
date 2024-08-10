@@ -1,19 +1,16 @@
 import React, { FC, Fragment, useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 import { Profile } from 'models/user';
-import { ApplicationState } from 'models/states';
 import { FirebaseConfig } from 'config/delorean.config';
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
-import { getUser, getUserProfile } from 'store/current/selectors';
-import { setFirebaseApplication, getSiteData, setUser, setUserProfile } from 'store/current/actions';
-import { getIsEditMode } from 'store/admin/selectors';
+import { getUserProfile } from 'store/current/selectors';
+import { isEditMode } from 'store/admin/selectors';
 
 import Home from 'pages/Home';
 import Conduct from 'pages/Conduct';
@@ -30,8 +27,7 @@ import SpeakerEditor from './editors/Speaker';
 import SessionEditor from './editors/Session';
 
 import 'stylesheets/main.scss';
-
-type MainLayoutProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+import { getSiteData, setFirebaseApplication, setUser, setUserProfile } from 'store/current/reducer';
 
 export enum DeloreanRoutes {
   HOME = '/',
@@ -41,16 +37,12 @@ export enum DeloreanRoutes {
   CODE_OF_CONDUCT = '/code-of-conduct'
 }
 
-const MainLayout: FC<MainLayoutProps> = ({
-  user,
-  profile,
-  isEditMode,
+const MainLayout: FC = () => {
+  const dispatch = useDispatch();
 
-  setUser,
-  setUserProfile,
-  setFirebaseApplication,
-  getSiteData
-}) => {
+  const profile = useSelector(getUserProfile);
+  const isEditing = useSelector(isEditMode);
+
   const [firstLoad, setFirstLoad] = useState(true);
 
   useEffect(() => {
@@ -58,20 +50,20 @@ const MainLayout: FC<MainLayoutProps> = ({
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
 
-    setFirebaseApplication(firebaseApp);
+    dispatch(setFirebaseApplication(firebaseApp));
 
     const verifyLogin = async (user: User) => {
       if (firstLoad && user) {
-        setUser(user);
+        dispatch(setUser(user));
 
-        let profile = await getDoc(doc(db, `/users/${user.uid}`));
-        setUserProfile(profile.data() as Profile);
+        const profile = await getDoc(doc(db, `/users/${user.uid}`));
+        dispatch(setUserProfile(profile.data() as Profile))
         setFirstLoad(false);
       }
     }
 
     onAuthStateChanged(auth, verifyLogin);
-    getSiteData();
+    dispatch(getSiteData());
   }, [])
 
   const buildAdminPanels = () => {
@@ -103,24 +95,11 @@ const MainLayout: FC<MainLayoutProps> = ({
         <Route path="/*" element={<Home />} />
       </Routes>
 
-      {isEditMode ? <EditOverlay /> : null}
+      {isEditing ? <EditOverlay /> : null}
 
       <Footer />
     </Fragment>
   )
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  user: getUser(state),
-  profile: getUserProfile(state),
-  isEditMode: getIsEditMode(state)
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  setUser,
-  setUserProfile,
-  setFirebaseApplication,
-  getSiteData
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
+export default MainLayout;

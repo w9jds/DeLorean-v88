@@ -20,6 +20,11 @@ export type SpeakerEditorFullState = SpeakerEditorState & {
   ref?: DocumentReference;
 };
 
+export type SpeakerChanges = {
+  ref: DocumentReference, 
+  speaker: Speaker
+}
+
 export type SpeakerEditorState = {
   name: string;
   title?: string;

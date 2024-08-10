@@ -8,8 +8,8 @@ import { Loader } from '@googlemaps/js-api-loader';
 
 import Configuration from 'models/config';
 import { ApplicationState } from 'models/states';
+import { toggleConfig } from 'store/config/reducer';
 import { MapsConfig } from 'config/delorean.config';
-import { closeConfigDialog } from 'store/config/actions';
 import { isConfigDialogOpen } from 'store/config/selectors';
 import { getDatabase, getCurrentConfig } from 'store/current/selectors';
 
@@ -42,7 +42,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
   open,
   config,
 
-  closeConfigDialog
+  toggleConfig
 }) => {
   const ref = useRef();
   const [autocomplete, setAutoComplete] = useState<google.maps.places.Autocomplete>();
@@ -96,7 +96,7 @@ const SiteConfig: FC<SiteConfigProps> = ({
 
   const handleClose = () => {
     setAutoComplete(null);
-    closeConfigDialog();
+    toggleConfig();
   };
 
   const save = async () => {
@@ -253,7 +253,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  closeConfigDialog
+  toggleConfig
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SiteConfig);

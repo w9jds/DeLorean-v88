@@ -1,14 +1,13 @@
 import { takeEvery, all, select, fork } from 'redux-saga/effects';
 import { Firestore, DocumentSnapshot, collection, doc } from 'firebase/firestore';
+import { sync, Payload } from '../firestore';
 
 import Sponsor from 'models/sponsor';
 import Configuration from 'models/config';
 
 import { getDatabase } from './selectors';
-import { setSiteConfig, setSponsors } from './actions';
-import { CurrentEvents } from 'store/events';
+import { getSiteData, setSiteConfig, setSponsors } from './reducer';
 
-import { sync, Payload } from '../firestore';
 
 function* loadSiteConfig() {
   const db: Firestore = yield select(getDatabase);
@@ -27,25 +26,23 @@ function* loadEventSponsors() {
 
   yield fork(sync, collection(db, 'sponsors'), {
     successAction: setSponsors,
-    transform: marshallSponsors,
+    transform: (collection: Payload) => {
+      const sponsors: Record<string, Sponsor> = {};
+    
+      if ('forEach' in collection.snapshot) {
+        collection.snapshot.forEach(
+          (document) => (sponsors[document.id] = document.data() as Sponsor)
+        );
+      }
+    
+      return sponsors;
+    },
   });
 }
 
-const marshallSponsors = (collection: Payload) => {
-  const sponsors: Record<string, Sponsor> = {};
-
-  if ('forEach' in collection.snapshot) {
-    collection.snapshot.forEach(
-      (document) => (sponsors[document.id] = document.data() as Sponsor)
-    );
-  }
-
-  return sponsors;
-};
-
 export function* sagas() {
   yield all([
-    takeEvery(CurrentEvents.LOAD_SITE_DATA, loadSiteConfig),
-    takeEvery(CurrentEvents.LOAD_SITE_DATA, loadEventSponsors),
+    takeEvery(getSiteData.type, loadSiteConfig),
+    takeEvery(getSiteData.type, loadEventSponsors),
   ]);
 }

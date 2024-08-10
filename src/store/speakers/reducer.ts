@@ -1,9 +1,8 @@
-import { Reducer } from 'redux';
-import { handleActions } from 'redux-actions';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DocumentSnapshot } from 'firebase/firestore';
 
 import { SpeakerState } from 'models/states';
-import { SpeakerEvents } from 'store/events';
-import { setSpeakerEditorInitialState, setSpeakers } from './actions';
+import { SpeakerChanges, SpeakerEditorFullState } from 'models/speaker';
 
 const clearState = {
   bio: '',
@@ -16,23 +15,34 @@ const clearState = {
 };
 
 const initialState: SpeakerState = {
+  isEditorOpen: false,
   editor: clearState,
   speakers: {}
 };
 
-const speakers: Reducer<SpeakerState> = handleActions<any>({
-  [SpeakerEvents.SET_SPEAKERS]: (state: SpeakerState, action: ReturnType<typeof setSpeakers>) => ({
-      ...state,
-      speakers: action.payload
-  }),
-  [SpeakerEvents.SET_EDITOR_STATE]: (state: SpeakerState, action: ReturnType<typeof setSpeakerEditorInitialState>) => ({
-      ...state,
-      editor: action.payload
-  }),
-  [SpeakerEvents.CLEAR_EDITOR_STATE]: (state: SpeakerState) => ({
-      ...state,
-      editor: clearState
-  })
-}, initialState);
+const speakerSlice = createSlice({
+  name: 'speakers',
+  initialState,
+  reducers: {
+    setSpeakers: (state, action: PayloadAction<Record<string, DocumentSnapshot>>) => {
+      state.speakers = action.payload;
+    },
+    setSpeakerEditorInitialState: (state, action: PayloadAction<SpeakerEditorFullState>) => {
+      state.editor = action.payload;
+    },
+    setSpeakerEditorOpen: (state, action) => {
+      state.isEditorOpen = action.payload;
 
-export default speakers;
+      if (action.payload === false) {
+        state.editor = clearState;
+      }
+    },
+
+    //Saga Triggers
+    editSpeaker: (_, action: PayloadAction<SpeakerChanges>) => {},
+  }
+});
+
+export const { setSpeakers, setSpeakerEditorInitialState, setSpeakerEditorOpen, editSpeaker } = speakerSlice.actions;
+
+export default speakerSlice;

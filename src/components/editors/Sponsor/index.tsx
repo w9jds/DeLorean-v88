@@ -1,51 +1,35 @@
 import React, { FC, Fragment, useState } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import classnames from 'classnames';
 
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { UploadTaskSnapshot, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
-import { Button, TextField, DialogTitle, DialogContent, DialogActions, FormControl } from '@mui/material';
+import { Button, TextField, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
-import { ApplicationState } from 'models/states';
+import { closeDialog } from 'store/dialogs/reducer';
 import { getDatabase, getFirebaseStorage } from 'store/current/selectors';
-import { closeDialogWindow } from 'store/dialogs/actions';
 
 import './index.scss';
 
-// const stylesheet: StyleRulesCallback = theme => ({
-//     formControl: {
-//         margin: theme.spacing.unit,
-//         width: '75%',
-//         minWidth: '120px'
-//     },
-//     sponsorDetails: {
-//         flex: 1,
-//         display: 'flex',
-//         flexDirection: 'column',
-//         alignItems: 'center',
-//         marginTop: 'auto',
-//         marginBottom: 'auto'
-//     }
-// });
-
-type SponsorDialogProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 type Avatar = {
   metadata: File;
   preview: string;
   contents: ArrayBuffer;
 };
 
-const SponsorDialog: FC<SponsorDialogProps> = ({
-  db,
-  storage,
+const SponsorDialog: FC = () => {
+  const db = useSelector(getDatabase);
+  const storage = useSelector(getFirebaseStorage);
+  const dispatch = useDispatch();
 
-  closeDialogWindow
-}) => {
   const [fields, setFields] = useState({ name: '', site: '' });
   const [file, setFile] = useState<Avatar>();
+
+  const close = () => {
+    dispatch(closeDialog());
+  }
 
   const onSettingChange = (e, name: string) => setFields({
     ...fields,
@@ -71,7 +55,7 @@ const SponsorDialog: FC<SponsorDialogProps> = ({
       logoUri: await getDownloadURL(task.ref)
     });
 
-    closeDialogWindow();
+    close();
   }
 
   const onFileDrop = files => {
@@ -94,7 +78,7 @@ const SponsorDialog: FC<SponsorDialogProps> = ({
   const buildDropZone = () => {
     if (!file) {
       return (
-        <Dropzone accept="image/*" onDrop={onFileDrop}>
+        <Dropzone accept={{ 'image/*': [] }} onDrop={onFileDrop}>
           {dropZoneRender}
         </Dropzone>
       );
@@ -103,7 +87,7 @@ const SponsorDialog: FC<SponsorDialogProps> = ({
     return (
       <div className="drag-drop-preview">
         <div>
-          <img src={file.preview} />
+          <img title='preview' src={file.preview} />
         </div>
       </div>
     );
@@ -130,7 +114,7 @@ const SponsorDialog: FC<SponsorDialogProps> = ({
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeDialogWindow}>
+        <Button onClick={close}>
           Cancel
         </Button>
         <Button onClick={onSaveSponsor} color="primary" autoFocus>
@@ -141,13 +125,4 @@ const SponsorDialog: FC<SponsorDialogProps> = ({
   );
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  db: getDatabase(state),
-  storage: getFirebaseStorage(state),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  closeDialogWindow
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SponsorDialog);
+export default SponsorDialog;

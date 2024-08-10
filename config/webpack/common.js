@@ -4,6 +4,7 @@ const { DevfestDetails } = require('../../src/config/delorean.details.js');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const ENV_DEST = process.env.ENV_DEST ? process.env.ENV_DEST : 'dev';
 
@@ -79,6 +80,14 @@ module.exports = {
       },
     }),
     new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../../node_modules/tinymce'),
+          to: path.resolve(__dirname, '../../dist/static/tinymce/'),
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       eventName: `${DevfestDetails.location} ${DevfestDetails.name} ${DevfestDetails.year}`,
       description: DevfestDetails.description,

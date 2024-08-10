@@ -1,27 +1,28 @@
 import React, { FC, useMemo } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DocumentReference, deleteDoc } from '@firebase/firestore';
 import { intervalToDuration } from 'date-fns/fp';
 import createDOMPurify from 'dompurify';
 
+import { 
+  Accordion, AccordionSummary, AccordionDetails, 
+  ListItem, ListItemText, ListItemAvatar, Divider, 
+  Typography, Avatar, Tooltip, Button, Paper 
+} from '@mui/material';
+
+import SpeakerDetails from '../components/dialogs/Details';
+
 import { Speaker } from 'models/speaker';
 import { Session, SessionTypes } from 'models/session';
+import { isEditMode } from 'store/admin/selectors';
+import { openDialog } from 'store/dialogs/reducer';
+import { editSession } from 'store/sessions/reducer';
 
-import { Accordion, AccordionSummary, AccordionDetails, ListItem, ListItemText, ListItemAvatar, Divider, Typography, Avatar, Tooltip, Button, Paper } from '@mui/material';
-import SpeakerDetails from 'components/dialogs/SpeakerDetails';
 import { ExpandMore, Delete, Edit } from '@mui/icons-material';
-
-import { ApplicationState } from 'models/states';
-import { getIsEditMode } from 'store/admin/selectors';
-import { openDialogWindow } from 'store/dialogs/actions';
-import { editSession } from 'store/editors/actions';
 
 import './SessionSheet.scss';
 
-type SessionSheetProps = SessionSheetAttribs & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
-
-type SessionSheetAttribs = {
+type Props = {
   speakers: Speaker[];
   session: Session;
   reference: DocumentReference;
@@ -29,30 +30,34 @@ type SessionSheetAttribs = {
 
 const DOMPurify = createDOMPurify(window);
 
-const SessionSheet: FC<SessionSheetProps> = ({
-  session,
-  speakers,
-  isEditMode,
-  reference,
-
-  openDialogWindow,
-  editSession,
-}) => {
+const SessionSheet: FC<Props> = ({ session, speakers, reference }) => {
+  const dispatch = useDispatch();
+  const isEditing = useSelector(isEditMode);
 
   const onSpeakerClicked = (speaker) => () => {
-    openDialogWindow(<SpeakerDetails key={speaker.id} speaker={speaker} />, false);
+    dispatch(
+      openDialog({
+        views: <SpeakerDetails key={speaker.id} speaker={speaker} />,
+        fullscreen: false
+      })
+    );
   };
 
   const onDeleteClicked = async e => {
     e.preventDefault();
     e.stopPropagation();
+
     await deleteDoc(reference);
   };
 
   const onEditClicked = e => {
     e.preventDefault();
     e.stopPropagation();
-    editSession(reference, session);
+    
+    dispatch(editSession({
+      ref: reference, 
+      session
+    }));
   };
 
   const hasDescription = useMemo(() => session.description.length > 0, [session.description]);
@@ -126,7 +131,7 @@ const SessionSheet: FC<SessionSheetProps> = ({
   if (!hasDescription && !hasSpeakers) {
     return (
       <Paper square className="session-card">
-        {isEditMode ? buildAdminActions() : null}
+        {isEditing ? buildAdminActions() : null}
         {buildSessionHeader()}
       </Paper>
     );
@@ -134,7 +139,7 @@ const SessionSheet: FC<SessionSheetProps> = ({
     return (
       <Accordion className="session">
         <AccordionSummary expandIcon={<ExpandMore />} >
-          {isEditMode ? buildAdminActions() : null}
+          {isEditing ? buildAdminActions() : null}
           {buildSessionHeader()}
         </AccordionSummary>
         <AccordionDetails>
@@ -166,13 +171,4 @@ const SessionSheet: FC<SessionSheetProps> = ({
   }
 };
 
-const mapStateToProps = (state: ApplicationState) => ({
-  isEditMode: getIsEditMode(state)
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  editSession,
-  openDialogWindow
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(SessionSheet);
+export default SessionSheet;
