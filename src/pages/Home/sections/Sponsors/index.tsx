@@ -19,7 +19,7 @@ const Sponsors: FC = () => {
           <h1>Sponsors and Community Partners</h1>
         </div>
 
-        <div className="action container-thin">
+        <div className="action">
           <span>{`Meet the organizations that make ${DevfestDetails.location} ${DevfestDetails.name} possible. If you’d like to learn more about sponsorships, read our `}</span>
           <a href={config?.event?.sponsors?.prospectus}>Sponsor Prospectus</a>
           <span> or </span>

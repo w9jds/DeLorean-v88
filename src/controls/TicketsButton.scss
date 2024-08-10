@@ -1,0 +1,20 @@
+
+
+.get-ticket-mobile {
+  position: fixed;
+  display: flex;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1500;
+
+  .contents {
+    display: flex;
+    gap: 8px;
+
+    svg {
+      width: 24; 
+      height: 24;
+    }
+  }
+  
+}

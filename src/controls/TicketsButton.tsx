@@ -1,24 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion, useAnimate } from 'framer-motion';
+import { useNavigation } from 'react-router-dom';
 import classnames from 'classnames';
 
 import { EventbriteConfig } from 'config/delorean.config';
-import { Button, ButtonProps, Fab, FabProps } from '@mui/material';
+import { Button, ButtonProps, Collapse, Fab, Grow, Typography } from '@mui/material';
 import { LocalActivity } from '@mui/icons-material';
 
+import './TicketsButton.scss';
 
 const TicketButton = () => {
-  const mobileAnimation = useRef<any>();
+  const [scope, animate] = useAnimate();
 
   const [isMobile, setMobile] = useState(false);
   const [isFooterVisible, setFooterVisibility] = useState(false);
   const [isTicketsVisible, setTicketsVisibility] = useState(true);
+
   const prev = useRef({
     isFooterVisible: false,
     isTicketsVisible: true
   });
 
   useEffect(() => {
-    window.addEventListener('scroll', onScrollEvent);
+    window.addEventListener('scroll', onTransitionEvent);
     window.addEventListener('resize', onResizeEvent);
 
     if (window.innerWidth <= 550) {
@@ -26,50 +30,31 @@ const TicketButton = () => {
     }
 
     return () => {
-      window.removeEventListener('scroll', onScrollEvent);
+      window.removeEventListener('scroll', onTransitionEvent);
       window.removeEventListener('resize', onResizeEvent);
     }
   }, [])
 
-  const onResizeEvent = () => {
-    if (window.innerWidth <= 550) {
-      setMobile(true);
-    }
-  }
-
   useEffect(() => {
-    if (isMobile) {
-      const animationBase = {
-        targets: '.get-ticket-mobile',
-        duration: 725
-      };
-
-      if (prev.current.isTicketsVisible !== isTicketsVisible) {
-        if (isTicketsVisible === false) {
-          // mobileAnimation.current = anime({
-          //   targets: '.get-ticket-mobile',
-          //   duration: 725,
-          //   scale: [0, 1]
-          // });
-        }
-
-        if (mobileAnimation.current && isTicketsVisible === true) {
-          mobileAnimation.current.reverse();
-          mobileAnimation.current.play();
-        }
-      }
-
-      if (!isTicketsVisible && prev.current.isFooterVisible !== isFooterVisible) {
-        if (isFooterVisible === true) {
-          expandTickets();
-        }
-        if (isFooterVisible === false) {
-          // anime({
-          //   ...animationBase,
-          //   translateY: 0,
-          //   translateX: 0
-          // });
-        }
+    if (isMobile && prev.current.isFooterVisible !== isFooterVisible) {
+      if (isFooterVisible) {
+        const footer = document.querySelector('.footer.container-wide');
+  
+        animate(scope.current, {
+          x: '50%',
+          translateX: 'calc(-50vw + 24px)',
+          translateY: -footer.getBoundingClientRect().height,
+        }, { 
+          duration: 0.25 
+        });
+      } else {
+        animate(scope.current, {
+          x: 0,
+          translateX: 0,
+          translateY: 0,
+        }, { 
+          duration: 0.25
+        })
       }
     }
 
@@ -87,7 +72,17 @@ const TicketButton = () => {
     );
   }
 
-  const onScrollEvent = () => {
+  const onResizeEvent = () => {
+    if (window.innerWidth <= 550) {
+      setMobile(true);
+    } else {
+      setMobile(false);
+    }
+
+    onTransitionEvent();
+  }
+
+  const onTransitionEvent = () => {
     const intro = document.querySelector(`.intro #get-event-tickets-${EventbriteConfig.eventId}`);
     const footer = document.querySelector('.footer.container-wide');
 
@@ -106,42 +101,22 @@ const TicketButton = () => {
     setTicketsVisibility(ticketsVisible);
   }
 
-  const expandTickets = () => {
-    const targets = document.querySelector('.get-ticket-mobile');
-    const footer = document.querySelector('.footer.container-wide');
-
-    const targetBounds = targets.getBoundingClientRect();
-    const footerHeight = footer.getBoundingClientRect().height;
-
-    // anime({
-    //   targets: targets,
-    //   translateY: [0, -(footerHeight - 10)],
-    //   translateX: () => {
-    //     let left = (window.innerWidth / 2) - (targetBounds.width / 2);
-    //     return [0, left - targetBounds.left];
-    //   },
-    //   duration: 725
-    // });
-  }
-
   if (isMobile) {
-    const classes = classnames('get-ticket-mobile', {
-      'extended': isFooterVisible && window.innerWidth <= 550
-    });
-
-    const props = {
-      id: `get-header-event-tickets-${EventbriteConfig.eventId}`,
-      color: 'secondary',
-      variant: isFooterVisible ? 'extended' : null
-    };
-
     return (
-      <div className={classes}>
-        <Fab {...props as FabProps}>
-          <LocalActivity />
-          {isFooterVisible ? 'Get Tickets' : null}
+      <motion.div ref={scope} className="get-ticket-mobile">
+        <Fab id={`get-header-event-tickets-${EventbriteConfig.eventId}`} size="large" color="secondary" variant="extended">
+          <Collapse in={isFooterVisible} orientation="horizontal" collapsedSize={24} exit={true}>
+            <div className="contents">
+              <LocalActivity />
+              <Grow in={isFooterVisible}>
+                <Typography variant="button" display="block" noWrap>
+                  Get Tickets
+                </Typography>
+              </Grow>
+            </div>
+          </Collapse>
         </Fab>
-      </div>
+      </motion.div>
     );
   }
 
