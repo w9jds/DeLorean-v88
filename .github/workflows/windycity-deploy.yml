@@ -22,7 +22,7 @@ jobs:
         env:
           DELOREAN_API_KEY: ${{ secrets.DELOREAN_API_KEY }}
           DELOREAN_MAP_API: ${{ secrets.DELOREAN_MAP_API }}
-          DELOREAN_EVENT_ID: 729485088537
+          DELOREAN_EVENT_ID: 971184989447
 
       - run: firebase use default
       - run: firebase deploy --only hosting
