@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useAnimate } from 'framer-motion';
-import { useNavigation } from 'react-router-dom';
+import { useLocation, useNavigation } from 'react-router-dom';
 import classnames from 'classnames';
 
 import { EventbriteConfig } from 'config/delorean.config';
@@ -10,6 +10,7 @@ import { LocalActivity } from '@mui/icons-material';
 import './TicketsButton.scss';
 
 const TicketButton = () => {
+  const location = useLocation();
   const [scope, animate] = useAnimate();
 
   const [isMobile, setMobile] = useState(false);
@@ -34,6 +35,10 @@ const TicketButton = () => {
       window.removeEventListener('resize', onResizeEvent);
     }
   }, [])
+
+  useEffect(() => {
+    onTransitionEvent();
+  }, [location]);
 
   useEffect(() => {
     if (scope.current && isMobile && prev.current.isFooterVisible !== isFooterVisible) {
