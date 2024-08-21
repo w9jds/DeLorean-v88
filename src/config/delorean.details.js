@@ -2,7 +2,7 @@ const DevfestDetails = {
   name: 'DevFest',
   location: 'Windy City',
   description: 'A community-run conference offering sessions, hack-a-thons, and codelabs across many different technologies',
-  year: 2023,
+  year: 2024,
   url: 'https://windycity.devfest.io'
 };
 

@@ -57,10 +57,19 @@ class SchedulePage extends React.Component<ScheduleProps> {
     const { speakers } = this.props;
     const data = session.data() as Session;
 
+    const links: Speaker[] = [];
+    if (data.speakers && data.speakers.length) {
+      data.speakers.forEach(id => {
+        if (speakers[id]) {
+          links.push(speakers[id].data() as Speaker)
+        } 
+      });
+    }
+
     return (
       <SessionSheet
         key={session.id}
-        speakers={data.speakers.map(id => speakers[id].data() as Speaker)}
+        speakers={links}
         reference={session.ref}
         session={data}
       />
